@@ -6,11 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="Archery_App" />
+        <module name="website" />
       </profile>
     </annotationProcessing>
-    <bytecodeTargetLevel>
-      <module name="Archery_App" target="16" />
-    </bytecodeTargetLevel>
   </component>
 </project>
