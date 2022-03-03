@@ -11,6 +11,6 @@
     <title>Archery_App</title>
   </head>
   <body>
-  Archery App version 2
+  Archery App
   </body>
 </html>
