@@ -3,18 +3,122 @@
 <head>
     <meta charset="UTF-8">
     <title>Archery app!</title>
+    <link rel="stylesheet" type="text/css" href="./WEB-INF/css/style.css">
 </head>
 <body>
 <!-- header -->
+
+
+<section>
+    <header class="header row j_left" id="header">
+        <!-- <div class="hbox center wider"> -->
+        <!--<a href="/" class="logo" title="Домой"></a> ТУТ БЫЛА КАРТИНКА-->
+        <nav class>
+            <ul class="row">
+                <li class="item ">
+                    <a style=margin-left:50px; href="#abonement" class="button green">Абонемент</a>
+                </li>
+                <li class="item">
+                    <a href="#contact" class="button green">Контакты</a>
+                </li>
+                <li class="item">
+                    <a href="#work_time" class="button green">Время работы</a>
+                </li>
+                <li class="item">
+                    <a href="/lk.html" class="button green">ВОЙТИ</a>
+                </li>
+            </ul>
+        </nav>
+
+    </header>
+</section>
+
+<!-- ************* body ******************-->
 <div>
-    <h1>Оно работаетc!</h1>
+    <main>
+        <!-- title -->
+        <section class="max_width banner">
+            <h1>Парадокс Лучника</h1>
+            <p>Какой-нибудь текст</p>
+        </section>
+
+        <section class="about_us">
+            <div>
+                <h2 style="margin-left:20px;">O нас</h2>
+                <p style="margin:10px;">Стрельба из лука - уникальный вид спорта. Снимает стресс и успокаивает нервы,
+                    поддерживает организм в общем тонусе и просто очень увлекательное занятие.
+                </p>
+            </div>
+        </section>
+
+        <!-- news -->
+        <div class="section2">
+            <div class="section_item item1">Item 1</div>
+            <div class="section_item item2">Item 2</div>
+            <div class="section_item item3">Item 3</div>
+            <div class="section_item item4">Item 4</div>
+            <div class="section_item item5">Item 5</div>
+        </div>
+    </main>
+    <section id="abonement" class="abonement" style="text-indent: 25px;">
+        <div>
+            <h2 style="margin-left:20px;">Абонемент</h2>
+            <!--            <p style="margin:10px;">Стрельба из лука - уникальный вид спорта. Снимает стресс и успокаивает нервы,-->
+            <!--                поддерживает организм в общем тонусе и просто очень увлекательное занятие.-->
+            <!--            </p>-->
+            <ul class="col">
+                <li>
+                    <p style="margin:7px;">
+                        Подробные мастер-классы для взрослых и детей.
+                    </p>
+                </li>
+                <li>
+                    <p style="margin:7px;">
+                        Обучение стрельбе из всех типов луков: классические, традиционные, блочные. Занятия
+                        индивидуально
+                        и в небольшой группе.
+                    </p>
+                </li>
+                <li>
+                    <p style="margin:7px;">
+                        Самостоятельная стрельба из луков и арбалетов. У нас уютный зал с дистанцией от 6 до 30 метров.
+                        Хранилка, раздевалка и зона отдыха.
+                    </p>
+                </li>
+                <li>
+                    <p style="margin:7px;">
+                        Помощь в настройке мат.части. Мелкий ремонт луков и комплектующих. Консультации по выбору луков
+                        и
+                        где их взять =)
+                    </p>
+                </li>
+                <li>
+                    <p style="margin:7px;">
+                        Подарочные сертификаты.
+                    </p>
+                </li>
+                <li>
+                    <p style="margin:7px;">
+                        Мероприятия для больших компаний и детские праздники.
+                    </p>
+                </li>
+                <li>
+                    <p style="margin:7px;">
+                        Выездные мероприятия. Лучный тир "под ключ".
+                    </p>
+                </li>
+            </ul>
+
+        </div>
+    </section>
 </div>
 
-<div>       <!-- content -->
-    <div>    <!-- buttons holder -->
-        <button onclick="location.href='/list'">List users</button>
-        <button onclick="location.href='/add'">Add user</button>
-    </div>
+<div class="col j_left" >
+    <!-- <a class="contact" href="tel:+78006542400">+7(921)973-33-44</a> -->
+    <h2 style="color: seagreen"class="contact">Контакты</h2>
+    <a id="work_time" class="contact">Время работы 18-22 по будям</a>
+    <a id="contact" class="contact">Телефон +7(812)783-51-70</a>
+    <a class="contact">Адрес ул.Пушкина д. Котушкина</a>
 </div>
 </body>
 </html>
