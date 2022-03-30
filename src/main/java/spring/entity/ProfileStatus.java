@@ -17,12 +17,12 @@ import javax.persistence.Table;
 public class ProfileStatus {
     @Id
     @Column(name = "status", nullable = false)
-    private String rank_name;
+    private String status;
 
     @Override
     public String toString() {
         return "ProfileStatus{" +
-                "rank_name='" + rank_name + '\'' +
+                "rank_name='" + status + '\'' +
                 '}';
     }
 }
