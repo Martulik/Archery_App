@@ -336,13 +336,6 @@ header .item a {
     transition: color 0.5s ease;
 }
 
-@media (max-width: 1200px) {
-    header {
-        display: none !important;
-    }
-}
-
-
 footer {
     background-color: #e4e4e4;
     padding: 5em 0;
@@ -463,26 +456,28 @@ label {
 
 .section2 {
     display: flex;
-    justify-content: space-between;
+    gap: 20px;
+    height: auto;
+    width: auto;
     overflow-x: auto;
-    width: 100%;
-    margin-left: 0;
-    margin-right: 0;
     scroll-snap-type: x mandatory;
+    box-shadow: 0 3px 10px 0 rgba(98, 141, 19, 0.06);
+    -webkit-overflow-scrolling: touch;
+    scroll-padding: 1rem;
+    margin: 50px;
+    border-radius: 10px;
+    padding: 10px 10px 20px 10px;
 }
 
 .section_item {
     display: flex;
-    flex-direction: row;
-    padding: 0.5em;
-    color: white;
-    background-size: cover;
     justify-content: center;
     align-items: center;
-    flex: 0 0 300px;
-    height: 250px;
-    font-size: 50px;
+    width: 30px;
+    height: 370px;
     scroll-snap-align: start;
+    background-color: #ccc;
+    flex: 0 0 25%;
 }
 
 .item1 {
