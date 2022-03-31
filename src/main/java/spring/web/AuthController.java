@@ -16,6 +16,7 @@ import spring.repositories.StudentRepository;
 import spring.requests.AuthRequest;
 import spring.requests.RegisterRequest;
 import spring.security.jwt.JwtTokenProvider;
+import spring.service.ProfileStatusService;
 
 import java.util.Optional;
 
@@ -33,7 +34,7 @@ public class AuthController {
     @Autowired
     StudentRepository studentRepository;
     @Autowired
-    ProfileStatusRepository profileStatusRepository;
+    ProfileStatusService profileStatusService;
 
 
 
@@ -83,7 +84,8 @@ public class AuthController {
         }
         Student student = new Student();
         BeanUtils.copyProperties(request, student); //проверить правильно ли работает
-        student.setProfileStatus(profileStatusRepository.findByStatus("OnChecking").get()); //заполнить таблицу статусов
+        //student.setProfile_status(profileStatusRepository.findByStatus("OnChecking").get()); //заполнить таблицу статусов
+        student.setProfile_status(profileStatusService.findByProfileStatus("OnChecking")); //заполнить таблицу статусов
 
         studentRepository.save(student);
 

@@ -58,12 +58,12 @@ public class Student implements UserDetails {
     @ManyToOne
     @JoinColumn(name="rank_name", referencedColumnName="rank_name")
     @JsonManagedReference
-    private Rank rank;
+    private Rank rank_name;
 
     @ManyToOne
     @JoinColumn(name="profile_status", referencedColumnName="status")
     @JsonManagedReference
-    private ProfileStatus profileStatus;
+    private ProfileStatus profile_status;
 
     @Override
     public String toString() {
@@ -79,8 +79,8 @@ public class Student implements UserDetails {
                 ", password_hash='" + password_hash + '\'' +
                 ", token='" + token + '\'' +
                 ", token_date='" + token_date + '\'' +
-                ", rank=" + rank +
-                ", profileStatus=" + profileStatus +
+                ", rank=" + rank_name +
+                ", profileStatus=" + profile_status +
                 '}';
     }
 

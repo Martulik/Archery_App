@@ -1,9 +1,11 @@
 package spring.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import spring.entity.ProfileStatus;
+import spring.entity.Rank;
 import spring.entity.Student;
 
 import java.util.List;
@@ -17,6 +19,14 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("select s from Student s where s.phone_number = ?1")
     Optional<Student> findUserByPhone_number(String phone_number);
 
-    @Query("select s from Student s where s.profileStatus.status = ?1")
+    @Query("select s from Student s where s.profile_status.status = ?1")
     List<Student> findStudentsByProfileStatus(String status);
+
+    @Modifying
+    @Query("update Student s set s.profile_status = ?2 where s.id = ?1")
+    void updateProfileStatus(long id, ProfileStatus status);
+
+    @Modifying
+    @Query("update Student s set s.rank_name = ?2 where s.id = ?1")
+    void updateRank(long id, Rank rank);
 }

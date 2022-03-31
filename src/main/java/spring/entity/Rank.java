@@ -22,7 +22,7 @@ public class Rank {
     private String color;
 
     @JsonBackReference
-    @OneToMany(mappedBy = "rank")
+    @OneToMany(mappedBy = "rank_name")
     private List<Student> students;
 
     @Override
