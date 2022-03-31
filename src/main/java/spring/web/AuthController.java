@@ -71,7 +71,8 @@ public class AuthController {
     }
 
     @PostMapping(value = "/register", consumes = "application/json")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<String> register(@RequestBody RegisterRequest request) { //добавить статус "deleted"
+        //Добавить проверку на статус Не зарегистрирован
         //добавить проверку на дибила
         String email = request.getEmail();
         String phone_number = request.getPhone_number();
