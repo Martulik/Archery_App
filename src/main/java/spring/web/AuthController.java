@@ -39,7 +39,7 @@ public class AuthController {
 
 
     @PostMapping(value = "/signIn", consumes = "application/json")
-    public ResponseEntity<String> signIn(@RequestBody AuthRequest request) {
+    public /*ResponseEntity<String>*/void signIn(@RequestBody AuthRequest request) {
         try{
             String login = request.getLogin();
             String password = request.getPassword();
@@ -64,7 +64,7 @@ public class AuthController {
                             .orElseThrow(() -> new UsernameNotFoundException("User not found")).getRoles()
             );
 
-            return ResponseEntity.ok(token);
+            //return ResponseEntity.ok(token);
         } catch (AuthenticationException ex) {
             throw new BadCredentialsException("Invalid username or password");
         }
