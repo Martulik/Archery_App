@@ -28,7 +28,13 @@ function login() {
     req.setRequestHeader('Content-Type', 'application/json');
     req.withCredentials = true;
     req.onreadystatechange = function() {
-        if (req.readyState === XMLHttpRequest.DONE) {
+        if(req.readyState === XMLHttpRequest.DONE){
+            if (req.status === 200) {
+               // window.location = "http://localhost:63342/Archery_App/website/web/lk.html?_ijt=finm44415ind7a9ordd7imhmq4&_ij_reload=RELOAD_ON_SAVE";
+            window.location = "../../lk.html";
+            }
+        }
+      /*  if (req.readyState === XMLHttpRequest.DONE) {
             if (req.status === 200) {
                 document.getElementById("log_form").style.display = 'none';
                 document.getElementById("logged_user").style.display = 'block';
@@ -40,7 +46,7 @@ function login() {
                 document.getElementById('error_text').textContent = "User/password is incorrect";
                 document.getElementById('error').style.display="";
             }
-       }
+       }*/
     }
     req.send(JSON.stringify({login: user, password: pass}));
 }
