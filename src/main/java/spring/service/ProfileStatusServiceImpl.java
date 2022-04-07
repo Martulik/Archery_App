@@ -42,4 +42,14 @@ public class ProfileStatusServiceImpl implements ProfileStatusService{
         }
         throw new NoSuchElementException("There aren't such profile status");
     }
+
+    @Override
+    public ProfileStatus findByProfileStatus(ProfileStatus status) {
+        String st = status.getStatus();
+        Optional<ProfileStatus> optionalProfileStatus = profileStatusRepository.findByStatus(st);
+        if (optionalProfileStatus.isPresent()) {
+            return optionalProfileStatus.get();
+        }
+        throw new NoSuchElementException("There aren't such profile status");
+    }
 }

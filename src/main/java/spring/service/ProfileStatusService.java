@@ -9,4 +9,5 @@ public interface ProfileStatusService {
     void addStatus(String status);
     void deleteStatus(String status);
     ProfileStatus findByProfileStatus(String status);
+    ProfileStatus findByProfileStatus(ProfileStatus status);
 }

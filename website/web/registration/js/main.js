@@ -62,7 +62,10 @@
 
         $(thisAlert).removeClass('alert-validate');
     }
-    
-    
+
+    document.querySelector("#submit").onclick = login();
+    // {
+    //     alert("Вы нажали на кнопку");
+    // }
 
 })(jQuery);
