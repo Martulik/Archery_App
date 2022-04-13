@@ -23,7 +23,6 @@ import java.util.Optional;
 
 @Service
 public class StudentServiceImpl implements StudentService {
-    ProfileStatusConstants statusConst;
     @Autowired
     private StudentRepository studentRepository;
     @Autowired
@@ -64,7 +63,7 @@ public class StudentServiceImpl implements StudentService {
             student.setEmail(email); //проверить на корректность (и на существование такого?)
         }
 
-        student.setProfile_status(profileStatusService.findByProfileStatus(statusConst.ON_CHECKING));
+        student.setProfile_status(profileStatusService.findByProfileStatus(ProfileStatusConstants.ON_CHECKING));
         student.setPassword_hash(pwdEncoder.encode(request.getPassword_hash())); //сохраняем сразу хешированный пароль
 
         //обработка даты
@@ -83,6 +82,11 @@ public class StudentServiceImpl implements StudentService {
         student.setBirth_date(date); //Тип дата
 
         return student;
+    }
+
+    @Override
+    public List<Student> getAllStudents() {
+        return studentRepository.findAll();
     }
 
     @Override

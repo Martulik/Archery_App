@@ -37,8 +37,6 @@ public class AuthController {
     @Autowired
     ProfileStatusService profileStatusService;
 
-    ProfileStatusConstants statusConst;
-
     @PostMapping(value = "/signIn", consumes = "application/json")
     public ResponseEntity<String> signIn(@RequestBody AuthRequest request) {
         try{
@@ -78,7 +76,7 @@ public class AuthController {
         Student studentPhone = studentService.findStudentByPhoneNumber(phone_number);
         if (studentPhone != null) {
             ProfileStatus status = profileStatusService.findByProfileStatus(studentPhone.getProfile_status());
-            if (!status.getStatus().equals(statusConst.NOT_REGISTERED)) {
+            if (!status.getStatus().equals(ProfileStatusConstants.NOT_REGISTERED)) {
                 throw new InvalidRegisterException("This student is registered, please just sign in");
             }
         }
