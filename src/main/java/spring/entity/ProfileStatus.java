@@ -24,7 +24,7 @@ public class ProfileStatus {
     @Override
     public String toString() {
         return "ProfileStatus{" +
-                "rank_name='" + status + '\'' +
+                "status='" + status + '\'' +
                 '}';
     }
 }
