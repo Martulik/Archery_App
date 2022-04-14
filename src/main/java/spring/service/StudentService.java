@@ -8,6 +8,7 @@ import java.util.List;
 public interface StudentService {
 
     Student createStudent(RegisterRequest request);
+    List<Student> getAllStudents();
     List<Student> getStudentsByStatus(String status);
     Student findStudentById(long id);
     Student findStudentByEmail(String email);
