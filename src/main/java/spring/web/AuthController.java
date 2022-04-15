@@ -62,9 +62,11 @@ public class AuthController {
                     student.getRoles()
             );
 
+            //return ResponseEntity.ok(token);
             return ResponseEntity.ok(token);
         } catch (AuthenticationException ex) {
             throw new BadCredentialsException("Invalid username or password");
+            //return ResponseEntity.badRequest();
         }
     }
 

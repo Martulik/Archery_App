@@ -42,16 +42,16 @@ public class InitiateUtils implements CommandLineRunner {
 //
 //        rankRepository.deleteAll();
 //
-//                System.out.println("список статусов");
-//                for(ProfileStatus ps : profileStatusService.getStatusList()) {
-//                    System.out.println(ps.toString());
-//                }
+                System.out.println("список статусов");
+                for(ProfileStatus ps : profileStatusService.getStatusList()) {
+                    System.out.println(ps.toString());
+                }
 //
 //        System.out.println("пытаемся зарегистрироваться");
 //        studentRepository.save(studentService.createStudent(new RegisterRequest("Kate", "Borisova", "89171124120", "kate_boriso2002@mail.ru", "04.04.2002", "pwd")));
 //
-//        for (Student st :studentService.getAllStudents()) {
-//            System.out.println(st.toString());
-//        }
+        for (Student st :studentService.getAllStudents()) {
+            System.out.println(st.toString());
+        }
     }
 }
