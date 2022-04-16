@@ -3,123 +3,197 @@
 <head>
     <meta charset="UTF-8">
     <title>Archery app!</title>
-    <link rel="stylesheet" type="text/css" href="./WEB-INF/css/style.css">
+    <link rel="stylesheet" type="text/css" href="WEB-INF/style.css">
+
+    <style>
+        a {
+            text-decoration: none; /* Убираем подчёркивание */
+        }
+
+    </style>
+
 </head>
 <body>
 <!-- header -->
-
-
-<section>
-    <header class="header row j_left" id="header">
-        <!-- <div class="hbox center wider"> -->
-        <!--<a href="/" class="logo" title="Домой"></a> ТУТ БЫЛА КАРТИНКА-->
-        <nav class="grow">
-            <ul class="row">
-                <li class="item ">
-                    <a style=margin-left:50px; href="#abonement" class="button green">Абонемент</a>
-                </li>
-                <li class="item">
-                    <a href="#contact" class="button green">Контакты</a>
-                </li>
-                <li class="item">
-                    <a href="#work_time" class="button green">Время работы</a>
-                </li>
-                <li class="item">
-                    <a href="http://localhost:63342/Archery_App/website/web/login/login.html" class="button green">ВОЙТИ</a>
-                </li>
-            </ul>
-        </nav>
-
-    </header>
-</section>
-
-
-<!-- ************* body ******************-->
 <div>
-    <main>
-        <!-- title -->
-        <section class="max_width banner">
-            <h1>Парадокс Лучника</h1>
-            <p>Какой-нибудь текст</p>
-        </section>
-
-        <section class="about_us">
-            <div>
-                <h2 style="margin-left:20px;">O нас</h2>
-                <p style="margin:10px;">Стрельба из лука - уникальный вид спорта. Снимает стресс и успокаивает нервы,
-                    поддерживает организм в общем тонусе и просто очень увлекательное занятие.
-                </p>
-            </div>
-        </section>
-
-        <!-- news -->
-        <div class="section2">
-            <div class="section_item item1">Item 1</div>
-            <div class="section_item item2">Item 2</div>
-            <div class="section_item item3">Item 3</div>
-            <div class="section_item item4">Item 4</div>
-            <div class="section_item item5">Item 5</div>
+    <section class="header">
+        <button class="buttonreg" onclick="location.href = './registration/reg.html'">
+            <div class="textreg">Регестрация</div>
+        </button>
+        <button class="iconLK" onclick="location.href = './login/login.html'">
+            <img src="./images/03-account.svg">
+        </button>
+        <div class="sam">
+            <img src="./images/17-direct-massage.svg">
         </div>
-    </main>
-    <section id="abonement" class="abonement" style="text-indent: 25px;">
-        <div>
-            <h2 style="margin-left:20px;">Абонемент</h2>
-            <!--            <p style="margin:10px;">Стрельба из лука - уникальный вид спорта. Снимает стресс и успокаивает нервы,-->
-            <!--                поддерживает организм в общем тонусе и просто очень увлекательное занятие.-->
-            <!--            </p>-->
-            <ul class="col">
-                <li>
-                    <p style="margin:7px;">
-                        Подробные мастер-классы для взрослых и детей.
-                    </p>
-                </li>
-                <li>
-                    <p style="margin:7px;">
-                        Обучение стрельбе из всех типов луков: классические, традиционные, блочные. Занятия
-                        индивидуально
-                        и в небольшой группе.
-                    </p>
-                </li>
-                <li>
-                    <p style="margin:7px;">
-                        Самостоятельная стрельба из луков и арбалетов. У нас уютный зал с дистанцией от 6 до 30 метров.
-                        Хранилка, раздевалка и зона отдыха.
-                    </p>
-                </li>
-                <li>
-                    <p style="margin:7px;">
-                        Помощь в настройке мат.части. Мелкий ремонт луков и комплектующих. Консультации по выбору луков
-                        и
-                        где их взять =)
-                    </p>
-                </li>
-                <li>
-                    <p style="margin:7px;">
-                        Подарочные сертификаты.
-                    </p>
-                </li>
-                <li>
-                    <p style="margin:7px;">
-                        Мероприятия для больших компаний и детские праздники.
-                    </p>
-                </li>
-                <li>
-                    <p style="margin:7px;">
-                        Выездные мероприятия. Лучный тир "под ключ".
-                    </p>
-                </li>
-            </ul>
-
+        <div class="name">
+            Парадокс лучника
+        </div>
+        <div class="menu">
+            <!--            <a class="abon">Абонемент</a>-->
+            <a href="#abonement" class="abon">
+                Абонемент
+            </a>
+            <a href="#contacts" class="cont">
+                Контакты
+            </a>
+            <!--            <a class="cont">Контакты</a>-->
+            <a href="#working_time" class="time">
+                Время работы
+            </a>
+            <!--            <a class="time">Время работы</a>-->
         </div>
     </section>
-</div>
 
-<div class="col j_left" >
-    <!-- <a class="contact" href="tel:+78006542400">+7(921)973-33-44</a> -->
-    <h2 style="color: seagreen"class="contact">Контакты</h2>
-    <a id="work_time" class="contact">Время работы 18-22 по будям</a>
-    <a id="contact" class="contact">Телефон +7(812)783-51-70</a>
-    <a class="contact">Адрес ул.Пушкина д. Котушкина</a>
+    <section class="max_width">
+        <h1>Стрельба из лука в Санкт-Петербурге</h1>
+        <p>Стрельба из лука - уникальный вид спорта. Снимает стресс и успокаивает нервы, поддерживает организм в
+            общем тонусе и просто очень увлекательное занятие.</p>
+        <button class="button1">Подарочный сертификат</button>
+        <button class="button2" onclick="location.href = './login/login.html'">Запись на мастер класс</button>
+    </section>
+    <!--        <section class="news">-->
+    <!--            <h class="newsZag">Новости</h>-->
+    <!--            &lt;!&ndash;            <div class="newsc">&ndash;&gt;-->
+    <!--            &lt;!&ndash;                <div class="section_item" style="left: 0px;"></div>&ndash;&gt;-->
+    <!--            &lt;!&ndash;                <div class="section_item " style="left: 271.39px"></div>&ndash;&gt;-->
+    <!--            &lt;!&ndash;            </div>&ndash;&gt;-->
+
+    <!--        </section>-->
+    <section class="news">
+        <h class="newsZag">Новости</h>
+        <section class="card">
+            <div class="card--content">
+            </div>
+            <div class="card--content">
+            </div>
+            <div class="card--content">
+            </div>
+            <div class="card--content">
+            </div>
+            <div class="card--content">
+            </div>
+            <div class="card--content">
+            </div>
+            <div class="card--content">
+            </div>
+            <div class="card--content">
+            </div>
+            <div class="card--content">
+            </div>
+            <div class="card--content">
+            </div>
+        </section>
+    </section>
+    <section class="usl">
+        <h id="abonement" class="uslZag">Услуги и стоимость</h>
+        <div class="item1">
+            <h class="zag1">Обучение</h>
+            <div class="text" style="top: 134.81px; width: 254.79px; height: 44px; left: 43.81px">Опытный тренер
+                научит <br> Вас стрелять из любого лука:
+            </div>
+            <div class="text" style="top: 188.73px; width: 242.66px; height: 44px; left: 55.95px">- Классический лук
+                с<br> прицелом (олимпийский)
+            </div>
+            <div class="text" style="top: 242.66px; width: 242.66px; height: 44px; left: 55.95px">- Блочный лук
+            </div>
+            <div class="text" style="top: 275.01px; width: 242.66px; height: 44px; left: 55.95px">- Традиционный лук
+                (все <br> типы традиционных луков)
+            </div>
+            <div class="stoimost" style="top: 378.82px; width: 224px; height: 36px; left: 59.32px">от 600
+                р/занятие
+            </div>
+        </div>
+        <div class="item2">
+            <h class="zag2">Самостоятельная стрельба</h>
+            <div class="text2" style=" width: 254.79px;height: 132px; left: 45.16px; top: 173.9px;">Если Вы уже
+                умеете стрелять,
+                у<br> вас есть свое оборудование и вы <br> находитесь в поисках уютного <br>
+                зала для самостоятельных<br> тренировок, то у нас есть что<br> Вам предложить!
+            </div>
+            <div class="stoimost" style="top: 378.82px; width: 224px; height: 36px; left: 59.32px">от 350
+                р/занятие
+            </div>
+        </div>
+        <div class="item3">
+            <h class="zag3">Детская секция</h>
+            <div class="text2" style=" width: 254.79px;height: 132px; left: 45.16px; top: 132.11px;">
+                Вы хотите, чтобы Ваш ребёнок<br> занимался Олимпийский видом<br> спорта? Тогда стрельба из лука
+                -<br>
+                это то, что Вам нужно!Она <br> всесторонне развивает, учит <br> концентрировать внимание,<br>
+                помогает сосредоточится. И<br> кроме того - это отличный<br> способ развеяться после уроков!
+            </div>
+            <div class="stoimost" style="top: 378.82px; width: 224px; height: 36px; left: 59.32px">от 600
+                р/занятие
+            </div>
+        </div>
+        <div class="item4">
+            <h class="zag4">Мероприятие для компании</h>
+            <div class="text2" style=" width: 254.79px;height: 132px; left: 45.16px; top: 156.32px;">Стрельба из
+                лука настолько <br>универсальный вид спорта, что<br>
+                по совместительству является <br>идеальным <br>времяприпровождением, чтобы<br>
+                отметить важное событие. <br> Особенно, если Вам надоели <br> стандартные, заезженные<br> посиделки.
+            </div>
+        </div>
+        <div class="item5">
+            <h class="zag5">Выездные мероприятия</h>
+            <div class="text2" style=" width: 254.79px;height: 132px; left: 45.16px; top: 156.32px;">Ваш праздник
+                станет более<br> привлекательным и<br> запоминающимся, если на нем<br>
+                будет возможность <br>посоревноваться в меткости и<br> ловкости.
+            </div>
+            <div class="text2" style=" width: 254.79px;height: 132px; left: 45.16px; top: 314.11px;">Мы предоставим
+                Вам выездной <br>лучный тир "под ключ".
+            </div>
+        </div>
+        <div class="item6">
+            <h class="zag6">Подарочные сертификаты</h>
+            <div class="text2" style=" width: 254.79px;height: 132px; left: 45.16px; top: 156.32px;">Простой,
+                приятный и<br>
+                нестандартный подарок - это <br>новые позитивные впечатления!
+            </div>
+            <div class="text2" style=" width: 254.79px;height: 132px; left: 45.16px; top: 260.18px;">Стрельба из
+                лука - это именно<br>
+                тот вид спорта, который <br>поможет их получить!
+            </div>
+        </div>
+    </section>
+    <section class="contacts_and_time">
+        <section id="contacts" class="contact">
+            <h class="zagcont">Контакты</h>
+            <div class="tel">+7 (950) 030-82-12</div>
+            <div class="text3" style="width: 557.44px; height: 58px; left: 459.01px; top: 2862.77px;">СПб, ст.м.
+                Нарвская, Наб. Обводного канала, 223-225,<br>Литера Л, 5 этаж
+            </div>
+            <div class="text3" style="width: 557.44px; height: 58px; left: 459.01px; top: 2938.93px;">Вход на
+                территорию:
+            </div>
+            <li class="text3" style="width: 557.44px; height: 58px; left:518px; top: 2977.35px;">наб. Обводного канала,
+                223
+            </li>
+            <li class="text3" style="width: 557.44px; height: 58px; left: 518px; top: 3016.45px;">Курляндская, 44</li>
+        </section>
+        <section id="working_time" class="timr">
+            <h class="zagr">Режим работы</h>
+            <div class="shedule">
+                <div>
+                    <a class="day" style="width: 93px;height: 36px;left:2px ; top:3200px;">ПН-ПТ</a>
+                    <a class="text4" style="width: 198px;height: 36px;left:232px ; top:3200px;">с 18:00 до 22:00</a>
+                </div>
+                <div>
+                    <a class="day" style="width: 93px;height: 36px;left:2px ; top:3200px;">Суббота</a>
+                    <a class="text4" style="width: 198px;height: 36px;left:232px ; top:3200px;">с 14:00 до 20:00</a>
+                </div>
+                <div>
+                    <a class="day" style="width: 93px;height: 36px;left:2px ; top:3200px;">Воскресенье</a>
+                    <a class="text4" style="width: 198px;height: 36px;left:232px ; top:3200px;">Выходной</a>
+                </div>
+
+            </div>
+        </section>
+    </section>
+    <section class="niz"></section>
+
+    </main>
 </div>
 </body>
 </html>

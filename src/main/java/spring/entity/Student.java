@@ -22,6 +22,7 @@ import java.util.stream.Collectors;
 @Table(name = "students")
 public class Student implements UserDetails {
     @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "student_id", nullable = false)
     private Long id;
 

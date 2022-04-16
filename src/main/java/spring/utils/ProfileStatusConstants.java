@@ -1,8 +1,8 @@
 package spring.utils;
 
 public class ProfileStatusConstants {
-    public String ON_CHECKING = "onChecking";
-    public String APPROVED = "approved";
-    public String DELETED = "deleted";
-    public String NOT_REGISTERED = "notRegistered";
+    public static String ON_CHECKING = "onChecking";
+    public static String APPROVED = "approved";
+    public static String DELETED = "deleted";
+    public static String NOT_REGISTERED = "notRegistered";
 }
