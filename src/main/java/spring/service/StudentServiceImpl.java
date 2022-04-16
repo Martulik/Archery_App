@@ -80,7 +80,7 @@ public class StudentServiceImpl implements StudentService {
         if (date.after(currentDate)) { //проверка что дата рождения раньше текущего дня
             throw new InvalidEnterValueException("Invalid date");
         }
-        student.setBirth_date(date); //Тип дата
+        //student.setBirth_date(date); //Тип дата
 
         return student;
     }
@@ -135,5 +135,35 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public void updateToken(String token) {
         //доделать
+    }
+
+    @Override
+    public void updateHasPaid(long student_id, Boolean hasPaid)
+    {
+        if (hasPaid)
+        {
+            studentRepository.updateHasPaid(student_id, (byte) 1);
+        }
+        studentRepository.updateHasPaid(student_id, (byte) 0);
+    }
+
+    public Rank getRank(long id)
+    {
+        Optional<Student> optionalStudent = studentRepository.findById(id);
+        if (optionalStudent.isPresent())
+        {
+            return optionalStudent.get().getRank_name();
+        }
+        throw new StudentNotFoundException("Student not found");
+    }
+
+    public Boolean hasPaid(long id)
+    {
+        Optional<Student> optionalStudent = studentRepository.findById(id);
+        if (optionalStudent.isPresent())
+        {
+            return optionalStudent.get().getHasPaid() == (byte) 1;
+        }
+        throw new StudentNotFoundException("Student not found");
     }
 }
