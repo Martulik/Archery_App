@@ -5,22 +5,21 @@
 function login() {
 
     var user = "kate_boriso2002@mail.ru";
-    var pass = "pwd";
+    var pass = "pwd1";
 
     var req = new XMLHttpRequest();
-    console.log("first attempt");
-    req.open("POST", "http://localhost:8080/archery/auth/signIn", true);
-    console.log("2 attempt");
+
+    req.open("POST", "http://localhost:8080/archery/auth/signIn");
     req.setRequestHeader('Content-Type', 'application/json');
     req.withCredentials = true;
     req.send(JSON.stringify({login: user, password: pass}));
-    console.log("3 attempt");
-
-    if (req.status === 200) {
-        location.href = "../../lk.html";
-        //window.location = "../../lk.html";
-    } else {
-        alert("Some fail");
+    req.onload = function () {
+        if (req.status !== 200) {
+            alert("Fail");
+        } else {
+            alert("Success");
+            location.href = "../../lk.html";
+        }
     }
 }
 
@@ -36,14 +35,5 @@ function getStudents() {
     }).catch(err => {
         alert("Fail");
         console.log(err);
-        // Do something for an error here
     });
-
-
-    // if (req.status === 200) {
-    //     location.href = "../../lk.html";
-    //     //window.location = "../../lk.html";
-    // } else {
-    //     alert("Some fail");
-    // }
 }

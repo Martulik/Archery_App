@@ -24,25 +24,6 @@
 	<link rel="stylesheet" type="text/css" href="css/util.css">
 	<link rel="stylesheet" type="text/css" href="css/main.css">
 <!--===============================================================================================-->
-	<script type="text/javascript">
-		function login() {
-			var apiUrl = 'https://localhost:8080/archery/auth/signIn';
-			var user = document.getElementById('email').value();
-			var pass = document.getElementById('pass').value();
-
-			var response = fetch(apiUrl, {
-				method: 'POST',
-				headers: {'Content-Type': 'application/json'},
-				body: JSON.stringify({login: user, password: pass})
-			}).catch(err => {
-				console.log(err);
-				// Do something for an error here
-			});
-			//if (response.ok) {
-				location.href = "../../lk.html";
-			//}
-		}
-	</script>
 </head>
 <body>
 	
@@ -81,41 +62,13 @@
 <!--								Sign in-->
 <!--							</a>-->
 <!--						</button>-->
-<!--						<script src="js/login.js">-->
-<!--						</script>-->
-
-<!--						<script type="text/javascript">-->
-<!--							var apiUrl = 'https://localhost:8080/archery/auth/signIn';-->
-<!--							var user = document.getElementsByName('email').values();-->
-<!--							var pass = document.getElementsByName('pass').values();-->
-
-<!--							response = await fetch(apiUrl, {-->
-<!--								method: 'POST',-->
-<!--								headers: { 'Content-Type': 'application/json' },-->
-<!--								body: JSON.stringify({ login: user, password: pass} )-->
-<!--							}).catch(err => {-->
-<!--								console.log(err);-->
-<!--								// Do something for an error here-->
-<!--							});-->
-<!--							if(response.ok) {-->
-<!--								location.href = "../../lk.html";-->
-<!--							}-->
-<!--						</script>-->
 
 						<input className="login100-form-btn" type="submit" name="submit" value="Sign in"
 							   onClick="login()">
-
-
-
-
 							<!--							<a href="../lk.html" class="txt3">-->
 <!--							<a class="txt3">-->
 <!--								Sign in-->
 <!--							</a>-->
-						</input>
-
-<!--						<input type="submit" name="submit" value="submit" onclick="return login()">-->
-
 					</div>
 
 					<div class="flex-col-c p-t-170 p-b-40">
@@ -149,6 +102,7 @@
 	<script src="vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
 	<script src="js/main.js"></script>
+<!--	<script src="js/login.js"></script>-->
 
 </body>
 </html>
