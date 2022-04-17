@@ -126,8 +126,9 @@
     /*left: 957px;*/
     /*top: 6.5px;*/
     /*margin-left: auto;*/
-    width: 10vw;
-    height: 5vh;
+    /*width: 10vw;*/
+    /*height: 5vh;*/
+    padding: 1vh;
     background: white;
     border-color: white;
     box-sizing: border-box;
@@ -181,8 +182,9 @@
     margin-top: 1vh;
 
     /*margin-left: 80vw;*/
-    width: 4vw;
-    height: 6vh;
+    /*width: 4vw;*/
+    /*height: 6vh;*/
+    padding: 2vh;
     /*width: 53.25px;*/
     /*height: 53.25px;*/
     /*left: 1134px;*/
@@ -387,6 +389,7 @@ img {
     /*height: 463.07px;*/
     /*left: 0px;*/
     /*top: 124.03px;*/
+    /*position: relative;*/
 
     width: 23vw;
     height: 50vh;
@@ -400,17 +403,16 @@ img {
 }
 
 .zag1 {
-    position: absolute;
-    width: 217px;
-    height: 54px;
-    left: 90.69px;
-    top: 53.25px;
-
+    /*position: absolute;*/
+    /*width: 217px;*/
+    /*height: 54px;*/
+    /*left: 90.69px;*/
+    /*top: 53.25px;*/
     font-family: 'Playfair Display';
     font-style: normal;
     font-weight: 600;
-    font-size: 35.0505px;
-    line-height: 54px;
+    /*font-size: 35.0505px;*/
+    /*line-height: 54px;*/
     /* identical to box height */
     color: #000000;
 }
@@ -484,119 +486,6 @@ img {
     color: #000000;
 }
 
-/*.item3 {*/
-/*    position: absolute;*/
-/*    width: 341.74px;*/
-/*    height: 463.07px;*/
-/*    left: 760.33px;*/
-/*    top: 124.03px;*/
-
-/*    background: #FFFFFF;*/
-/*    box-shadow: 0px 2.69619px 2.69619px rgba(0, 0, 0, 0.25);*/
-/*    border-radius: 13.481px;*/
-/*}*/
-
-/*.zag3 {*/
-/*    position: absolute;*/
-/*    width: 305px;*/
-/*    height: 49px;*/
-/*    left: 50.87px;*/
-/*    top: 55.27px;*/
-
-/*    font-family: 'Playfair Display';*/
-/*    font-style: normal;*/
-/*    font-weight: 600;*/
-/*    font-size: 35.0505px;*/
-/*    line-height: 49px;*/
-
-/*    color: #000000;*/
-/*}*/
-
-/*.item4 {*/
-/*    position: absolute;*/
-/*    width: 341.74px;*/
-/*    height: 463.07px;*/
-/*    left: 0px;*/
-/*    top: 623.5px;*/
-
-/*    background: #F8E1BC;*/
-/*    box-shadow: 0px 2.69619px 2.69619px rgba(0, 0, 0, 0.25);*/
-/*    border-radius: 13.481px;*/
-/*}*/
-
-/*.zag4 {*/
-/*    position: absolute;*/
-/*    width: 279.06px;*/
-/*    height: 108px;*/
-/*    left: 60.75px;*/
-/*    top: 34.48px;*/
-
-/*    font-family: 'Playfair Display';*/
-/*    font-style: normal;*/
-/*    font-weight: 600;*/
-/*    font-size: 35.0505px;*/
-/*    line-height: 54px;*/
-
-/*    color: #000000;*/
-
-/*}*/
-
-/*.item5 {*/
-/*    position: absolute;*/
-/*    width: 341.74px;*/
-/*    height: 463.07px;*/
-/*    left: 376.79px;*/
-/*    top: 623.5px;*/
-
-/*    background: #FFFFFF;*/
-/*    box-shadow: 0px 2.69619px 2.69619px rgba(0, 0, 0, 0.25);*/
-/*    border-radius: 13.481px;*/
-
-/*}*/
-
-/*.zag5 {*/
-/*    position: absolute;*/
-/*    width: 314.11px;*/
-/*    height: 108px;*/
-/*    left: 14.83px;*/
-/*    top: 34.38px;*/
-
-/*    font-family: 'Playfair Display';*/
-/*    font-style: normal;*/
-/*    font-weight: 600;*/
-/*    font-size: 35.0505px;*/
-/*    line-height: 54px;*/
-/*    text-align: center;*/
-
-/*    color: #000000;*/
-/*}*/
-
-/*.item6 {*/
-/*    position: absolute;*/
-/*    width: 341.74px;*/
-/*    height: 463.07px;*/
-/*    left: 760.33px;*/
-/*    top: 623.5px;*/
-
-/*    background: rgba(237, 180, 88, 0.4);*/
-/*    box-shadow: 0px 2.69619px 2.69619px rgba(0, 0, 0, 0.25);*/
-/*    border-radius: 13.481px;*/
-/*}*/
-
-/*.zag6 {*/
-/*    position: absolute;*/
-/*    width: 289.17px;*/
-/*    height: 108px;*/
-/*    left: 26.29px;*/
-/*    top: 44.29px;*/
-
-/*    font-family: 'Playfair Display';*/
-/*    font-style: normal;*/
-/*    font-weight: 600;*/
-/*    font-size: 35.0505px;*/
-/*    line-height: 54px;*/
-/*    text-align: center;*/
-/*}*/
 
 .contact {
     width: 923.45px;
@@ -719,7 +608,7 @@ img {
 .card {
     min-width: 100%;
     min-height: 200px;
-    height: 45vh;
+    height: 35vh;
     display: flex;
     overflow-x: auto;
 }
@@ -727,9 +616,10 @@ img {
 
 .card--content {
     background-color: #EBF5DF;
-    min-width: 200px;
+    /*min-width: 200px;*/
+    min-width: 20vw;
     /*width: 25%;*/
-    margin: 2%;
+    margin: 1%;
     filter: drop-shadow(0px 4px 4px rgba(0, 0, 0, 0.25));
     border-radius: 2%;
 }
