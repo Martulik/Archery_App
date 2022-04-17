@@ -9,10 +9,9 @@ function login() {
     req.open("POST", "http://localhost:8080/archery/auth/signIn", false);
     req.setRequestHeader('Content-Type', 'application/json');
     req.withCredentials = true;
-    //req.send(JSON.stringify({login: user, password: pass}));
     req.onload = function () {
         if (req.status !== 200) {
-            alert("Fail");
+            alert("Wrong email or password, please try again");
         } else {
             console.log("Success");
             document.location.href = "../../lk.html";
