@@ -13,5 +13,6 @@ import org.springframework.context.annotation.Configuration;
 public class JwtProperties {
     @Value("$(jwt.secret-key)")
     private String secretKey;
+    //private String secretKey = "dfgyhujikol;rtyuij";
     private long validityInMs = 180000;
 }
