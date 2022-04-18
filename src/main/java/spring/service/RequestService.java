@@ -14,4 +14,6 @@ public interface RequestService {
     void removeRequest(Long requestId);
     void removeByDate(Date date);
     void removeByStudentAndTime(Long studentId, Date date, Time timeStart, Time timeEnd);
+    void removeActiveRequestsByStudent(Long studentId, Date date, Time time);
+    void changeIfHasCome(Long studentId, Date date, Boolean hasCome);
 }

@@ -19,5 +19,5 @@ public interface RankRepository extends JpaRepository<Rank, String> {
     @Transactional
     @Modifying
     @Query("update Rank r set r.color = :color where r.rank_name = :name")
-    void changeColor(@Param("color") String color, @Param("name") String name);
+    void changeColor(String color, String name);
 }

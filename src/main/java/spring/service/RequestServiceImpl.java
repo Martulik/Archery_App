@@ -48,6 +48,16 @@ public class RequestServiceImpl implements RequestService {
         requestRepository.removeByStudentIdAndDateAndTimeStartAndTimeEnd(studentId, date, timeStart, timeEnd);
     }
 
+    public void removeActiveRequestsByStudent(Long studentId, Date date, Time time)
+    {
+        requestRepository.removeActiveRequestsByStudent(studentId, date, time);
+    }
+
+    public void changeIfHasCome(Long studentId, Date date, Boolean hasCome)
+    {
+
+    }
+
     @Autowired
     public void setRequestRepository(RequestRepository requestRepository) {
         this.requestRepository = requestRepository;
