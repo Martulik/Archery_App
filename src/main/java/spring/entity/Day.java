@@ -22,17 +22,7 @@ public class Day {
     @Basic
     @Column(name = "time_end")
     private Time timeEnd;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Day day = (Day) o;
-        return Objects.equals(date, day.date) && Objects.equals(timeStart, day.timeStart) && Objects.equals(timeEnd, day.timeEnd);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(date, timeStart, timeEnd);
-    }
+    @Basic
+    @Column(name = "are_lessons")
+    private Boolean areLessons;
 }

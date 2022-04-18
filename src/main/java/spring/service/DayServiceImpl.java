@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import spring.entity.Day;
 import spring.exception.DayNotFoundException;
 import spring.repositories.DayRepository;
+import spring.repositories.RequestRepository;
 
 import java.sql.Time;
 import java.util.Date;
@@ -15,6 +16,7 @@ import java.util.Optional;
 public class DayServiceImpl implements DayService
 {
     private DayRepository dayRepository;
+    private RequestRepository requestRepository;
 
     public Day findByDate(Date date)
     {
@@ -33,13 +35,45 @@ public class DayServiceImpl implements DayService
 
     public Boolean areLessons(Date date)
     {
-        Optional<Day> optionalDay = dayRepository.findByDateAndTimeStart(date, Time.valueOf("0:00:00"));
-        return optionalDay.isEmpty();
+        return dayRepository.findByDateAndAreLessons(date, true);
+    }
+
+    public void changeAreLessons(Date date)
+    {
+        Day day = findByDate(date);
+        if (day.getAreLessons())
+        {
+            requestRepository.removeByDayDate(date);
+            day.setAreLessons(false);
+        }
+        else
+        {
+            day.setAreLessons(true);
+        }
+    }
+
+    public void changeTimeStart(Date date, Time timeStart)
+    {
+        Day day = findByDate(date);
+        requestRepository.removeByDayDate(date); //добавить случай, когда начало ставят позже конца
+        day.setTimeStart(timeStart);
+    }
+
+    public void changeTimeEnd(Date date, Time timeEnd)
+    {
+        Day day = findByDate(date);
+        requestRepository.removeByDayDate(date);
+        day.setTimeEnd(timeEnd);
     }
 
     @Autowired
     public void setDayRepository(DayRepository dayRepository)
     {
         this.dayRepository = dayRepository;
+    }
+    @Autowired
+    public void setRequestRepository(RequestRepository requestRepository)
+    {
+        this.requestRepository = requestRepository;
     }
 }

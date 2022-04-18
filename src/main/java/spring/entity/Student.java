@@ -57,7 +57,7 @@ public class Student implements UserDetails {
     private String token_date;
 
     @Column(name = "has_paid")
-    private byte hasPaid;
+    private Boolean hasPaid;
 
     @ManyToOne
     @JoinColumn(name="rank_name", referencedColumnName="rank_name")

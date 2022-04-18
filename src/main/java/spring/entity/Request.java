@@ -18,9 +18,16 @@ public class Request {
     @Id
     @Column(name = "request_id")
     private Long requestId;
+
+    @ManyToOne
+    @JoinColumn(name="date", referencedColumnName="date")
+    @JsonManagedReference
+    private Day day;
+
     @Basic
     @Column(name = "time_start")
     private Time timeStart;
+
     @Basic
     @Column(name = "time_end")
     private Time timeEnd;
@@ -31,12 +38,7 @@ public class Request {
     private RequestStatus status;
 
     @ManyToOne
-    @JoinColumn(name="students", referencedColumnName="student_id")
+    @JoinColumn(name="student_id", referencedColumnName="student_id")
     @JsonManagedReference
     private Student student;
-
-    @ManyToOne
-    @JoinColumn(name="days", referencedColumnName="date")
-    @JsonManagedReference
-    private Day day;
 }

@@ -11,4 +11,5 @@ public interface SeasonTicketService
     List<SeasonTicket> areNotForSale();
     Time getTimeDuration(String ticketType);
     SeasonTicket addSeasonTicket(SeasonTicket seasonTicket);
+    void changeIfIsForSale(SeasonTicket seasonTicket);
 }

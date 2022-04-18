@@ -19,5 +19,5 @@ public interface DayRepository extends JpaRepository<Day, String>
     @Query("select d from Day d where d.date >= :start and d.date <= :end")
     List<Day> findFromTo(Date start, Date end);
 
-    Optional<Day> findByDateAndTimeStart(Date date, Time timestart);
+    Boolean findByDateAndAreLessons(Date date, Boolean areLessons);
 }

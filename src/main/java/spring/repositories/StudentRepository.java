@@ -32,8 +32,16 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
 
     @Modifying
     @Query("update Student s set s.hasPaid = ?2 where s.id = ?1")
-    void updateHasPaid(long id, byte hasPaid);
+    void updateHasPaid(long id, Boolean hasPaid);
 
     @Query("update Student s set s.token = ?2 where s.id = ?1")
     void updateToken(Long id, String token);
+
+    @Modifying
+    @Query("update Student s set s.attended_classes = s.attended_classes + 1 where s.id = :id")
+    void increaseAttendedClasses(long id);
+
+    @Modifying
+    @Query("update Student s set s.attended_classes = s.attended_classes - 1 where s.id = :id and s.attended_classes > 0")
+    void decreaseAttendedClasses(long id);
 }
