@@ -14,7 +14,7 @@ function login() {
             alert("Wrong email or password, please try again");
         } else {
             console.log("Success");
-
+            document.location.href = "../lk.html";
         }
     }
     req.send(JSON.stringify({login: user, password: pass}));
