@@ -12,7 +12,7 @@ import spring.service.DayService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/lera/admin/timetable")
+@RequestMapping("/archery/admin/timetable")
 public class TimetableController
 {
     private DayService dayService;

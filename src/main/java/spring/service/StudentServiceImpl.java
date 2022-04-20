@@ -67,7 +67,7 @@ public class StudentServiceImpl implements StudentService {
         }
 
         student.setProfile_status(profileStatusService.findByProfileStatus(ProfileStatusConstants.ON_CHECKING));
-        student.setPassword_hash(pwdEncoder.encode(request.getPassword_hash())); //сохраняем сразу хешированный пароль
+        student.setPassword_hash(pwdEncoder.encode(request.getPassword_hash()));
 
         //обработка даты
         String dateString = request.getBirth_date();

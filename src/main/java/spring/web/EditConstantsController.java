@@ -13,18 +13,18 @@ import spring.service.RankService;
 import java.util.List;
 
 @RestController
-@RequestMapping("/lera/admin/edit")
+@RequestMapping("/archery/admin/edit")
 public class EditConstantsController
 {
     private RankService rankService;
 
-    @GetMapping(value = "/ranks", consumes = "application/json")
+    @GetMapping(value = "/getRanks", consumes = "application/json")
     public ResponseEntity<List<Rank>> findAll()
     {
         return new ResponseEntity<>(rankService.findAll(), HttpStatus.OK);
     }
 
-    @PostMapping(value = "/ranks", consumes = "application/json")
+    @PostMapping(value = "/changeRankColor", consumes = "application/json")
     public ResponseEntity<String> changeColor(String color, String name)
     {
         rankService.changeColor("blue", "juniors");
