@@ -18,7 +18,7 @@ function login() {
             alert("Fail");
         } else {
             alert("Success");
-            location.href = "../../lk.html";
+            location.href = "../../index2.html";
         }
     }
 }
