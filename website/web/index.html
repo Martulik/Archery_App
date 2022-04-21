@@ -4,15 +4,15 @@
     <meta charset="UTF-8">
     <title>Archery app!</title>
     <link rel="stylesheet" type="text/css" href="./WEB-INF/Style.css">
-
+    <link rel="stylesheet" type="text/css" href="./login/vendor/bootstrap/css/Bootstrap.min.css">
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css"
+          integrity="sha512-QKC1UZ/ZHNgFzVKSAhV5v5j73eeL9EEN289eKAEFaAjgAiobVAnVv/AGuPbXsKl1dNoel3kNr6PYnSiTzVVBCw=="
+          crossorigin="anonymous"/>
     <style>
         a {
             text-decoration: none; /* Убираем подчёркивание */
         }
-
-        /*body {*/
-        /*    background: #E5E5E5;*/
-        /*}*/
     </style>
 
 </head>
@@ -64,7 +64,7 @@
 
     <section class="news">
         <h class="newsZag">Новости</h>
-        <section class="card">
+        <section class="cards">
             <div class="card--content">
             </div>
             <div class="card--content">
@@ -88,69 +88,85 @@
         </section>
     </section>
 
-    <section class="usl">
-        <h class="uslZag" id="abonement">Услуги и стоимость</h>
-        <section>
-            <div class="item1">
-                <h class="zag1">Обучение</h>
-                <div class="text">Опытный тренер научит <br> Вас стрелять из любого лука:
-                </div>
-                <div class="text">- Классический лук с<br> прицелом (олимпийский)
-                </div>
-                <div class="text">- Блочный лук
-                </div>
-                <div class="text">- Традиционный лук
-                    (все <br> типы традиционных луков)
-                </div>
-                <div class="stoimost">от 600 р/занятие
-                </div>
-            </div>
-            <div class="item2">
-                <h class="zag1">Самостоятельная стрельба</h>
-                <div class="text">Если Вы уже умеете стрелять, у<br> вас есть свое оборудование и вы <br> находитесь в
-                    поисках уютного <br>зала для самостоятельных<br> тренировок, то у нас есть что<br> Вам предложить!
-                </div>
-                <div class="stoimost">от 350 р/занятие
-                </div>
-            </div>
+    <section>
+        <div class="container">
 
-            <div class="item1">
-                <h class="zag1">Детская секция</h>
-                <div class="text">
-                    Вы хотите, чтобы Ваш ребёнок<br> занимался Олимпийский видом<br> спорта? Тогда стрельба из лука
-                    -<br>
-                    это то, что Вам нужно!Она <br> всесторонне развивает, учит <br> концентрировать внимание,<br>
-                    помогает сосредоточится. И<br> кроме того - это отличный<br> способ развеяться после уроков!
-                </div>
-                <div class="stoimost">от 600 р/занятие
-                </div>
+            <div class="section-heading title-style4 border-bottom padding-25px-bottom sm-padding-15px-bottom">
+                <h3 class="uslZag" id="abonement"><span>Услуги и</span> стоимость</h3>
             </div>
-        </section>
+            <div class="row mt-60">
+                <div class="col-lg-4 col-md-6 margin-30px-bottom xs-margin-20px-bottom">
+                    <div class="service-block4 h-100">
+                        <div class="service-desc">
+                            <h4>Обучение</h4>
+                            <p>Опытный тренер научит Вас стрелять из любого лука:</p>
+                            <p>- Классический лук с прицелом (олимпийский)</p>
+                            <p>- Блочный лук</p>
+                            <p>- Традиционный лук (все типы традиционных луков)</p>
+                            <p class="stoimost">от 600 р/занятие</p>
+                        </div>
 
-        <section>
-            <div class="item2">
-                <h class="zag1">Мероприятие для компании</h>
-                <div class="text">Стрельба из лука настолько <br>универсальный вид спорта, что<br>
-                    по совместительству является <br>идеальным <br>времяприпровождением, чтобы<br>
-                    отметить важное событие. <br> Особенно, если Вам надоели <br> стандартные, заезженные<br> посиделки.
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 margin-30px-bottom xs-margin-20px-bottom">
+                    <div class="service-block4 h-100">
+                        <div class="service-desc">
+                            <h4>Самостоятельная<br>стрельба</h4>
+                            <p>Если Вы уже умеете стрелять, у вас есть свое оборудование и вы находитесь в
+                                поисках уютного зала для самостоятельных тренировок, то у нас есть что Вам
+                                предложить!</p>
+                            <p class="stoimost">от 350 р/занятие</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 margin-30px-bottom xs-margin-20px-bottom">
+                    <div class="service-block4 h-100">
+                        <div class="service-desc">
+                            <h4>Детская секция</h4>
+                            <p>Вы хотите, чтобы Ваш ребёнок занимался Олимпийским видом
+                                спорта?</p>
+                            <p>Тогда стрельба из лука - это то, что Вам нужно! Она всесторонне развивает, учит
+                                концентрировать внимание, помогает сосредоточиться.</p>
+                            <p>И кроме того - это отличный способ развеяться после уроков!</p>
+                            <p class="stoimost">от 600 р/занятие</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 xs-margin-20px-bottom">
+                    <div class="service-block4 h-100">
+                        <div class="service-desc">
+                            <h4>Мероприятие<br>для компании</h4>
+                            <p>Стрельба из лука настолько универсальный вид спорта, что по совместительству является
+                                идеальным времяпрепровождением, чтобы отметить важное событие. </p>
+                            <p>Особенно, если Вам надоели стандартные, заезженные посиделки.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-lg-4 col-md-6 xs-margin-20px-bottom">
+                    <div class="service-block4 h-100">
+                        <div class="service-desc">
+                            <h4>Выездные<br>мероприятия</h4>
+                            <p>Ваш праздник станет более привлекательным и запоминающимся, если на нем будет возможность
+                                посоревноваться в меткости и ловкости.</p>
+                            <p>Мы предоставим Вам выездной лучный тир "под ключ".</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-lg-4 col-md-6 col-xs-12">
+                    <div class="service-block4 h-100">
+                        <div class="service-desc">
+                            <h4>Подарочные<br>сертификаты</h4>
+                            <p>Простой, приятный и нестандартный подарок - это новые позитивные впечатления!</p>
+                            <p>Стрельба из лука - это именно тот вид спорта, который поможет их получить!</p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="item1">
-                <h class="zag1">Выездные мероприятия</h>
-                <div class="text">Ваш праздник станет более<br> привлекательным и<br> запоминающимся, если на нем<br>
-                    будет возможность <br>посоревноваться в меткости и<br> ловкости.
-                </div>
-                <div class="text">Мы предоставим Вам выездной <br>лучный тир "под ключ".
-                </div>
-            </div>
-            <div class="item2">
-                <h class="zag1">Подарочные сертификаты</h>
-                <div class="text">Простой, приятный и<br>нестандартный подарок - это <br>новые позитивные впечатления!
-                </div>
-                <div class="text">Стрельба из лука - это именно<br>тот вид спорта, который <br>поможет их получить!
-                </div>
-            </div>
-        </section>
+        </div>
     </section>
 
     <section class="contacts_and_time">
