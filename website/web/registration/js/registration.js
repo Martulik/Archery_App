@@ -13,7 +13,7 @@ function register() {
     console.log(birth_date);
     var req = new XMLHttpRequest();
 
-    req.open("POST", "http://localhost:8080/archery/auth/register", false);
+    req.open("POST", "http://localhost:8080/archery/auth/register");
     req.setRequestHeader('Content-Type', 'application/json');
     req.withCredentials = true;
     req.onload = function () {
