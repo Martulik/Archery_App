@@ -71,7 +71,7 @@ public class StudentServiceImpl implements StudentService {
 
         //обработка даты
         String dateString = request.getBirth_date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date;
         try {
             date = formatter.parse(dateString);
