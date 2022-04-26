@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalTime;
 import java.util.Date;
 import java.sql.Time;
 import java.util.Objects;
@@ -26,11 +27,11 @@ public class Request {
 
     @Basic
     @Column(name = "time_start")
-    private Time timeStart;
+    private LocalTime timeStart;
 
     @Basic
     @Column(name = "time_end")
-    private Time timeEnd;
+    private LocalTime timeEnd;
 
     @ManyToOne
     @JoinColumn(name="request_status", referencedColumnName="status")

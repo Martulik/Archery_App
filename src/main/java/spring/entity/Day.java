@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalTime;
 import java.util.Date;
 import java.sql.Time;
 import java.util.Objects;
@@ -18,10 +19,10 @@ public class Day {
     private Date date;
     @Basic
     @Column(name = "time_start")
-    private Time timeStart;
+    private LocalTime timeStart;
     @Basic
     @Column(name = "time_end")
-    private Time timeEnd;
+    private LocalTime timeEnd;
     @Basic
     @Column(name = "are_lessons")
     private Boolean areLessons;

@@ -66,7 +66,7 @@ public class StudentServiceImpl implements StudentService {
             student.setEmail(email); //проверить на корректность (и на существование такого?)
         }
 
-        student.setProfile_status(profileStatusService.findByProfileStatus(ProfileStatusConstants.ON_CHECKING));
+        //student.setProfile_status(profileStatusService.findByProfileStatus(ProfileStatusConstants.ON_CHECKING));
         student.setPassword_hash(pwdEncoder.encode(request.getPassword_hash()));
 
         //обработка даты

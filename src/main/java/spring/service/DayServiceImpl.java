@@ -4,10 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.entity.Day;
 import spring.exception.DayNotFoundException;
+import spring.exception.StartAfterEndException;
 import spring.repositories.DayRepository;
 import spring.repositories.RequestRepository;
 
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -52,17 +54,25 @@ public class DayServiceImpl implements DayService
         }
     }
 
-    public void changeTimeStart(Date date, Time timeStart)
+    public void changeTimeStart(Date date, LocalTime timeStart)
     {
         Day day = findByDate(date);
         requestRepository.removeByDayDate(date); //добавить случай, когда начало ставят позже конца
+        if (day.getTimeEnd().isBefore(timeStart))
+        {
+            throw new StartAfterEndException("Start is after end");
+        }
         day.setTimeStart(timeStart);
     }
 
-    public void changeTimeEnd(Date date, Time timeEnd)
+    public void changeTimeEnd(Date date, LocalTime timeEnd)
     {
         Day day = findByDate(date);
         requestRepository.removeByDayDate(date);
+        if (day.getTimeStart().isAfter(timeEnd))
+        {
+            throw new StartAfterEndException("Start is after end");
+        }
         day.setTimeEnd(timeEnd);
     }
 

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import spring.entity.PurchaseHistory;
 import spring.entity.SeasonTicket;
 import spring.entity.Student;
+import spring.exception.SeasonTicketNotFoundException;
 import spring.repositories.PurchaseHistoryRepository;
 
 import java.util.Date;
@@ -31,6 +32,15 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService
     public Boolean checkActiveSeasonTicket(Long studentId, Date date)
     {
         return findPurchaseWithActiveSeasonTicket(studentId, date).isPresent();
+    }
+
+    public SeasonTicket findActiveSeasonTicket(Long studentId, Date date)
+    {
+        Optional<PurchaseHistory> optionalPurchaseHistory = findPurchaseWithActiveSeasonTicket(studentId, date);
+        if (optionalPurchaseHistory.isPresent()) {
+            return optionalPurchaseHistory.get().getSeasonTicket();
+        }
+        throw new SeasonTicketNotFoundException("Season ticket is not found");
     }
 
     public List<SeasonTicket> findByStudentId(Long studentId)
