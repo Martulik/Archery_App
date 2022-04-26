@@ -28,6 +28,11 @@
 <body>
 
 <div class="limiter">
+    <button class="home-form-btn" type="button" onclick="location.href = '../index.html'">
+        <a class="txt3">
+            Home page
+        </a>
+    </button>
     <div class="container-login100">
         <div class="wrap-login100">
             <form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
@@ -36,38 +41,39 @@
 					</span>
 
                 <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter email">
-                    <input class="input100" type="text" name="email" placeholder="Email">
+                    <input class="input100" id="email" type="text" name="email" placeholder="Email">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter password">
-                    <input class="input100" type="password" name="pass" placeholder="Password">
+                    <input class="input100" type="password" id="pass" name="pass" placeholder="Password">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter phone number">
-                    <input class="input100" type="text" name="phone number" placeholder="Phone number">
+                    <input class="input100" type="text" id="phone_number" name="phone number"
+                           placeholder="Phone number">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter first name">
-                    <input class="input100" type="text" name="first name" placeholder="First name">
+                    <input class="input100" id="first_name" type="text" name="first name" placeholder="First name">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter last name">
-                    <input class="input100" type="text" name="last name" placeholder="Last name">
+                    <input class="input100" id="last_name" type="text" name="last name" placeholder="Last name">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter birth date">
-                    <input class="input100" type="date" name="birth date" placeholder="Birth date">
+                    <input class="input100" id="birth_date" type="date" name="birth date" placeholder="Birth date">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="container-login100-form-btn">
-                    <button class="login100-form-btn">
-                        <a href="http://localhost:63342/Archery_App/website/web/registration/reg.html" class="txt3">
+                    <button class="login100-form-btn" type="button" onclick="register()">
+                        <a class="txt3">
                             Sign up now
                         </a>
                     </button>
@@ -104,6 +110,9 @@
 <script src="vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
 <script src="js/main.js"></script>
+
+<script src="js/registration.js"></script>
+
 
 </body>
 </html>

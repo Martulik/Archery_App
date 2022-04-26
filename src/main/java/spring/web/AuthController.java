@@ -83,7 +83,7 @@ public class AuthController {
             }
         }
         if (studentEmail != null) {
-            return new ResponseEntity(HttpStatus.ALREADY_REPORTED); //208
+            return new ResponseEntity(HttpStatus.ALREADY_REPORTED);
         }
         Student student = studentService.createStudent(request);
         studentRepository.save(student);
@@ -92,7 +92,7 @@ public class AuthController {
                 email,
                 student.getRoles()
         );
-
+        studentService.updateToken(student.getId(), token);
         return new ResponseEntity(HttpStatus.OK);
     }
 
