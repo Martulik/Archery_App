@@ -79,11 +79,12 @@ public class AuthController {
         if (studentPhone != null) {
             ProfileStatus status = profileStatusService.findByProfileStatus(studentPhone.getProfile_status());
             if (!status.getStatus().equals(ProfileStatusConstants.NOT_REGISTERED)) {
-                return new ResponseEntity(HttpStatus.ALREADY_REPORTED); //208
+                return new ResponseEntity(HttpStatus.ALREADY_REPORTED);
             }
         }
         if (studentEmail != null) {
-            return new ResponseEntity(HttpStatus.ALREADY_REPORTED); //208
+            //тут надо перенаправить на страницу со входом?
+            return new ResponseEntity(HttpStatus.ALREADY_REPORTED);
         }
         Student student = studentService.createStudent(request);
         studentRepository.save(student);
@@ -92,7 +93,7 @@ public class AuthController {
                 email,
                 student.getRoles()
         );
-
+        studentService.updateToken(student.getId(), token);
         return new ResponseEntity(HttpStatus.OK);
     }
 
