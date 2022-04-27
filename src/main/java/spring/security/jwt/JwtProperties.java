@@ -1,4 +1,3 @@
-
 package spring.security.jwt;
 
 import lombok.Getter;

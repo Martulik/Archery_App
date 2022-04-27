@@ -376,15 +376,16 @@ img {
     /*display: inline-block;*/
     justify-content: center;
     align-items: center;
-    /*text-align: center;*/
+    text-align: center;
     font-family: 'Playfair Display';
     font-style: normal;
     font-weight: 700;
-    padding-top: 3vh;
+    padding-top: 20vh;
     /*font-size: 43.8132px;*/
     /*line-height: 58px;*/
-    font-size: 3em;
+    font-size: 2.5em;
     color: #000000;
+    padding-bottom: 4vh;
 }
 
 .item1 {
@@ -446,7 +447,7 @@ img {
     font-family: 'Playfair Display';
     font-style: normal;
     font-weight: 600;
-    font-size: 2em;
+    font-size: 1.3em;
     line-height: 36px;
     /* identical to box height */
     /*padding-top: 15%;*/
@@ -497,17 +498,16 @@ img {
 /*}*/
 
 
-
 .contact {
 
     height: auto;
-    margin-top: 5vw ;
+    margin-top: 5vw;
     margin-left: 3vw;
 }
 
 .timr {
     height: auto;
-    margin-top: 5vw ;
+    margin-top: 5vw;
     margin-left: 3vw;
 }
 
@@ -555,6 +555,7 @@ img {
     /* identical to box height */
     color: #000000;
 }
+
 .text4 {
 
     font-family: 'Playfair Display';
@@ -608,7 +609,7 @@ img {
     color: #000000;
 }
 
-.card {
+.cards {
     min-width: 100%;
     min-height: 200px;
     height: 35vh;
@@ -633,4 +634,164 @@ img {
 
 .contacts_and_time {
     margin-top: 15vh;
+}
+
+/*-----------------*/
+body {
+    margin-top: 20px;
+}
+
+.service-block4 {
+    position: relative;
+    border: 1px solid #f7f7f7;
+    background: #fff;
+    box-shadow: 0px 10px 30px 0px rgba(50, 50, 50, 0.16);
+    border-radius: 5px;
+    overflow: hidden;
+    padding: 30px;
+}
+
+.service-block4:before {
+    position: absolute;
+    top: -42px;
+    right: -100px;
+    z-index: 0;
+    content: " ";
+    width: 250px;
+    height: 120px;
+    background: #f7f7f7;
+    border-bottom-left-radius: 0;
+    transition: all 0.4s ease-in-out;
+    transform: rotate(45deg);
+    -moz-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+    -webkit-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out
+}
+
+.service-block4:hover:before {
+    background: #EBF5DF
+}
+
+.service-block4 .service-icon {
+    position: absolute;
+    top: 18px;
+    right: 18px;
+    z-index: 1;
+    text-align: center
+}
+
+.service-block4 i {
+    color: #EBF5DF;
+    font-size: 38px;
+    line-height: normal;
+    transition: all 0.4s ease-in-out;
+    -moz-transition: all 0.4s ease-in-out;
+    -ms-transition: all 0.4s ease-in-out;
+    -webkit-transition: all 0.4s ease-in-out;
+    -o-transition: all 0.4s ease-in-out;
+    margin-bottom: 0
+}
+
+.service-block4:hover i {
+    color: #fff
+}
+
+.service-block4 .service-desc {
+    position: relative
+}
+
+.service-block4 .service-desc h4 {
+    margin-bottom: 8px;
+    font-size: 18px;
+    font-weight: 600
+}
+
+.service-block4 .service-desc h5 {
+    margin-bottom: 5px;
+    font-size: 12px;
+    font-weight: 500
+}
+
+.service-block4 .service-desc h5:after {
+    content: '';
+    display: block;
+    width: 80px;
+    height: 2px;
+    background: #EBF5DF;
+    margin-top: 10px;
+    margin-bottom: 15px;
+    -moz-transition-duration: .4s;
+    -ms-transition-duration: .4s;
+    -webkit-transition-duration: .4s;
+    -o-transition-duration: .4s;
+    transition-duration: .4s
+}
+
+.service-block4 p {
+    margin-top: 25px;
+    padding-right: 50px;
+    margin-bottom: 0
+}
+
+@media screen and (max-width: 1199px) {
+    .service-block4:before {
+        right: -110px
+    }
+
+    .service-block4 .service-desc h4 {
+        font-size: 16px;
+        margin-bottom: 5px
+    }
+
+    .service-block4 p {
+        padding-right: 40px;
+        margin-top: 20px
+    }
+
+    .service-block4 i {
+        font-size: 34px
+    }
+}
+
+@media screen and (max-width: 991px) {
+    .service-block4 {
+        padding: 25px
+    }
+
+    .service-block4 .service-desc h4 {
+        font-size: 15px
+    }
+
+    .service-block4 i {
+        font-size: 32px
+    }
+
+    .service-block4 p {
+        margin-top: 15px;
+        padding-right: 30px
+    }
+}
+
+@media screen and (max-width: 767px) {
+    .service-block4 {
+        padding: 20px
+    }
+
+    .service-block4:before {
+        right: -130px
+    }
+
+    .service-block4 i {
+        font-size: 28px
+    }
+
+    .service-block4 .service-icon {
+        top: 13px;
+        right: 12px
+    }
+}
+
+.margin-30px-bottom {
+    margin-bottom: 30px;
 }
