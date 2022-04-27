@@ -34,7 +34,8 @@ public class TimetableController
         try
         {
             Time time = purchaseHistoryService.findActiveSeasonTicket(id, date).getTimeDuration();
-            if (time.)
+            //if (time.)не закончено
+            return new ResponseEntity<>( "fsdfsdf", HttpStatus.OK);
         }
         catch (SeasonTicketNotFoundException e)
         {
