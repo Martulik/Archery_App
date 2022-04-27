@@ -1,33 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <title>Login V8</title>
+    <title>Registration</title>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <!--===============================================================================================-->
     <link rel="icon" type="image/png" href="images/icons/favicon.ico"/>
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/bootstrap/css/Bootstrap.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" type="text/css" href="fonts/font-awesome-4.7.0/css/Font-awesome.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/animate/animate.css">
+    <link rel="stylesheet" type="text/css" href="vendor/animate/Animate.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/hamburgers.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/css-hamburgers/Hamburgers.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/animsition/css/animsition.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/animsition/css/Animsition.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/select2/select2.min.css">
+    <link rel="stylesheet" type="text/css" href="vendor/select2/Select2.min.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/daterangepicker.css">
+    <link rel="stylesheet" type="text/css" href="vendor/daterangepicker/Daterangepicker.css">
     <!--===============================================================================================-->
-    <link rel="stylesheet" type="text/css" href="css/util.css">
-    <link rel="stylesheet" type="text/css" href="css/main.css">
+    <link rel="stylesheet" type="text/css" href="css/Util.css">
+    <link rel="stylesheet" type="text/css" href="css/Main.css">
     <!--===============================================================================================-->
 </head>
 <body>
 
 <div class="limiter">
+    <button class="home-form-btn" type="button" onclick="location.href = '../index.html'">
+        <a class="txt3">
+            Home page
+        </a>
+    </button>
     <div class="container-login100">
         <div class="wrap-login100">
             <form class="login100-form validate-form p-l-55 p-r-55 p-t-178">
@@ -36,38 +41,39 @@
 					</span>
 
                 <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter email">
-                    <input class="input100" type="text" name="email" placeholder="Email">
+                    <input class="input100" id="email" type="text" name="email" placeholder="Email">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter password">
-                    <input class="input100" type="password" name="pass" placeholder="Password">
+                    <input class="input100" type="password" id="pass" name="pass" placeholder="Password">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter phone number">
-                    <input class="input100" type="text" name="phone number" placeholder="Phone number">
+                    <input class="input100" type="text" id="phone_number" name="phone number"
+                           placeholder="Phone number">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter first name">
-                    <input class="input100" type="text" name="first name" placeholder="First name">
+                    <input class="input100" id="first_name" type="text" name="first name" placeholder="First name">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter last name">
-                    <input class="input100" type="text" name="last name" placeholder="Last name">
+                    <input class="input100" id="last_name" type="text" name="last name" placeholder="Last name">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="wrap-input100 validate-input m-b-16" data-validate="Please enter birth date">
-                    <input class="input100" type="date" name="birth date" placeholder="Birth date">
+                    <input class="input100" id="birth_date" type="date" name="birth date" placeholder="Birth date">
                     <span class="focus-input100"></span>
                 </div>
 
                 <div class="container-login100-form-btn">
-                    <button class="login100-form-btn">
-                        <a href="http://localhost:63342/Archery_App/website/web/registration/reg.html" class="txt3">
+                    <button class="login100-form-btn" type="button" onclick="register()">
+                        <a class="txt3">
                             Sign up now
                         </a>
                     </button>
@@ -104,6 +110,9 @@
 <script src="vendor/countdowntime/countdowntime.js"></script>
 <!--===============================================================================================-->
 <script src="js/main.js"></script>
+
+<script src="js/registration.js"></script>
+
 
 </body>
 </html>

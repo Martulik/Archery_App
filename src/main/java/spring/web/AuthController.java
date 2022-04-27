@@ -1,12 +1,13 @@
 package spring.web;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 import spring.entity.ProfileStatus;
 import spring.entity.Student;
 import spring.exception.InvalidRegisterException;
@@ -38,8 +39,8 @@ public class AuthController {
     ProfileStatusService profileStatusService;
 
     @PostMapping(value = "/signIn", consumes = "application/json")
-    public ResponseEntity<String> signIn(@RequestBody AuthRequest request) {
-        try{
+    public ResponseEntity signIn(@RequestBody AuthRequest request) {
+        try {
             String login = request.getLogin();
             String password = request.getPassword();
             boolean passwordMatch = false;
@@ -54,22 +55,23 @@ public class AuthController {
                 }
             }
 
-            if (!passwordMatch)
+            if (!passwordMatch) {
                 throw new BadCredentialsException("Invalid username or password");
+            }
 
             String token = jwtTokenProvider.createToken(
                     login,
                     student.getRoles()
             );
-
-            return ResponseEntity.ok(token);
-        } catch (AuthenticationException ex) {
-            throw new BadCredentialsException("Invalid username or password");
+            studentService.updateToken(student.getId(), token);
+            return new ResponseEntity(HttpStatus.OK);
+        } catch (Exception ex) {
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping(value = "/register", consumes = "application/json")
-    public ResponseEntity<String> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity register(@RequestBody RegisterRequest request) {
         String email = request.getEmail();
         String phone_number = request.getPhone_number();
         Student studentEmail = studentService.findStudentByEmail(email);
@@ -77,12 +79,12 @@ public class AuthController {
         if (studentPhone != null) {
             ProfileStatus status = profileStatusService.findByProfileStatus(studentPhone.getProfile_status());
             if (!status.getStatus().equals(ProfileStatusConstants.NOT_REGISTERED)) {
-                throw new InvalidRegisterException("This student is registered, please just sign in");
+                return new ResponseEntity(HttpStatus.ALREADY_REPORTED);
             }
         }
-        if (studentEmail!= null) {
+        if (studentEmail != null) {
             //тут надо перенаправить на страницу со входом?
-            throw new InvalidRegisterException("This student is registered, please just sign in");
+            return new ResponseEntity(HttpStatus.ALREADY_REPORTED);
         }
         Student student = studentService.createStudent(request);
         studentRepository.save(student);
@@ -91,13 +93,13 @@ public class AuthController {
                 email,
                 student.getRoles()
         );
-
-        return ResponseEntity.ok(token);
+        studentService.updateToken(student.getId(), token);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @PutMapping("/exit")
     public void exit() {
         //Вернуть на главную страницу и очистить токен?
-        studentService.updateToken(null);
+        //studentService.updateToken(null);
     }
 }

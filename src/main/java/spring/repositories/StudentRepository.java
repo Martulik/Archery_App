@@ -29,4 +29,8 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Modifying
     @Query("update Student s set s.rank_name = ?2 where s.id = ?1")
     void updateRank(long id, Rank rank);
+
+    @Modifying
+    @Query("update Student s set s.token = ?2 where s.id = ?1")
+    void updateToken(Long id, String token);
 }

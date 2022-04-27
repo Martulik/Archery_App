@@ -14,6 +14,7 @@ import spring.repositories.StudentRepository;
 import spring.requests.RegisterRequest;
 import spring.utils.ProfileStatusConstants;
 
+import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -68,7 +69,7 @@ public class StudentServiceImpl implements StudentService {
 
         //обработка даты
         String dateString = request.getBirth_date();
-        SimpleDateFormat formatter = new SimpleDateFormat("dd.MM.yyyy");
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date;
         try {
             date = formatter.parse(dateString);
@@ -137,7 +138,11 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void updateToken(String token) {
-        //доделать
+    @Transactional
+    public void updateToken(Long id, String token) {
+        Optional<Student> optionalStudent = studentRepository.findById(id);
+        if (optionalStudent.isPresent()) {
+            studentRepository.updateToken(id, token);
+        }
     }
 }

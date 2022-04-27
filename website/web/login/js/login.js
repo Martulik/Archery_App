@@ -1,21 +1,21 @@
 function login() {
-
     var user = document.getElementById('email').value;
-    alert(user);
+    console.log(user);
     var pass = document.getElementById('pass').value;
-    alert(pass);
+    console.log(pass);
     var req = new XMLHttpRequest();
 
-    req.open("POST", "http://localhost:8080/archery/auth/signIn");
+    req.open("POST", "http://localhost:8080/archery/auth/signIn", false);
     req.setRequestHeader('Content-Type', 'application/json');
     req.withCredentials = true;
-    req.send(JSON.stringify({login: user, password: pass}));
     req.onload = function () {
         if (req.status !== 200) {
-            alert("Fail");
+            alert("Wrong email or password, please try again");
         } else {
-            alert("Success");
-            location.href = "../../lk.html";
+            console.log("Success");
+            document.location.href = "../index2.html";
         }
     }
+    req.send(JSON.stringify({login: user, password: pass}));
 }
+

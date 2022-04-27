@@ -4,15 +4,21 @@
     <meta charset="UTF-8">
     <title>Archery app!</title>
     <link rel="stylesheet" type="text/css" href="./WEB-INF/Style.css">
-    <link rel="stylesheet" type="text/css" href="./login/vendor/bootstrap/css/Bootstrap.min.css">
+
     <link rel="stylesheet"
           href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css"
           integrity="sha512-QKC1UZ/ZHNgFzVKSAhV5v5j73eeL9EEN289eKAEFaAjgAiobVAnVv/AGuPbXsKl1dNoel3kNr6PYnSiTzVVBCw=="
           crossorigin="anonymous"/>
+    <link rel="stylesheet" type="text/css" href="./login/vendor/bootstrap/css/Bootstrap.min.css">
+
     <style>
         a {
             text-decoration: none; /* Убираем подчёркивание */
         }
+
+        /*body {*/
+        /*    background: #E5E5E5;*/
+        /*}*/
     </style>
 
 </head>
@@ -40,11 +46,8 @@
             </a>
             <!--            <a class="time">Время работы</a>-->
         </span>
-        <button class="iconLK" onclick="location.href = './login/login.html'">
-            <img src="./images/03-account.svg" alt="">
-        </button>
-        <button class="buttonreg" onclick="location.href = './registration/reg.html'">
-            <span class="textreg">Регистрация</span>
+        <button class="buttonreg" onclick="location.href = 'lk/lk.html'">
+            <span class="textreg">Личный кабинет</span>
         </button>
 
     </section>
@@ -58,8 +61,8 @@
         </div>
         <!--        <p>Стрельба из лука - уникальный вид спорта. Снимает стресс и успокаивает нервы, поддерживает организм в-->
         <!--            общем тонусе и просто очень увлекательное занятие.</p>-->
-        <button class="button1">Подарочный сертификат</button>
-        <button class="button2" onclick="location.href = './login/login.html'">Запись на мастер класс</button>
+        <button class="button1" onclick="location.href = ''">Подарочный сертификат</button>
+        <button class="button2" onclick="location.href = ''">Запись на мастер класс</button>
     </section>
 
     <section class="news">
@@ -87,6 +90,7 @@
             </div>
         </section>
     </section>
+
 
     <section>
         <div class="container">
@@ -168,7 +172,7 @@
             </div>
         </div>
     </section>
-
+    
     <section class="contacts_and_time">
         <section id="contacts" class="contact">
             <h class="zagcont">Контакты</h>
