@@ -1,6 +1,8 @@
 package spring.security.jwt;
 
 import io.jsonwebtoken.*;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -8,7 +10,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import spring.exception.InvalidJwtAutenticationException;
+import spring.security.SpringSecurityConfig;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
@@ -20,12 +24,12 @@ import java.util.List;
 public class JwtTokenProvider {
     @Autowired
     private JwtProperties jwtProperties;
-
     @Autowired
     @Qualifier(value = "customDetailService")
     private UserDetailsService userDetailsService;
 
     private String secretKey;
+    private static final Logger LOGGER = LoggerFactory.getLogger(JwtTokenProvider.class);
 
     @PostConstruct
     private void init() {
@@ -33,6 +37,9 @@ public class JwtTokenProvider {
     }
 
     public String createToken(String userName, List<String> roles) {
+
+        //String authorities = authentication.getAuthorities().stream().map(authority -> authority.getAuthority()).collect(Collectors.joining(","));
+
         Claims claims = Jwts.claims().setSubject(userName);
         claims.put("roles", roles);
 
@@ -62,7 +69,7 @@ public class JwtTokenProvider {
 
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+        if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
         return null;

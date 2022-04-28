@@ -39,7 +39,7 @@ public class AuthController {
     ProfileStatusService profileStatusService;
 
     @PostMapping(value = "/signIn", consumes = "application/json")
-    public ResponseEntity signIn(@RequestBody AuthRequest request) {
+    public ResponseEntity<HttpStatus> signIn(@RequestBody AuthRequest request) {
         try {
             String login = request.getLogin();
             String password = request.getPassword();
@@ -64,14 +64,14 @@ public class AuthController {
                     student.getRoles()
             );
             studentService.updateToken(student.getId(), token);
-            return new ResponseEntity(HttpStatus.OK);
+            return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception ex) {
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping(value = "/register", consumes = "application/json")
-    public ResponseEntity register(@RequestBody RegisterRequest request) {
+    public ResponseEntity<HttpStatus> register(@RequestBody RegisterRequest request) {
         String email = request.getEmail();
         String phone_number = request.getPhone_number();
         Student studentEmail = studentService.findStudentByEmail(email);
@@ -79,12 +79,12 @@ public class AuthController {
         if (studentPhone != null) {
             ProfileStatus status = profileStatusService.findByProfileStatus(studentPhone.getProfile_status());
             if (!status.getStatus().equals(ProfileStatusConstants.NOT_REGISTERED)) {
-                return new ResponseEntity(HttpStatus.ALREADY_REPORTED);
+                return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
             }
         }
         if (studentEmail != null) {
             //тут надо перенаправить на страницу со входом?
-            return new ResponseEntity(HttpStatus.ALREADY_REPORTED);
+            return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
         }
         Student student = studentService.createStudent(request);
         studentRepository.save(student);
@@ -94,7 +94,7 @@ public class AuthController {
                 student.getRoles()
         );
         studentService.updateToken(student.getId(), token);
-        return new ResponseEntity(HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PutMapping("/exit")
