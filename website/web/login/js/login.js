@@ -1,5 +1,4 @@
 function login() {
-
     var user = document.getElementById('email').value;
     console.log(user);
     var pass = document.getElementById('pass').value;
@@ -19,3 +18,4 @@ function login() {
     }
     req.send(JSON.stringify({login: user, password: pass}));
 }
+
