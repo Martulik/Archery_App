@@ -60,7 +60,6 @@ public class JwtFilter extends GenericFilterBean {
                 response.setStatus(HttpServletResponse.SC_OK);
                 return;
             }
-
 //            if (token != null && jwtTokenProvider.validateToken(token)) {
 //                Authentication auth = jwtTokenProvider.getAuthentication(token);
 //                if (auth != null) {
@@ -70,9 +69,6 @@ public class JwtFilter extends GenericFilterBean {
 //                }
 //            }
             filterChain.doFilter(servletRequest, servletResponse);
-
-            //это все добавила
-            //resetAuthenticationAfterRequest(); //не уверена что надо
         } catch (ExpiredJwtException eje) {
             LOGGER.info("Security exception for user {} - {}", eje.getClaims().getSubject(), eje.getMessage());
             ((HttpServletResponse) servletResponse).setStatus(HttpServletResponse.SC_UNAUTHORIZED);

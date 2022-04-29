@@ -14,6 +14,8 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.LinkedList;
+import java.util.List;
 
 @RestController
 @RequestMapping("/archery/profile")
@@ -23,8 +25,9 @@ public class ProfileController {
     StudentService studentService;
 
     @GetMapping(value = "/getFirstName")
-    public ResponseEntity<String> getFirstName() {
+    public List<String> getFirstName() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        List<String> list = new LinkedList<>();
 
 //        if (auth == null) { // не должно никогда срабатывать, тк отлавливается в JwtFilter
 //            //значит время сеанса истекло
@@ -44,13 +47,12 @@ public class ProfileController {
 
         Student student = (Student) auth.getPrincipal();
         try {
-            String name = student.getFirst_name();
-            if (name == null) {
-                return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
-            }
-            return ResponseEntity.ok(name);
+            //return new ResponseEntity(HttpStatus.BAD_REQUEST); //400
+            list.add(student.getFirst_name());
+            return list;
         } catch (Exception e) {
-            return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE); //406
+            //return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE); //406
+            return null;
         }
     }
 
