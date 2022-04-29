@@ -1,0 +1,41 @@
+#main{
+    width: 400px;
+    height: 200px;
+    background: #eee;
+    border: 1px solid black;
+    text-align: center;
+    margin: 10px 0px;
+}
+#main p{
+    display: none;
+}
+#main:target p{
+    display: block;
+}
+#main:target + #click{
+    display: none;
+}
+#main:target ~ #back{
+    display: block;
+}
+#back{
+    display: none;
+    margin-left: 311px;
+}
+.stoimost {
+    /*position: absolute;*/
+
+    font-family: 'Playfair Display';
+    font-style: normal;
+    font-weight: 600;
+    font-size: 1.3em;
+    line-height: 36px;
+    /* identical to box height */
+    /*padding-top: 15%;*/
+
+    color: #000000;
+}
+
+.showing{
+    margin-top: 3vh;
+}
