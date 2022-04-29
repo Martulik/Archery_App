@@ -263,4 +263,13 @@ public class StudentServiceImpl implements StudentService {
             } //тогда нужно обновить поле "оплатил", так как при сбросе активного абонемента оно становится false, а здесь сброс откатили, снова добавив
         } //доступные занятия в последнем купленном абонементе
     }
+
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        Optional<Student> student = studentRepository.findUserByEmail(username);
+//        if (student.isEmpty()) {
+//            throw new UsernameNotFoundException("Student not found");
+//        }
+//        return student.get();
+//    }
 }

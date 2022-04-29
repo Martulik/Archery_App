@@ -5,6 +5,7 @@ package spring.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -22,6 +23,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
     private JwtTokenProvider jwtTokenProvider;
 
     @Bean
+    @Primary
     @Override
     public AuthenticationManager authenticationManagerBean() throws Exception {
         return super.authenticationManagerBean();
@@ -33,15 +35,17 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .formLogin().disable()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //не нужно создавать сессию тк храним пользователя по токену
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/archery/auth/signIn").permitAll()
+                //.antMatchers(HttpMethod.POST,"/archery/auth/login").permitAll()
                 .antMatchers(HttpMethod.POST,"/archery/auth/register").permitAll()
                 .antMatchers(HttpMethod.GET,"/archery/test/studentList").permitAll()
                 .antMatchers(HttpMethod.PUT,"/archery/auth/exit").hasAnyRole("ADMIN", "USER")
                 .antMatchers(HttpMethod.GET,"/archery/admin/*").hasRole("ADMIN")
-                .antMatchers(HttpMethod.GET,"/archery/profile/*").hasAnyRole("ADMIN", "USER")
+                //.antMatchers(HttpMethod.GET,"/archery/profile/*").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.GET,"/archery/profile/getFirstName").hasAnyRole("ADMIN", "USER")
                 //.antMatchers(HttpMethod.POST,"/archery/profile/*").permitAll()
 
                 .anyRequest().authenticated()

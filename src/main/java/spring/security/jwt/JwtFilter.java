@@ -61,14 +61,14 @@ public class JwtFilter extends GenericFilterBean {
                 return;
             }
 
-            if (token != null && jwtTokenProvider.validateToken(token)) {
-                Authentication auth = jwtTokenProvider.getAuthentication(token);
-                if (auth != null) {
-                    SecurityContextHolder.getContext().setAuthentication(auth);
-                    //!!!
-                    System.out.println(auth.getPrincipal());
-                }
-            }
+//            if (token != null && jwtTokenProvider.validateToken(token)) {
+//                Authentication auth = jwtTokenProvider.getAuthentication(token);
+//                if (auth != null) {
+//                    SecurityContextHolder.getContext().setAuthentication(auth);
+//                    //!!!
+//                    System.out.println(auth.getPrincipal());
+//                }
+//            }
             filterChain.doFilter(servletRequest, servletResponse);
 
             //это все добавила

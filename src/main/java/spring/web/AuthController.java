@@ -5,6 +5,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -29,41 +32,43 @@ public class AuthController {
     JwtTokenProvider jwtTokenProvider;
     @Autowired
     PasswordEncoder pwdEncoder;
-
     @Autowired
     StudentRepository studentRepository;
-
     @Autowired
     StudentService studentService;
     @Autowired
     ProfileStatusService profileStatusService;
+
 
     @PostMapping(value = "/signIn", consumes = "application/json")
     public ResponseEntity<HttpStatus> signIn(@RequestBody AuthRequest request) {
         try {
             String login = request.getLogin();
             String password = request.getPassword();
-            boolean passwordMatch = false;
-
-            Student student = studentService.findStudentByEmail(login);
-            if (student != null) {
-                passwordMatch = pwdEncoder.matches(password, student.getPassword_hash());
-            } else {
-                student = studentService.findStudentByPhoneNumber(login);
-                if (student != null) {
-                    passwordMatch = pwdEncoder.matches(password, student.getPassword_hash());
-                }
-            }
-
-            if (!passwordMatch) {
-                throw new BadCredentialsException("Invalid username or password");
-            }
-
-            String token = jwtTokenProvider.createToken(
-                    login,
-                    student.getRoles()
-            );
-            studentService.updateToken(student.getId(), token);
+//            boolean passwordMatch = false;
+//
+//            Student student = studentService.findStudentByEmail(login);
+//            if (student != null) {
+//                passwordMatch = pwdEncoder.matches(password, student.getPassword_hash());
+//            } else {
+//                student = studentService.findStudentByPhoneNumber(login);
+//                if (student != null) {
+//                    passwordMatch = pwdEncoder.matches(password, student.getPassword_hash());
+//                }
+//            }
+//
+//            if (!passwordMatch) {
+//                throw new BadCredentialsException("Invalid username or password");
+//            }
+//
+//            String token = jwtTokenProvider.createToken(
+//                    login,
+//                    student.getRoles()
+//            );
+//            studentService.updateToken(student.getId(), token);
+            Authentication r = new UsernamePasswordAuthenticationToken(login, password);
+            Authentication result = authenticationManager.authenticate(r);
+            SecurityContextHolder.getContext().setAuthentication(result);
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
