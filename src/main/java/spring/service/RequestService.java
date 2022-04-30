@@ -1,23 +1,35 @@
 package spring.service;
 
-import spring.entity.Day;
 import spring.entity.Request;
+import spring.entity.RequestStatus;
 import spring.entity.Student;
 
 import java.time.LocalTime;
 import java.util.Date;
-import java.sql.Time;
 import java.util.List;
 
 public interface RequestService {
+    Boolean existsByStudentIdAndTime(Long studentId, Date date, LocalTime timeStart, LocalTime timeEnd);
+    Boolean existsByStudentIdAndDate(Long studentId, Date date);
+    Boolean addRequest(Long studentId, Date date, LocalTime timeStart, LocalTime timeEnd);
+    void removeByStudentIdAndTime(Long studentId, Date date, LocalTime timeStart, LocalTime timeEnd);
+    List<Student> findStudentsByDate(Date date);
+    RequestStatus showStatusByStudentIdAndDate(Long studentId, Date date);
+    void changePresenceOfStudent(Long studentId, Date date, Boolean hasCome);
+    List<Student> findStudentsByTime(Date date, LocalTime timeStart, LocalTime timeEnd);
+
+
+
+
+
     List<Request> findByStatus(String status);
     void updateStatus(String status, long requestId);
-    Boolean existsByStudentAndTime(Long studentId, Date date, LocalTime timeStart, LocalTime timeEnd);
-    Boolean existsByStudentAndDate(Long studentId, Date date);
+
+
     void removeRequest(Long requestId);
     void removeByDate(Date date);
-    void removeByStudentAndTime(Long studentId, Date date, LocalTime timeStart, LocalTime timeEnd);
+
     void removeActiveRequestsByStudent(Long studentId, Date date, LocalTime time);
-    void changeIfHasCome(Long studentId, Date date, Boolean hasCome);
-    Boolean addRequest(Student student, Day day, LocalTime timeStart, LocalTime timeEnd);
+
+
 }

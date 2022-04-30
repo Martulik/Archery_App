@@ -13,7 +13,16 @@ import java.util.Optional;
 public interface PurchaseHistoryRepository extends JpaRepository<PurchaseHistory, String>
 {
     @Query("select p from PurchaseHistory p where p.student.id = :studentId and p.availableClasses > 0")
-    Optional<PurchaseHistory> findUnspentSeasonTicket(Long studentId);
+    List<PurchaseHistory> findUnspentSeasonTicket(Long studentId);
+    Boolean existsByStudentId(Long studentId);
+
+
+
+
+
+
+
+
 
     List<PurchaseHistory> findByStudentId(Long studentId);
     Optional<PurchaseHistory> findTopByStudentIdOrderByStartDateDesc(Long studentId);

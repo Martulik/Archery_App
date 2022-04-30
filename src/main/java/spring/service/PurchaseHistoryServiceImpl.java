@@ -17,7 +17,7 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService
 {
     private PurchaseHistoryRepository purchaseHistoryRepository;
 
-    public Boolean daysHavePassed(Date startDate, Date endDate, Integer daysDuration)
+    public Boolean daysHavePassed(Date startDate, Date endDate, int daysDuration)
     {
         int days = (int)(endDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000);
         return days > daysDuration;
@@ -25,13 +25,8 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService
 
     public Optional<PurchaseHistory> findPurchaseWithActiveSeasonTicket(Long studentId, Date date)
     {
-        return purchaseHistoryRepository.findUnspentSeasonTicket(studentId).filter(purchaseHistory ->
-                !daysHavePassed(purchaseHistory.getStartDate(), date, purchaseHistory.getSeasonTicket().getDaysDuration()));
-    }
-
-    public Boolean checkActiveSeasonTicket(Long studentId, Date date)
-    {
-        return findPurchaseWithActiveSeasonTicket(studentId, date).isPresent();
+        return purchaseHistoryRepository.findUnspentSeasonTicket(studentId).stream().filter(purchaseHistory ->
+                !daysHavePassed(purchaseHistory.getStartDate(), date, purchaseHistory.getSeasonTicket().getDaysDuration())).findFirst();
     }
 
     public SeasonTicket findActiveSeasonTicket(Long studentId, Date date)
@@ -43,7 +38,23 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService
         throw new SeasonTicketNotFoundException("Season ticket is not found");
     }
 
-    public List<SeasonTicket> findByStudentId(Long studentId)
+    public Boolean existByStudentId(Long studentId)
+    {
+        return purchaseHistoryRepository.existsByStudentId(studentId);
+    }
+
+
+
+
+
+
+
+    public Boolean checkActiveSeasonTicket(Long studentId, Date date)
+    {
+        return findPurchaseWithActiveSeasonTicket(studentId, date).isPresent();
+    }
+
+    public List<SeasonTicket> findTicketsByStudentId(Long studentId)
     {
         List<PurchaseHistory> listPurchaseHistory = purchaseHistoryRepository.findByStudentId(studentId);
         return listPurchaseHistory.stream().map(PurchaseHistory::getSeasonTicket).toList();

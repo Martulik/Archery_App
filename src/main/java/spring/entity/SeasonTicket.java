@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import javax.persistence.*;
 import java.sql.Time;
+import java.time.LocalTime;
 import java.util.Objects;
 
 @Entity
@@ -23,7 +24,7 @@ public class SeasonTicket {
     private int numberOfClasses;
     @Basic
     @Column(name = "time_duration")
-    private Time timeDuration;
+    private LocalTime timeDuration;
     @Basic
     @Column(name = "days_duration")
     private Integer daysDuration;
