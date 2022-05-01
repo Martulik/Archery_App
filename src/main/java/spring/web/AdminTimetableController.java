@@ -12,6 +12,7 @@ import spring.service.PurchaseHistoryService;
 import spring.service.RequestService;
 import spring.service.StudentService;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.Date;
@@ -31,7 +32,7 @@ public class AdminTimetableController
     private StudentService studentService;
 
     @GetMapping("/day")
-    public ResponseEntity<String> showDay(@RequestBody Date date)
+    public ResponseEntity<String> showDay(@RequestBody LocalDate date)
     {
         Day day = dayService.findByDate(date);
         if (!day.getAreLessons())
@@ -62,7 +63,7 @@ public class AdminTimetableController
     }
 
     @GetMapping("day/{id}")
-    public ResponseEntity<String> showPresenceOfStudent(@RequestBody Date date, @RequestBody Long id)
+    public ResponseEntity<String> showPresenceOfStudent(@RequestBody LocalDate date, @RequestBody Long id)
     {
         String action = "";
         if (!requestService.showStatusByStudentIdAndDate(id, date).getStatus().equals("HAS_COME"))
@@ -77,13 +78,13 @@ public class AdminTimetableController
     }
 
     @PostMapping("/day/{id}")
-    public void changePresenceOfStudent(@RequestBody Date date, @RequestBody Long id, @RequestBody boolean hasCome)
+    public void changePresenceOfStudent(@RequestBody LocalDate date, @RequestBody Long id, @RequestBody boolean hasCome)
     {
         requestService.changePresenceOfStudent(id, date, hasCome);
     }
 
     @GetMapping("/day/lesson")
-    public ResponseEntity<List<Student>> showLesson(@RequestBody Date date, @RequestBody LocalTime timeStart, @RequestBody LocalTime timeEnd)
+    public ResponseEntity<List<Student>> showLesson(@RequestBody LocalDate date, @RequestBody LocalTime timeStart, @RequestBody LocalTime timeEnd)
     {
         return new ResponseEntity<>(requestService.findStudentsByTime(date, timeStart, timeEnd), HttpStatus.OK);
     }

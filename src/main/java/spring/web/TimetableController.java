@@ -12,8 +12,11 @@ import spring.service.PurchaseHistoryService;
 import spring.service.RequestService;
 import spring.service.StudentService;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
@@ -32,17 +35,24 @@ public class TimetableController
     @Autowired
     private StudentService studentService;
 
-   /* @GetMapping("")
+    @GetMapping("")
     public ResponseEntity<List<Day>> showTimetable()
     {
-        //вывести 5 недель; связь с текущей датой
-    } */
+        LocalDate currentDate = LocalDate.now();
+        int currentDayOfWeek = currentDate.getDayOfWeek().getValue();
+        LocalDate startOfTimetable = currentDate.minusDays(currentDayOfWeek + 7);
+        LocalDate endOfTimetable = currentDate.plusDays(7 - currentDayOfWeek + 21);
+        return new ResponseEntity<>(dayService.findFromTo(startOfTimetable, endOfTimetable), HttpStatus.OK);
+    }
 
     @GetMapping("/day")
-    public ResponseEntity<String> showDay(@PathVariable Long id, @RequestBody Date date)
+    public ResponseEntity<String> showDay(@PathVariable Long id, @RequestBody LocalDate date)
     {
         Day day = dayService.findByDate(date);
-        //сделать: проверка, что не раньше текущего дня
+        if (day.getDate().isBefore(LocalDate.now()))
+        {
+            return new ResponseEntity<>("День уже прошел", HttpStatus.OK);
+        }
         if (!day.getAreLessons())
         {
             return new ResponseEntity<>("Занятий нет", HttpStatus.OK);
@@ -77,9 +87,12 @@ public class TimetableController
     }
 
     @GetMapping("/day/lesson")
-    public ResponseEntity<String> showLesson(@PathVariable Long id, @RequestBody Date date, @RequestBody LocalTime timeStart, @RequestBody LocalTime timeEnd)
+    public ResponseEntity<String> showLesson(@PathVariable Long id, @RequestBody LocalDate date, @RequestBody LocalTime timeStart, @RequestBody LocalTime timeEnd)
     {
-        //сделать просмотр, не позже ли текущий момент начала занятия; если позже, ничего сделать нельзя
+        if (timeStart.isBefore(LocalTime.now()) && date.isBefore(LocalDate.now()))
+        {
+            return new ResponseEntity<>("Занятие уже началось или прошло", HttpStatus.OK);
+        }
         if (requestService.existsByStudentIdAndTime(id, date, timeStart, timeEnd))
         {
             return new ResponseEntity<>("Отменить заявку", HttpStatus.OK);
@@ -93,7 +106,7 @@ public class TimetableController
     }
 
     @PostMapping("/day/lesson/signup")
-    public ResponseEntity<String> signUpLesson(@PathVariable Long id, @RequestBody Date date, @RequestBody LocalTime timeStart, @RequestBody LocalTime timeEnd)
+    public ResponseEntity<String> signUpLesson(@PathVariable Long id, @RequestBody LocalDate date, @RequestBody LocalTime timeStart, @RequestBody LocalTime timeEnd)
     {
         if (requestService.addRequest(id, date, timeStart, timeEnd))
         {
@@ -103,7 +116,7 @@ public class TimetableController
     }
 
     @PostMapping("/day/lesson/remove")
-    public ResponseEntity<String> removeRequest(@PathVariable Long id, @RequestBody Date date, @RequestBody LocalTime timeStart, @RequestBody LocalTime timeEnd)
+    public ResponseEntity<String> removeRequest(@PathVariable Long id, @RequestBody LocalDate date, @RequestBody LocalTime timeStart, @RequestBody LocalTime timeEnd)
     {
         requestService.removeByStudentIdAndTime(id, date, timeStart, timeEnd);
         return new ResponseEntity<>("Удаление заявки успешно", HttpStatus.OK);

@@ -8,6 +8,7 @@ import java.util.List;
 
 public interface SeasonTicketService
 {
+    List<SeasonTicket> findTickets();
     List<SeasonTicket> areForSale();
     List<SeasonTicket> areNotForSale();
     LocalTime getTimeDuration(String ticketType);

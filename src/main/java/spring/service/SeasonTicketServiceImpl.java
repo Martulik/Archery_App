@@ -18,6 +18,10 @@ public class SeasonTicketServiceImpl implements SeasonTicketService {
     private SeasonTicketRepository seasonTicketRepository;
     private PurchaseHistoryRepository purchaseHistoryRepository;
 
+    public List<SeasonTicket> findTickets()
+    {
+        return seasonTicketRepository.findAll();
+    }
     public List<SeasonTicket> areForSale()
     {
         return seasonTicketRepository.findByIsForSale(true);

@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import spring.entity.*;
 import spring.repositories.RequestRepository;
 
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 import java.sql.Time;
@@ -17,16 +18,16 @@ import static spring.Application.*;
 @Service
 public class RequestServiceImpl implements RequestService
 {
-    public Boolean existsByStudentIdAndTime(Long studentId, Date date, LocalTime timeStart, LocalTime timeEnd)
+    public Boolean existsByStudentIdAndTime(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
     {
         return requestRepository.existsByStudentIdAndDayDateAndTimeStartAndTimeEnd(studentId, date, timeStart, timeEnd);
     }
 
-    public Boolean existsByStudentIdAndDate(Long studentId, Date date)
+    public Boolean existsByStudentIdAndDate(Long studentId, LocalDate date)
     {
         return requestRepository.existsByStudentIdAndDayDate(studentId, date);
     }
-    public Boolean addRequest(Long studentId, Date date, LocalTime timeStart, LocalTime timeEnd)
+    public Boolean addRequest(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
     {
         Day day = dayService.findByDate(date);
         Student student = studentService.findStudentById(studentId); //нужно ли обработать искл?
@@ -76,23 +77,23 @@ public class RequestServiceImpl implements RequestService
         return true;
     }
 
-    public void removeByStudentIdAndTime(Long studentId, Date date, LocalTime timeStart, LocalTime timeEnd)
+    public void removeByStudentIdAndTime(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
     {
         requestRepository.removeByStudentIdAndDayDateAndTimeStartAndTimeEnd(studentId, date, timeStart, timeEnd);
     }
 
-    public List<Student> findStudentsByDate(Date date)
+    public List<Student> findStudentsByDate(LocalDate date)
     {
         List<Request> requests = requestRepository.findByDayDate(date);
         return requests.stream().map(Request::getStudent).distinct().collect(Collectors.toList());
     }
 
-    public RequestStatus showStatusByStudentIdAndDate(Long studentId, Date date)
+    public RequestStatus showStatusByStudentIdAndDate(Long studentId, LocalDate date)
     {
         return requestRepository.findRequestStatusByStudentIdAndDayDate(studentId, date).get();
     }
 
-    public void changePresenceOfStudent(Long studentId, Date date, Boolean hasCome)
+    public void changePresenceOfStudent(Long studentId, LocalDate date, Boolean hasCome)
     {
         RequestStatus oldStatus = requestRepository.findRequestStatusByStudentIdAndDayDate(studentId, date).get();
         RequestStatus requestStatus = new RequestStatus();
@@ -113,7 +114,7 @@ public class RequestServiceImpl implements RequestService
         requestRepository.updateStatusByDate(studentId, date, requestStatus);
     }
 
-    public List<Student> findStudentsByTime(Date date, LocalTime timeStart, LocalTime timeEnd)
+    public List<Student> findStudentsByTime(LocalDate date, LocalTime timeStart, LocalTime timeEnd)
     {
         return requestRepository.findIfIntersectByTime(date, timeStart, timeEnd).stream().map(Request::getStudent).toList();
     }
@@ -143,14 +144,14 @@ public class RequestServiceImpl implements RequestService
         requestRepository.removeByRequestId(requestId);
     }
 
-    public void removeByDate(Date date)
+    public void removeByDate(LocalDate date)
     {
         requestRepository.removeByDayDate(date);
     }
 
 
 
-    public void removeActiveRequestsByStudent(Long studentId, Date date, LocalTime time)
+    public void removeActiveRequestsByStudent(Long studentId, LocalDate date, LocalTime time)
     {
         requestRepository.removeActiveRequestsByStudentId(studentId, date, time);
     }
