@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.web.servlet.config.annotation.CorsRegistry;
@@ -16,6 +17,7 @@ import spring.security.jwt.JwtSecurityConfigurer;
 import spring.security.jwt.JwtTokenProvider;
 
 @Configuration
+@EnableWebSecurity
 public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
@@ -41,6 +43,12 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/archery/test/studentList").permitAll()
                 .antMatchers(HttpMethod.PUT,"/archery/auth/exit").hasAnyRole("ADMIN", "USER")
                 .antMatchers(HttpMethod.GET,"/archery/admin/*").hasRole("ADMIN")
+<<<<<<< HEAD
+=======
+                //.antMatchers(HttpMethod.GET,"/archery/profile/*").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.GET,"/archery/profile/*").fullyAuthenticated()
+                //.antMatchers(HttpMethod.POST,"/archery/profile/*").permitAll()
+>>>>>>> k.borisova
 
                 .anyRequest().authenticated()
                 .and()

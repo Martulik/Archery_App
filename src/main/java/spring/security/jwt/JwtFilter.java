@@ -57,6 +57,20 @@ public class JwtFilter extends GenericFilterBean {
             if (auth != null) {
                 SecurityContextHolder.getContext().setAuthentication(auth);
             }
+<<<<<<< HEAD
+=======
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                Authentication auth = jwtTokenProvider.getAuthentication(token);
+                if (auth != null) {
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
+            }
+            filterChain.doFilter(servletRequest, servletResponse);
+        } catch (ExpiredJwtException eje) {
+            LOGGER.info("Security exception for user {} - {}", eje.getClaims().getSubject(), eje.getMessage());
+            ((HttpServletResponse) servletResponse).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+            LOGGER.debug("Exception " + eje.getMessage(), eje);
+>>>>>>> k.borisova
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }

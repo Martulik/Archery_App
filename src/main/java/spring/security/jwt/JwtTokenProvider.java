@@ -69,8 +69,42 @@ public class JwtTokenProvider {
     }
 
     public Authentication getAuthentication(String token) {
+<<<<<<< HEAD
         UserDetails userDetails = userDetailsService.loadUserByUsername(getUserName(token));
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
+=======
+        UserDetails userDetails = userDetailsService.loadUserByUsername(getLogin(token));
+        return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
+    }
+
+//    @Override
+//    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+//        String login = authentication.getName();
+//        String password = (String) authentication.getCredentials();
+//        boolean passwordMatch = false;
+//
+//        Student student = studentService.findStudentByEmail(login);
+//        if (student != null) {
+//            passwordMatch = pwdEncoder.matches(password, student.getPassword_hash());
+//        } else {
+//            student = studentService.findStudentByPhoneNumber(login);
+//            if (student != null) {
+//                passwordMatch = pwdEncoder.matches(password, student.getPassword_hash());
+//            }
+//        }
+//
+//        if (!passwordMatch) {
+//            throw new BadCredentialsException("Invalid username or password");
+//        }
+//
+//        String token = this.createToken(
+//                login,
+//                student.getRoles()
+//        );
+//        studentService.updateToken(student.getId(), token);
+//        return this.getAuthentication(token);
+//    }
+>>>>>>> k.borisova
 }
 
