@@ -39,10 +39,6 @@ public class JwtFilter extends GenericFilterBean {
         }
     }
 
-    private void resetAuthenticationAfterRequest() {
-        SecurityContextHolder.getContext().setAuthentication(null);
-    }
-
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
@@ -60,14 +56,12 @@ public class JwtFilter extends GenericFilterBean {
                 response.setStatus(HttpServletResponse.SC_OK);
                 return;
             }
-//            if (token != null && jwtTokenProvider.validateToken(token)) {
-//                Authentication auth = jwtTokenProvider.getAuthentication(token);
-//                if (auth != null) {
-//                    SecurityContextHolder.getContext().setAuthentication(auth);
-//                    //!!!
-//                    System.out.println(auth.getPrincipal());
-//                }
-//            }
+            if (token != null && jwtTokenProvider.validateToken(token)) {
+                Authentication auth = jwtTokenProvider.getAuthentication(token);
+                if (auth != null) {
+                    SecurityContextHolder.getContext().setAuthentication(auth);
+                }
+            }
             filterChain.doFilter(servletRequest, servletResponse);
         } catch (ExpiredJwtException eje) {
             LOGGER.info("Security exception for user {} - {}", eje.getClaims().getSubject(), eje.getMessage());

@@ -30,20 +30,14 @@ import java.util.Date;
 import java.util.List;
 
 @Component
-public class JwtTokenProvider implements AuthenticationManager {
+public class JwtTokenProvider {
     @Autowired
     private JwtProperties jwtProperties;
     @Autowired
     @Qualifier(value = "customDetailService")
     private UserDetailsService userDetailsService;
 
-    @Autowired
-    private StudentService studentService;
-
     private String secretKey;
-
-    @Autowired
-    private PasswordEncoder pwdEncoder;
 
     @PostConstruct
     private void init() {
@@ -91,32 +85,32 @@ public class JwtTokenProvider implements AuthenticationManager {
         return new UsernamePasswordAuthenticationToken(userDetails.getUsername(), userDetails.getPassword(), userDetails.getAuthorities());
     }
 
-    @Override
-    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        String login = authentication.getName();
-        String password = (String) authentication.getCredentials();
-        boolean passwordMatch = false;
-
-        Student student = studentService.findStudentByEmail(login);
-        if (student != null) {
-            passwordMatch = pwdEncoder.matches(password, student.getPassword_hash());
-        } else {
-            student = studentService.findStudentByPhoneNumber(login);
-            if (student != null) {
-                passwordMatch = pwdEncoder.matches(password, student.getPassword_hash());
-            }
-        }
-
-        if (!passwordMatch) {
-            throw new BadCredentialsException("Invalid username or password");
-        }
-
-        String token = this.createToken(
-                login,
-                student.getRoles()
-        );
-        studentService.updateToken(student.getId(), token);
-        return this.getAuthentication(token);
-    }
+//    @Override
+//    public Authentication authenticate(Authentication authentication) throws AuthenticationException {
+//        String login = authentication.getName();
+//        String password = (String) authentication.getCredentials();
+//        boolean passwordMatch = false;
+//
+//        Student student = studentService.findStudentByEmail(login);
+//        if (student != null) {
+//            passwordMatch = pwdEncoder.matches(password, student.getPassword_hash());
+//        } else {
+//            student = studentService.findStudentByPhoneNumber(login);
+//            if (student != null) {
+//                passwordMatch = pwdEncoder.matches(password, student.getPassword_hash());
+//            }
+//        }
+//
+//        if (!passwordMatch) {
+//            throw new BadCredentialsException("Invalid username or password");
+//        }
+//
+//        String token = this.createToken(
+//                login,
+//                student.getRoles()
+//        );
+//        studentService.updateToken(student.getId(), token);
+//        return this.getAuthentication(token);
+//    }
 }
 

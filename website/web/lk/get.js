@@ -14,8 +14,8 @@ function getData(url, field_id) {
 }
 
 getData("http://localhost:8080/archery/profile/getFirstName",'inputFirstname');
-getData("http://localhost:8080/archery/test/studentList",'inputLastName');
+getData("http://localhost:8080/archery/profile/getLastName",'inputLastName');
 getData("http://localhost:8080/archery/test/studentList",'inputEmailAddress');
-getData("http://localhost:8080/archery/test/studentList",'inputPhone');
+getData("http://localhost:8080/archery/profile/getPhoneNumber",'inputPhone');
 getData("http://localhost:8080/archery/test/studentList",'inputBirthday');
 
