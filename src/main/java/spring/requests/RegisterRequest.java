@@ -14,6 +14,9 @@ public class RegisterRequest implements Serializable {
     private String last_name;
     private String phone_number;
     private String email;
-    private String birth_date;
-    private String password_hash;
+    private String birth_date; //в сервисе корректно обработать
+    //private boolean benefits;
+    private String password_hash; //захешировать в сервисе?
+    //rank и profile_status обрабатывается в сервисе
+
 }

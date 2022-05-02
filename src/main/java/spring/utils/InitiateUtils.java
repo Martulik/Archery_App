@@ -48,7 +48,7 @@ public class InitiateUtils implements CommandLineRunner {
         }
 //
 //        System.out.println("пытаемся зарегистрироваться");
-        //studentRepository.deleteById(11L);
+//        studentRepository.deleteAll();
 //        studentRepository.save(studentService.createStudent(new RegisterRequest("Kate", "Borisova", "89171124120", "kate_boriso2002@mail.ru", "04.04.2002", "pwd")));
 //
         for (Student st :studentService.getAllStudents()) {

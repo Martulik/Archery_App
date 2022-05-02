@@ -5,9 +5,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.BadCredentialsException;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -32,51 +29,49 @@ public class AuthController {
     JwtTokenProvider jwtTokenProvider;
     @Autowired
     PasswordEncoder pwdEncoder;
+
     @Autowired
     StudentRepository studentRepository;
+
     @Autowired
     StudentService studentService;
     @Autowired
     ProfileStatusService profileStatusService;
 
-
     @PostMapping(value = "/signIn", consumes = "application/json")
-    public ResponseEntity<HttpStatus> signIn(@RequestBody AuthRequest request) {
+    public ResponseEntity signIn(@RequestBody AuthRequest request) {
         try {
             String login = request.getLogin();
             String password = request.getPassword();
-//            boolean passwordMatch = false;
-//
-//            Student student = studentService.findStudentByEmail(login);
-//            if (student != null) {
-//                passwordMatch = pwdEncoder.matches(password, student.getPassword_hash());
-//            } else {
-//                student = studentService.findStudentByPhoneNumber(login);
-//                if (student != null) {
-//                    passwordMatch = pwdEncoder.matches(password, student.getPassword_hash());
-//                }
-//            }
-//
-//            if (!passwordMatch) {
-//                throw new BadCredentialsException("Invalid username or password");
-//            }
-//
-//            String token = jwtTokenProvider.createToken(
-//                    login,
-//                    student.getRoles()
-//            );
-//            studentService.updateToken(student.getId(), token);
-            Authentication r = new UsernamePasswordAuthenticationToken(login, password);
-            Authentication result = authenticationManager.authenticate(r);
-            SecurityContextHolder.getContext().setAuthentication(result);
-            return new ResponseEntity<>(HttpStatus.OK);
+            boolean passwordMatch = false;
+
+            Student student = studentService.findStudentByEmail(login);
+            if (student != null) {
+                passwordMatch = pwdEncoder.matches(password, student.getPassword_hash());
+            } else {
+                student = studentService.findStudentByPhoneNumber(login);
+                if (student != null) {
+                    passwordMatch = pwdEncoder.matches(password, student.getPassword_hash());
+                }
+            }
+
+            if (!passwordMatch) {
+                throw new BadCredentialsException("Invalid username or password");
+            }
+
+            String token = jwtTokenProvider.createToken(
+                    login,
+                    student.getRoles()
+            );
+            studentService.updateToken(student.getId(), token);
+            return new ResponseEntity(HttpStatus.OK);
         } catch (Exception ex) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
     }
 
     @PostMapping(value = "/register", consumes = "application/json")
-    public ResponseEntity<HttpStatus> register(@RequestBody RegisterRequest request) {
+    public ResponseEntity register(@RequestBody RegisterRequest request) {
         String email = request.getEmail();
         String phone_number = request.getPhone_number();
         Student studentEmail = studentService.findStudentByEmail(email);
@@ -84,12 +79,12 @@ public class AuthController {
         if (studentPhone != null) {
             ProfileStatus status = profileStatusService.findByProfileStatus(studentPhone.getProfile_status());
             if (!status.getStatus().equals(ProfileStatusConstants.NOT_REGISTERED)) {
-                return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+                return new ResponseEntity(HttpStatus.ALREADY_REPORTED);
             }
         }
         if (studentEmail != null) {
             //тут надо перенаправить на страницу со входом?
-            return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+            return new ResponseEntity(HttpStatus.ALREADY_REPORTED);
         }
         Student student = studentService.createStudent(request);
         studentRepository.save(student);
@@ -99,7 +94,7 @@ public class AuthController {
                 student.getRoles()
         );
         studentService.updateToken(student.getId(), token);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity(HttpStatus.OK);
     }
 
     @PutMapping("/exit")
