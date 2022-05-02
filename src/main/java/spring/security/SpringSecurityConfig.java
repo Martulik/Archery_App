@@ -5,6 +5,7 @@ package spring.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -35,7 +36,7 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .csrf().disable()
                 .formLogin().disable()
                 .sessionManagement()
-                .sessionCreationPolicy(SessionCreationPolicy.STATELESS) //не нужно создавать сессию тк храним пользователя по токену
+                .sessionCreationPolicy(SessionCreationPolicy.IF_REQUIRED)
                 .and()
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST,"/archery/auth/signIn").permitAll()
@@ -43,12 +44,9 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.GET,"/archery/test/studentList").permitAll()
                 .antMatchers(HttpMethod.PUT,"/archery/auth/exit").hasAnyRole("ADMIN", "USER")
                 .antMatchers(HttpMethod.GET,"/archery/admin/*").hasRole("ADMIN")
-<<<<<<< HEAD
-=======
                 //.antMatchers(HttpMethod.GET,"/archery/profile/*").hasAnyRole("ADMIN", "USER")
                 .antMatchers(HttpMethod.GET,"/archery/profile/*").fullyAuthenticated()
                 //.antMatchers(HttpMethod.POST,"/archery/profile/*").permitAll()
->>>>>>> k.borisova
 
                 .anyRequest().authenticated()
                 .and()

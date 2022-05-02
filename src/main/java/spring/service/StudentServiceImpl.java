@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import spring.entity.ProfileStatus;
 import spring.entity.Rank;
 import spring.entity.Student;
+import spring.exception.AlreadyExistException;
 import spring.exception.InvalidEnterValueException;
 import spring.exception.StudentNotFoundException;
 import spring.repositories.ProfileStatusRepository;
@@ -15,12 +16,10 @@ import spring.requests.RegisterRequest;
 import spring.utils.ProfileStatusConstants;
 
 import org.springframework.transaction.annotation.Transactional;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.List;
-import java.util.NoSuchElementException;
-import java.util.Optional;
+import java.util.*;
 
 @Service
 public class StudentServiceImpl implements StudentService {
@@ -31,11 +30,11 @@ public class StudentServiceImpl implements StudentService {
     @Autowired
     private RankRepository rankRepository;
     @Autowired
-    private ProfileStatusService profileStatusService;
-    @Autowired
     private PasswordEncoder pwdEncoder;
     @Autowired
     private PurchaseHistoryService purchaseHistoryService;
+    @Autowired
+    ProfileStatusService profileStatusService;
 
     @Override
     public Student createStudent(RegisterRequest request) {
@@ -66,7 +65,9 @@ public class StudentServiceImpl implements StudentService {
             student.setEmail(email); //проверить на корректность (и на существование такого?)
         }
 
-        //student.setProfile_status(profileStatusService.findByProfileStatus(ProfileStatusConstants.ON_CHECKING));
+        //Не проверяла, но добавить!!!!!!!!!!!
+        student.setProfile_status(profileStatusService.findByProfileStatus(ProfileStatusConstants.ON_CHECKING));
+        student.setRoles(Collections.singletonList("ROLE_USER"));
         student.setPassword_hash(pwdEncoder.encode(request.getPassword_hash()));
 
         //обработка даты
@@ -120,21 +121,90 @@ public class StudentServiceImpl implements StudentService {
 
 
     @Override
+    @Transactional
+    public void updateFirstName(long student_id, String firstName) {
+        Optional<Student> optionalStudent = studentRepository.findById(student_id);
+        if (optionalStudent.isPresent()) {
+            studentRepository.updateFirstName(student_id, firstName);
+            return;
+        }
+        throw new NoSuchElementException("Invalid student_id");
+    }
+
+
+    @Override
+    @Transactional
+    public void updateLastName(long student_id, String lastName) {
+        Optional<Student> optionalStudent = studentRepository.findById(student_id);
+        if (optionalStudent.isPresent()) {
+            studentRepository.updateLastName(student_id, lastName);
+            return;
+        }
+        throw new NoSuchElementException("Invalid student_id");
+    }
+
+    @Override
+    @Transactional
+    public void updatePhoneNumber(long student_id, String phoneNumber) {
+        Optional<Student> optionalStudent = studentRepository.findById(student_id);
+        Optional<Student> optionalNumber = studentRepository.findUserByPhone_number(phoneNumber);
+        if (optionalNumber.isPresent()) {
+            throw new AlreadyExistException("Account with this email already registered");
+        }
+        if (optionalStudent.isPresent()) {
+            studentRepository.updatePhoneNumber(student_id, phoneNumber);
+            return;
+        }
+        throw new NoSuchElementException("Invalid student_id");
+    }
+
+    @Override
+    @Transactional
+    public void updateEmail(long student_id, String email) {
+        Optional<Student> optionalStudent = studentRepository.findById(student_id);
+        Optional<Student> optionalEmail = studentRepository.findUserByEmail(email);
+        if (optionalEmail.isPresent()) {
+            throw new AlreadyExistException("Account with this email already registered");
+        }
+        if (optionalStudent.isPresent()) {
+            studentRepository.updateEmail(student_id, email);
+            return;
+        }
+        throw new NoSuchElementException("Invalid student_id");
+    }
+
+    @Override
+    @Transactional
+    public void updateBirthDate(long student_id, Date birthDate) {
+        Optional<Student> optionalStudent = studentRepository.findById(student_id);
+        if (optionalStudent.isPresent()) {
+            studentRepository.updateBirthDate(student_id, birthDate);
+            return;
+        }
+        throw new NoSuchElementException("Invalid student_id");
+    }
+
+
+    @Override
+    @Transactional
     public void updateProfileStatus(long student_id, String status) {
         Optional<ProfileStatus> optionalProfileStatus = profileStatusRepository.findByStatus(status);
         Optional<Student> optionalStudent = studentRepository.findById(student_id);
         if (optionalProfileStatus.isPresent() && optionalStudent.isPresent()) {
             studentRepository.updateProfileStatus(student_id, optionalProfileStatus.get());
+            return;
         }
         throw new NoSuchElementException("Invalid student_id or profile_status");
     }
 
     @Override
+    @Transactional
     public void updateRank(long student_id, String rank) {
         Optional<Rank> optionalRank = rankRepository.findByRank_name(rank);
         Optional<Student> optionalStudent = studentRepository.findById(student_id);
         if (optionalRank.isPresent() && optionalStudent.isPresent()) {
             studentRepository.updateRank(student_id, optionalRank.get());
+            return;
         }
         throw new NoSuchElementException("Invalid student_id or rank_name");
     }
@@ -149,45 +219,41 @@ public class StudentServiceImpl implements StudentService {
     }
 
     @Override
-    public void updateHasPaid(long student_id, Boolean hasPaid)
-    {
-        if (hasPaid)
-        {
+    @Transactional
+    public void updateHasPaid(long student_id, Boolean hasPaid) {
+        if (hasPaid) {
             studentRepository.updateHasPaid(student_id, true);
         }
         studentRepository.updateHasPaid(student_id, false);
     }
 
-    public Rank getRank(long id)
-    {
+    @Override
+    public Rank getRank(long id) {
         Optional<Student> optionalStudent = studentRepository.findById(id);
-        if (optionalStudent.isPresent())
-        {
+        if (optionalStudent.isPresent()) {
             return optionalStudent.get().getRank_name();
         }
         throw new StudentNotFoundException("Student not found");
     }
 
-    public Boolean hasPaid(long id)
-    {
+    @Override
+    public Boolean hasPaid(long id) {
         Optional<Student> optionalStudent = studentRepository.findById(id);
-        if (optionalStudent.isPresent())
-        {
+        if (optionalStudent.isPresent()) {
             return optionalStudent.get().getHasPaid();
         }
         throw new StudentNotFoundException("Student not found");
     }
 
-    public void changeAttendedClasses(Long id, Boolean toIncrease)
-    {
-        if (toIncrease)
-        {
+    @Override
+    @Transactional
+    public void changeAttendedClasses(Long id, Boolean toIncrease) {
+        if (toIncrease) {
             studentRepository.increaseAttendedClasses(id);
             Date date = new Date(); //пока так, потом разбираться с датами и взять актуальную
             purchaseHistoryService.changeAvailableClassesFromActivePurchase(id, date, true); //в активном абонементе уменьшить
         } //число доступных занятий
-        else
-        {
+        else {
             studentRepository.decreaseAttendedClasses(id); //если админ ошиблась и хочет обратно уменьшить число посещенных занятий
             Date date = new Date(); //тогда в активном абонементе надо обратно увеличить число доступных занятий
             if (!purchaseHistoryService.changeAvailableClassesFromActivePurchase(id, date, false)) //если активного абонемента не оказалось
@@ -197,4 +263,13 @@ public class StudentServiceImpl implements StudentService {
             } //тогда нужно обновить поле "оплатил", так как при сбросе активного абонемента оно становится false, а здесь сброс откатили, снова добавив
         } //доступные занятия в последнем купленном абонементе
     }
+
+//    @Override
+//    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+//        Optional<Student> student = studentRepository.findUserByEmail(username);
+//        if (student.isEmpty()) {
+//            throw new UsernameNotFoundException("Student not found");
+//        }
+//        return student.get();
+//    }
 }
