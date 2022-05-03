@@ -65,12 +65,10 @@ public class StudentServiceImpl implements StudentService {
             student.setEmail(email); //проверить на корректность (и на существование такого?)
         }
 
-        //Не проверяла, но добавить!!!!!!!!!!!
         student.setProfile_status(profileStatusService.findByProfileStatus(ProfileStatusConstants.ON_CHECKING));
         student.setRoles(Collections.singletonList("ROLE_USER"));
         student.setPassword_hash(pwdEncoder.encode(request.getPassword_hash()));
 
-        //обработка даты
         String dateString = request.getBirth_date();
         SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
         Date date;
@@ -117,6 +115,15 @@ public class StudentServiceImpl implements StudentService {
     public Student findStudentByPhoneNumber(String phone) {
         Optional<Student> student = studentRepository.findUserByPhone_number(phone);
         return student.orElse(null);
+    }
+
+    @Override
+    public Student findStudentByToken(String token) {
+        Optional<Student> optionalStudent = studentRepository.findStudentByToken(token);
+        if (optionalStudent.isPresent()) {
+            return optionalStudent.get();
+        }
+        throw new StudentNotFoundException("Student not found");
     }
 
 

@@ -40,7 +40,7 @@ public class SecurityService {
         if (!passwordMatch) {
             throw new BadCredentialsException("Invalid username or password");
         }
-        final Authentication usernamePasswordAuthenticationToken = authenticationManager
+        Authentication usernamePasswordAuthenticationToken = authenticationManager
                 .authenticate(new UsernamePasswordAuthenticationToken(login, password));
         SecurityContextHolder.getContext().setAuthentication(usernamePasswordAuthenticationToken);
     }

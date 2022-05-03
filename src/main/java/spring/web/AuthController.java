@@ -11,6 +11,7 @@ import spring.entity.Student;
 import spring.repositories.StudentRepository;
 import spring.requests.AuthRequest;
 import spring.requests.RegisterRequest;
+import spring.requests.TokenData;
 import spring.security.jwt.JwtTokenProvider;
 import spring.service.SecurityService;
 import spring.service.ProfileStatusService;
@@ -33,8 +34,8 @@ public class AuthController {
     SecurityService securityService;
 
 
-    @PostMapping(value = "/signIn", consumes = "application/json")
-    public ResponseEntity<HttpStatus> signIn(@RequestBody AuthRequest request) {
+    @PostMapping(value = "/signIn", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<TokenData> signIn(@RequestBody AuthRequest request) {
         try {
             String login = request.getLogin();
             String password = request.getPassword();
@@ -60,10 +61,15 @@ public class AuthController {
 //            );
 //            studentService.updateToken(student.getId(), token);
             securityService.autologin(login, password);
+            Student student = studentService.findStudentByEmail(login);
+            String token = jwtTokenProvider.createToken(student.getEmail(), student.getRoles());
+            studentService.updateToken(student.getId(), token);
 //            Authentication r = new UsernamePasswordAuthenticationToken(login, password);
 //            Authentication result = authenticationManager.authenticate(r);
 //            SecurityContextHolder.getContext().setAuthentication(result);
-            return new ResponseEntity<>(HttpStatus.OK);
+            TokenData data = new TokenData();
+            data.setAccess_token(token);
+            return ResponseEntity.ok(data);
         } catch (Exception ex) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
@@ -82,19 +88,35 @@ public class AuthController {
             }
         }
         if (studentEmail != null) {
-            //тут надо перенаправить на страницу со входом?
             return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
         }
         Student student = studentService.createStudent(request);
         studentRepository.save(student);
 
-        String token = jwtTokenProvider.createToken(
-                email,
-                student.getRoles()
-        );
-        studentService.updateToken(student.getId(), token);
+//        String token = jwtTokenProvider.createToken(
+//                email,
+//                student.getRoles()
+//        );
+//        studentService.updateToken(student.getId(), token);
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
+
+    @PostMapping(value = "/refreshToken", consumes = "application/json", produces = "application/json")
+    public ResponseEntity<TokenData> refreshToken(@RequestBody String OldToken) {
+        try {
+            Student student = studentService.findStudentByToken(OldToken);
+            String token = jwtTokenProvider.createToken(student.getEmail(), student.getRoles());
+            studentService.updateToken(student.getId(), token);
+            TokenData data = new TokenData();
+            data.setAccess_token(token);
+            return ResponseEntity.ok(data);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);//400
+        }
+    }
+
 
     @PutMapping("/exit")
     public void exit() {

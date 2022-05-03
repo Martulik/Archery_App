@@ -16,6 +16,7 @@ public interface StudentService {
     Student findStudentById(long id);
     Student findStudentByEmail(String email);
     Student findStudentByPhoneNumber(String phone);
+    Student findStudentByToken(String token);
 
     void updateFirstName(long student_id, String firstName);
     void updateLastName(long student_id, String lastName);

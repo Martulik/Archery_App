@@ -42,21 +42,20 @@ public class JwtFilter extends GenericFilterBean {
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
         try {
-            HttpServletResponse response = (HttpServletResponse) servletResponse;
-            HttpServletRequest request = (HttpServletRequest) servletRequest;
-            response.setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
-            response.setHeader("Access-Control-Max-Age", "3600");
-            response.setHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, "
+            ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Methods", "POST, GET, PUT, OPTIONS, DELETE");
+            ((HttpServletResponse) servletResponse).setHeader("Access-Control-Max-Age", "3600");
+            ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Headers", "Origin, Accept, X-Requested-With, Content-Type, "
                     + "Access-Control-Request-Method, Access-Control-Request-Headers, Authorization");
-            response.setHeader("Access-Control-Allow-Credentials", "true");
-            setAccessControlAllowOrigin(response, request);
-            String token = jwtTokenProvider.resolveToken(request);
+            ((HttpServletResponse) servletResponse).setHeader("Access-Control-Allow-Credentials", "true");
+            setAccessControlAllowOrigin((HttpServletResponse) servletResponse, (HttpServletRequest) servletRequest);
+            String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
 
-            if (request.getMethod().equals("OPTIONS")) {
-                response.setStatus(HttpServletResponse.SC_OK);
+            if (((HttpServletRequest) servletRequest).getMethod().equals("OPTIONS")) {
+                ((HttpServletResponse) servletResponse).setStatus(HttpServletResponse.SC_OK);
                 return;
             }
             if (token != null && jwtTokenProvider.validateToken(token)) {
+                System.out.println("token is valid and not null (from Filter)");
                 Authentication auth = jwtTokenProvider.getAuthentication(token);
                 if (auth != null) {
                     SecurityContextHolder.getContext().setAuthentication(auth);
