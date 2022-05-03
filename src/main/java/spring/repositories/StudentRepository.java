@@ -69,4 +69,6 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("update Student s set s.birth_date = ?2 where s.id = ?1")
     void updateBirthDate(long student_id, Date birthDate);
 
+    @Query("select s from Student s where s.token = ?1")
+    Optional<Student> findStudentByToken(String token);
 }

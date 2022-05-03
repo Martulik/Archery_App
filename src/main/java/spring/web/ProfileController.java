@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.ModelAndView;
 import spring.entity.Student;
 import spring.service.StudentService;
 
@@ -14,8 +13,6 @@ import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 
 @RestController
 @RequestMapping("/archery/profile")
@@ -25,14 +22,22 @@ public class ProfileController {
     StudentService studentService;
 
     @GetMapping(value = "/getFirstName")
-    public ResponseEntity<String> getFirstName() {
-        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    public String getFirstName(Authentication auth) {
+        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         if (auth == null) { // не должно никогда срабатывать, тк отлавливается в JwtFilter
                             //значит время сеанса истекло и тут перенаправлять на страницу с логином
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
+            //return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
+            return null;
         }
-        Student student = (Student) auth.getPrincipal();
-        return ResponseEntity.ok(student.getFirst_name());
+
+        String login = auth.getName();
+        System.out.println(login);
+
+        Student student = studentService.findStudentByEmail(login);
+        System.out.println(student.toString());
+        String FirstName = student.getFirst_name();
+        System.out.println(FirstName);
+        return FirstName;
     }
 
 
