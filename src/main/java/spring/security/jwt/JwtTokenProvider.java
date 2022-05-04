@@ -69,12 +69,14 @@ public class JwtTokenProvider {
             return !claims.getBody().getExpiration().before(new Date());
         } catch (JwtException | IllegalArgumentException ex) {
             System.out.println("token ins't valid (from JwtTokenProvider)");
+            System.out.println("token " + token);
             throw new InvalidJwtAutenticationException("Expired or invalid token");
         }
     }
 
     public String resolveToken(HttpServletRequest request) {
         String bearerToken = request.getHeader("Authorization");
+        System.out.println("bearerToken " + bearerToken);
         if (StringUtils.hasText(bearerToken) && bearerToken.startsWith("Bearer ")) {
             return bearerToken.substring(7);
         }
