@@ -132,7 +132,7 @@ function getData(url, field_id) {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': `Token: ${access_t}` //убедиться что работает
+                'Authorization': `${access_t}` //убедиться что работает
             }
         }).then(response => {//не уверена что так надо
         // fetch(response).then(response => {

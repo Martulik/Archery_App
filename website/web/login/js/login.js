@@ -55,14 +55,22 @@ function login() {
         .then((res) => {
             if (res.status === 200) {
                 console.log("Success");
-                const tokenData = res.json();
+                var tokenData = res.json();
                 // saveToken(tokenData); // сохраняем полученный токен в sessionStorage, с помощью функции, заданной ранее
-                localStorage.setItem('tokenData', JSON.stringify(tokenData));
-                document.location.href = "../index2.html";
             } else {
                 alert("Wrong email or password, please try again");
             }
+        })
+        .then((tokenData) => {
+            console.log(JSON.parse(tokenData));
+        })
+        .then((tokenData) => {
+            localStorage.setItem('tokenData', JSON.stringify(tokenData));
+            console.log(tokenData);
+            // document.location.href = "../index2.html";
         });
+
+
 }
 
 
@@ -90,7 +98,7 @@ function refreshToken(token) {
 
 // export
 async function fetchWithAuth(url, options) { //не понимаю что именно возвращает (что такое options?)
-    const loginUrl = '../login.html'; // url страницы для авторизации //правильный ли путь?
+    const loginUrl = '../login/login.html'; // url страницы для авторизации //правильный ли путь?
     var tokenData = null; // объявляем локальную переменную tokenData
     var access_t = null;
     var expires = null;
