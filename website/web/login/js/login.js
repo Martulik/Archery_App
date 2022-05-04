@@ -56,7 +56,8 @@ function login() {
             if (res.status === 200) {
                 console.log("Success");
                 const tokenData = res.json();
-                saveToken(JSON.stringify(tokenData)); // сохраняем полученный токен в sessionStorage, с помощью функции, заданной ранее
+                // saveToken(tokenData); // сохраняем полученный токен в sessionStorage, с помощью функции, заданной ранее
+                localStorage.setItem('tokenData', JSON.stringify(tokenData));
                 document.location.href = "../index2.html";
             } else {
                 alert("Wrong email or password, please try again");
