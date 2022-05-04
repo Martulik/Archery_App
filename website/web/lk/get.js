@@ -46,25 +46,12 @@ function saveToken(token) {
 }
 
 function login() {
-    // var access_t = JSON.parse(localStorage.getItem('token'))['access_token']; //убедиться что работает
-
-    // var access_t = () => {
-    //     if (
-    //         JSON.parse(localStorage.getItem('token')['access_token'])
-    //     ) {
-    //         return JSON.parse(localStorage.getItem('token')['access_token'])
-    //     } else {
-    //         return ''
-    //     }
-    // }
-
     fetch('http://localhost:8080/archery/auth/signIn', {
         method: 'POST',
         credentials: 'include',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            // 'Authorization': `Token: ${access_t}` //убедиться что работает
         },
         body: JSON.stringify({
             login: document.getElementById('email').value,
@@ -107,9 +94,9 @@ function refreshToken(token) {
 }
 
 // export
-async function fetchWithAuth(url, options) { //не понимаю что именно возвращает (что такое options?)
+async function fetchWithAuth(url, options) {
 
-    const loginUrl = '../login.html'; // url страницы для авторизации //правильный ли путь?
+    const loginUrl = '../login/login.html'; // url страницы для авторизации //правильный ли путь?
     var tokenData = null; // объявляем локальную переменную tokenData
     var access_t = null;
     var expires = null;
@@ -123,12 +110,15 @@ async function fetchWithAuth(url, options) { //не понимаю что име
         console.log(expires);
 
     } else {
-        return window.location.replace(loginUrl); // если токен отсутствует, то перенаправляем пользователя на страницу авторизации
+        return fetch(url, options);
+        //return window.location.replace(loginUrl); // если токен отсутствует, то перенаправляем пользователя на страницу авторизации
     }
 
     if (!options.headers) { // если в запросе отсутствует headers, то задаем их
         console.log("there aren't headers");
-        options.headers = {};
+        options.headers = {
+            //тут что то должно быть
+        };
     }
 
     if (tokenData) {
