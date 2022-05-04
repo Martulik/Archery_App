@@ -24,14 +24,14 @@ function saveToken(token) {
 }
 
 function login() {
-    var access_t = JSON.parse(localStorage.getItem('token'))['access_token']; //убедиться что работает
+    //var access_t = JSON.parse(localStorage.getItem('token'))['access_token']; //убедиться что работает
     fetch('http://localhost:8080/archery/auth/signIn', {
         method: 'POST',
         credentials: 'include',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': `Token: ${access_t}` //убедиться что работает
+            //'Authorization': `Token: ${access_t}` //убедиться что работает
         },
         body: JSON.stringify({
             login:  document.getElementById('email').value,
