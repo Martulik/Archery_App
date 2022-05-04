@@ -7,6 +7,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import spring.entity.Student;
+import spring.exception.StudentNotFoundException;
+import spring.requests.UpdateProfileRequest;
 import spring.service.StudentService;
 
 import java.text.DateFormat;
@@ -22,68 +24,132 @@ public class ProfileController {
     StudentService studentService;
 
     @GetMapping(value = "/getFirstName")
-    public String getFirstName(Authentication auth) {
-        //Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    public ResponseEntity<String> getFirstName(Authentication auth) {
         if (auth == null) { // не должно никогда срабатывать, тк отлавливается в JwtFilter
-                            //значит время сеанса истекло и тут перенаправлять на страницу с логином
-            //return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
-            return null;
+            //значит время сеанса истекло и тут перенаправлять на страницу с логином
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
         }
-
-        String login = auth.getName();
-        System.out.println(login);
-
-        Student student = studentService.findStudentByEmail(login);
-        System.out.println(student.toString());
-        String FirstName = student.getFirst_name();
-        System.out.println(FirstName);
-        return FirstName;
+        try {
+            Student student = studentService.findStudentByEmail(auth.getName());
+            return ResponseEntity.ok(student.getFirst_name());
+        } catch (StudentNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
+        }
     }
-//
-//
-//    @GetMapping(value = "/getLastName")
-//    public ResponseEntity<String> getLastName() {
-//        Student student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        return ResponseEntity.ok(student.getLast_name());
-//    }
-//
-//    @GetMapping(value = "/getPhoneNumber")
-//    public ResponseEntity<String> getPhoneNumber() {
-//        Student student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        return ResponseEntity.ok(student.getPhone_number());
-//    }
-//
-//    @GetMapping(value = "/getEmail")
-//    public ResponseEntity<String> getEmail() {
-//        Student student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        return ResponseEntity.ok(student.getEmail());
-//    }
-//
-//    @GetMapping(value = "/getBirthDate")
-//    public ResponseEntity<String> getBirthDate() {
-//        Student student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
-//        return ResponseEntity.ok(df.format(student.getBirth_date()));
-//    }
-//
-//    @GetMapping(value = "/getAttentedClasses")
-//    public ResponseEntity<String> getAttentedClasses() {
-//        Student student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        return ResponseEntity.ok(Integer.toString(student.getAttended_classes()));
-//    }
-//
-//    @GetMapping(value = "/getRankName")
-//    public ResponseEntity<String> getRankName() {
-//        Student student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        return ResponseEntity.ok(student.getRank_name().getRank_name());
-//    }
-//
-//    @GetMapping(value = "/getProfileStatus")
-//    public ResponseEntity<String> getProfileStatus() {
-//        Student student = (Student) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-//        return ResponseEntity.ok(student.getProfile_status().getStatus());
-//    }
-//
+
+    @GetMapping(value = "/getLastName")
+    public ResponseEntity<String> getLastName(Authentication auth) {
+        if (auth == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
+        }
+        try {
+            Student student = studentService.findStudentByEmail(auth.getName());
+            return ResponseEntity.ok(student.getLast_name());
+        } catch (StudentNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
+        }
+    }
+
+    @GetMapping(value = "/getPhoneNumber")
+    public ResponseEntity<String> getPhoneNumber(Authentication auth) {
+        if (auth == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
+        }
+        try {
+            Student student = studentService.findStudentByEmail(auth.getName());
+            return ResponseEntity.ok(student.getPhone_number());
+        } catch (StudentNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    @GetMapping(value = "/getEmail")
+    public ResponseEntity<String> getEmail(Authentication auth) {
+        if (auth == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
+        }
+        try {
+            Student student = studentService.findStudentByEmail(auth.getName());
+            return ResponseEntity.ok(student.getEmail());
+        } catch (StudentNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
+        }
+    }
+
+    @GetMapping(value = "/getBirthDate")
+    public ResponseEntity<String> getBirthDate(Authentication auth) {
+        if (auth == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
+        }
+        try {
+            Student student = studentService.findStudentByEmail(auth.getName());
+            DateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+            return ResponseEntity.ok(df.format(student.getBirth_date()));
+        } catch (StudentNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
+        }
+    }
+
+    @GetMapping(value = "/getAttendedClasses")
+    public ResponseEntity<String> getAttendedClasses(Authentication auth) {
+        if (auth == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
+        }
+        try {
+            Student student = studentService.findStudentByEmail(auth.getName());
+            return ResponseEntity.ok(Integer.toString(student.getAttended_classes()));
+        } catch (StudentNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
+        }
+    }
+
+    @GetMapping(value = "/getRankName")
+    public ResponseEntity<String> getRankName(Authentication auth) {
+        if (auth == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
+        }
+        try {
+            Student student = studentService.findStudentByEmail(auth.getName());
+            return ResponseEntity.ok(student.getRank_name().getRank_name());
+        } catch (StudentNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
+        }
+    }
+
+    @GetMapping(value = "/getProfileStatus")
+    public ResponseEntity<String> getProfileStatus(Authentication auth) {
+        if (auth == null) {
+            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED); //401
+        }
+        try {
+            Student student = studentService.findStudentByEmail(auth.getName());
+            return ResponseEntity.ok(student.getProfile_status().getStatus());
+        } catch (
+                StudentNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
+        }
+    }
+
+
+    @PostMapping(value = "/updateAll", consumes = "application/json")
+    public ResponseEntity<HttpStatus> updateAll(@RequestBody UpdateProfileRequest request) {
+
+        try {
+            Student student = studentService.findStudentByEmail(request.getEmail());
+
+            studentService.updateFirstName(student.getId(), request.getFirst_name());
+            studentService.updateFirstName(student.getId(), request.getLast_name());
+            studentService.updateFirstName(student.getId(), request.getPhone_number());
+            studentService.updateFirstName(student.getId(), request.getBirth_date());
+            studentService.updateFirstName(student.getId(), request.getEmail()); //потом сделать отправку сообщения
+            // на почту с подтверждением
+            return new ResponseEntity<>(HttpStatus.OK);
+        } catch (Exception e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    //Post
 //
 //    @PostMapping(value = "/updateFirstName", consumes = "application/json") //consume type?
 //    public ResponseEntity<String> updateFirstName(@RequestBody String firstName) {

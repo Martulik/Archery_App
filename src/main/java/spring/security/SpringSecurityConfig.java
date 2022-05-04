@@ -1,11 +1,8 @@
-
-
 package spring.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
@@ -24,7 +21,6 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Autowired
     private JwtTokenProvider jwtTokenProvider;
-
     @Autowired
     CharacterEncodingFilter encodingFilter;
 
@@ -52,8 +48,8 @@ public class SpringSecurityConfig extends WebSecurityConfigurerAdapter {
 
                 .antMatchers(HttpMethod.GET, "/archery/test/studentList").permitAll()
                 .antMatchers(HttpMethod.GET, "/archery/admin/*").hasRole("ADMIN")
-                //.antMatchers(HttpMethod.GET,"/archery/profile/*").hasAnyRole("ADMIN", "USER")
-                .antMatchers(HttpMethod.GET, "/archery/profile/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/archery/profile/*").hasAnyRole("ADMIN", "USER")
+                .antMatchers(HttpMethod.POST, "/archery/profile/updateAll").hasAnyRole("ADMIN", "USER")
 
                 .anyRequest().authenticated()
                 .and()

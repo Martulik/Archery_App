@@ -12,7 +12,7 @@ function save_changes() {
     console.log(birth_date);
     var req = new XMLHttpRequest();
 
-    req.open("POST", "http://localhost:8080/");
+    req.open("POST", "http://localhost:8080/archery/profile/updateAll");
     req.setRequestHeader('Content-Type', 'application/json');
     req.withCredentials = true;
     req.onload = function () {
@@ -24,6 +24,9 @@ function save_changes() {
     }
     req.send(JSON.stringify({
         first_name: firstname,
-        last_name: lastName, phone_number: phone, email: emailAddress, birth_date: birth_date
+        last_name: lastName,
+        phone_number: phone,
+        email: emailAddress,
+        birth_date: birth_date
     }));
 }

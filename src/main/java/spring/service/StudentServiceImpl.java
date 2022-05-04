@@ -42,7 +42,6 @@ public class StudentServiceImpl implements StudentService {
         student.setFirst_name(request.getFirst_name());
         student.setLast_name(request.getLast_name());
 
-        //обработка телефона
         String phone = request.getPhone_number();
         String regex = "[0-9]+";
         if (phone.startsWith("+") && phone.length() == 12) {
@@ -58,12 +57,11 @@ public class StudentServiceImpl implements StudentService {
             throw new InvalidEnterValueException("Invalid phone number");
         }
 
-        //обработка почты
         String email = request.getEmail();
         regex = "\\w+([\\.-]?\\w+)*@\\w+([\\.-]?\\w+)*\\.\\w{2,4}";
         if (email.matches(regex)) {
             student.setEmail(email); //проверить на корректность (и на существование такого?)
-        }
+        }                           //разобраться как отправлять письмо на почту с подтверждением
 
         student.setProfile_status(profileStatusService.findByProfileStatus(ProfileStatusConstants.ON_CHECKING));
         student.setRoles(Collections.singletonList("ROLE_USER"));
@@ -78,10 +76,10 @@ public class StudentServiceImpl implements StudentService {
             throw new InvalidEnterValueException("Invalid date");
         }
         Date currentDate = new Date();
-        if (date.after(currentDate)) { //проверка что дата рождения раньше текущего дня
+        if (date.after(currentDate)) {
             throw new InvalidEnterValueException("Invalid date");
         }
-        student.setBirth_date(date); //Тип дата
+        student.setBirth_date(date);
 
         return student;
     }
@@ -108,13 +106,19 @@ public class StudentServiceImpl implements StudentService {
     @Override
     public Student findStudentByEmail(String email) {
         Optional<Student> student = studentRepository.findUserByEmail(email);
-        return student.orElse(null);
+        if (student.isPresent()) {
+            return student.get();
+        }
+        throw new StudentNotFoundException("Student not found");
     }
 
     @Override
     public Student findStudentByPhoneNumber(String phone) {
         Optional<Student> student = studentRepository.findUserByPhone_number(phone);
-        return student.orElse(null);
+        if (student.isPresent()) {
+            return student.get();
+        }
+        throw new StudentNotFoundException("Student not found");
     }
 
     @Override
@@ -126,7 +130,6 @@ public class StudentServiceImpl implements StudentService {
         throw new StudentNotFoundException("Student not found");
     }
 
-
     @Override
     @Transactional
     public void updateFirstName(long student_id, String firstName) {
@@ -137,7 +140,6 @@ public class StudentServiceImpl implements StudentService {
         }
         throw new NoSuchElementException("Invalid student_id");
     }
-
 
     @Override
     @Transactional
@@ -177,7 +179,7 @@ public class StudentServiceImpl implements StudentService {
             studentRepository.updateEmail(student_id, email);
             return;
         }
-        throw new NoSuchElementException("Invalid student_id");
+        throw new StudentNotFoundException("Invalid student_id");
     }
 
     @Override
@@ -188,7 +190,7 @@ public class StudentServiceImpl implements StudentService {
             studentRepository.updateBirthDate(student_id, birthDate);
             return;
         }
-        throw new NoSuchElementException("Invalid student_id");
+        throw new StudentNotFoundException("Invalid student_id");
     }
 
 
@@ -201,7 +203,7 @@ public class StudentServiceImpl implements StudentService {
             studentRepository.updateProfileStatus(student_id, optionalProfileStatus.get());
             return;
         }
-        throw new NoSuchElementException("Invalid student_id or profile_status");
+        throw new StudentNotFoundException("Invalid student_id or profile_status");
     }
 
     @Override
@@ -213,7 +215,7 @@ public class StudentServiceImpl implements StudentService {
             studentRepository.updateRank(student_id, optionalRank.get());
             return;
         }
-        throw new NoSuchElementException("Invalid student_id or rank_name");
+        throw new StudentNotFoundException("Invalid student_id or rank_name");
     }
 
     @Override
@@ -222,16 +224,20 @@ public class StudentServiceImpl implements StudentService {
         Optional<Student> optionalStudent = studentRepository.findById(id);
         if (optionalStudent.isPresent()) {
             studentRepository.updateToken(id, token);
+            return;
         }
+        throw new StudentNotFoundException("Invalid student_id");
     }
 
     @Override
     @Transactional
     public void updateHasPaid(long student_id, Boolean hasPaid) {
-        if (hasPaid) {
-            studentRepository.updateHasPaid(student_id, true);
+        Optional<Student> optionalStudent = studentRepository.findById(student_id);
+        if (optionalStudent.isPresent()) {
+            studentRepository.updateHasPaid(student_id, hasPaid);
+            return;
         }
-        studentRepository.updateHasPaid(student_id, false);
+        throw new StudentNotFoundException("Invalid student_id");
     }
 
     @Override

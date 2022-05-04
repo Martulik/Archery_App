@@ -1,46 +1,3 @@
-// function getData(url, field_id) {
-//     fetch(url).then(response => {
-//         return response.text();
-//     }).then(data => {
-//         document.getElementById(field_id).value = data;
-//         // input = document.getElementById(id);
-//         console.log(data);
-//         // id.value = data;
-//     }).catch(err => {
-//         alert("Fail");
-//         console.log(err);
-//     });
-// }
-//
-// getData("http://localhost:8080/archery/profile/getFirstName",'inputFirstname');
-// getData("http://localhost:8080/archery/profile/getLastName",'inputLastName');
-// getData("http://localhost:8080/archery/test/studentList",'inputEmailAddress');
-// getData("http://localhost:8080/archery/profile/getPhoneNumber",'inputPhone');
-// getData("http://localhost:8080/archery/test/studentList",'inputBirthday');
-// function login() {
-//     var user = document.getElementById('email').value;
-//     console.log(user);
-//     var pass = document.getElementById('pass').value;
-//     console.log(pass);
-//     var req = new XMLHttpRequest();
-//
-//     req.open("POST", "http://localhost:8080/archery/auth/signIn", false);
-//     req.setRequestHeader('Content-Type', 'application/json');
-//     req.withCredentials = true;
-//     req.onload = function () {
-//         if (req.status !== 200) {
-//             alert("Wrong email or password, please try again");
-//         } else {
-//             console.log("Success");
-//             const tokenData = req.json();
-//             saveToken(JSON.stringify(tokenData));
-//             document.location.href = "../index2.html";
-//         }
-//     }
-//     req.send(JSON.stringify({login: user, password: pass}));
-//
-// }
-
 function saveToken(token) {
     localStorage.setItem('tokenData', JSON.stringify(token));
 }
@@ -51,16 +8,14 @@ function refreshToken(token) {
         credentials: 'include',
         headers: {
             'Accept': 'application/json',
-            'Content-Type': 'application/json',
+            'Content-Type': 'application/json'
         },
-        body: JSON.stringify({
-            token,
-        }),
+        body: JSON.stringify({token}),
     })
         .then((res) => {
             if (res.status === 200) {
-                const tokenData = res.json();
-                saveToken(JSON.stringify(tokenData)); // сохраняем полученный обновленный токен в sessionStorage, с помощью функции, заданной ранее
+                const tokenData = res.json(); //не уверена что так
+                saveToken(JSON.stringify(tokenData));
                 return Promise.resolve();
             }
             return Promise.reject();
@@ -68,89 +23,69 @@ function refreshToken(token) {
 }
 
 // export
-async function fetchWithAuth(url, options) { //не понимаю что именно возвращает (что такое options?)
-
-    const loginUrl = '../login/login.html'; // url страницы для авторизации //правильный ли путь?
-    var tokenData_t = null; // объявляем локальную переменную tokenData
+async function fetchWithAuth(url, options) {
+    const loginUrl = '../login/login.html';
+    var tokenData_t = null;
     var access_t = null;
     var expires = null;
-    if (localStorage.tokenData) { // если в sessionStorage присутствует tokenData, то берем её
+    if (localStorage.tokenData) {
         console.log("token exist");
         tokenData_t = localStorage.tokenData;
         console.log(localStorage.tokenData);
-        access_t = JSON.parse(localStorage.getItem('tokenData'))['access_token'];
+        access_t = JSON.parse(localStorage.getItem('tokenData'));
         console.log(access_t);
-        expires = JSON.parse(localStorage.getItem('tokenData'))['expires_in'];
+        expires = JSON.parse(localStorage.getItem('expiresIn'));
         console.log(expires);
 
     } else {
-        console.log("localStorage.authToken = null")
-        return fetch(url, options); // возвращаем изначальную функцию, но уже с валидным токеном в headers
-
-        // return window.location.replace(loginUrl); // если токен отсутствует, то перенаправляем пользователя на страницу авторизации
+        console.log("localStorage.authToken = null");
+        return window.location.replace(loginUrl);
     }
 
-    if (!options.headers) { // если в запросе отсутствует headers, то задаем их
+    if (!options.headers) {
         console.log("there aren't headers");
-        options.headers = {};
+        options.headers = {}; // Нужно добавить необходимые заголовки
     }
 
     if (tokenData_t) {
         console.log("tokenData exist");
-        if (Date.now() >= expires) { // проверяем не истек ли срок жизни токена
+        if (Date.now() >= expires) {
             console.log("token isn't valid");
             try {
-                const newToken = await refreshToken(access_t); // если истек, то обновляем токен с помощью refresh_token
+                const newToken = await refreshToken(access_t);
                 saveToken(newToken);
-            } catch (err) { // если тут что-то пошло не так, то перенаправляем пользователя на страницу авторизации
+            } catch (err) {
                 return window.location.replace(loginUrl);
             }
         }
-        options.headers.Authorization = `Bearer ${access_t}`; // добавляем токен в headers запроса
+        options.headers.Authorization = `Bearer ${access_t}`;
     }
-    return fetch(url, options); // возвращаем изначальную функцию, но уже с валидным токеном в headers
+    return fetch(url, options);
 }
 
 function getData(url, field_id) {
-    // var access_t = null;
-    // var ls = localStorage.getItem('tokenData');
-    // console.log(ls);
-    // var tokenData = localStorage.tokenData;
-    // console.log(tokenData);
-    // var token = tokenData.access_token;
-    // console.log(token);
-    // var js = JSON.parse(ls);
-    // console.log(js);
-    // var access_t = js.access_token;
-    // console.log(access_t);
-    var access_t = JSON.parse(localStorage.getItem('tokenData'))['access_token']; //убедиться что работает
-    // access_t = JSON.parse(localStorage.getItem('token'))['access_token'];
     fetchWithAuth(url,
         {
             method: 'GET',
             credentials: 'include',
             headers: {
                 'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'Authorization': `${access_t}` //убедиться что работает
+                'Content-Type': 'application/json'
             }
-        }).then(response => {//не уверена что так надо
-        // fetch(response).then(response => {
+        }).then(response => {
         return response.text();
     }).then(data => {
         document.getElementById(field_id).value = data;
-        // input = document.getElementById(id);
         console.log(data);
-        // id.value = data;
     }).catch(err => {
-        // alert("Fail");
+        alert("Fail");
         console.log(err);
     });
 }
 
 getData("http://localhost:8080/archery/profile/getFirstName", 'inputFirstname');
-// getData("http://localhost:8080/archery/profile/getLastName", 'inputLastName');
-// getData("http://localhost:8080/archery/test/studentList", 'inputEmailAddress');
-// getData("http://localhost:8080/archery/profile/getPhoneNumber", 'inputPhone');
-// getData("http://localhost:8080/archery/test/studentList", 'inputBirthday');
+getData("http://localhost:8080/archery/profile/getLastName", 'inputLastName');
+getData("http://localhost:8080/archery/profile/getEmail", 'inputEmailAddress');
+getData("http://localhost:8080/archery/profile/getPhoneNumber", 'inputPhone');
+getData("http://localhost:8080/archery/profile/getBirthDate", 'inputBirthday');
 
