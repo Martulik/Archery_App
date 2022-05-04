@@ -13,28 +13,42 @@
 //             alert("Wrong email or password, please try again");
 //         } else {
 //             console.log("Success");
+//             const tokenData = req.json();
+//             saveToken(JSON.stringify(tokenData));
 //             document.location.href = "../index2.html";
 //         }
 //     }
 //     req.send(JSON.stringify({login: user, password: pass}));
+//
 // }
 
 function saveToken(token) {
-    sessionStorage.setItem('tokenData', JSON.stringify(token));
+    localStorage.setItem('tokenData', JSON.stringify(token));
 }
 
 function login() {
-    var access_t = JSON.parse(localStorage.getItem('token'))['access_token']; //убедиться что работает
+    // var access_t = JSON.parse(localStorage.getItem('token'))['access_token']; //убедиться что работает
+
+    // var access_t = () => {
+    //     if (
+    //         JSON.parse(localStorage.getItem('token')['access_token'])
+    //     ) {
+    //         return JSON.parse(localStorage.getItem('token')['access_token'])
+    //     } else {
+    //         return ''
+    //     }
+    // }
+
     fetch('http://localhost:8080/archery/auth/signIn', {
         method: 'POST',
         credentials: 'include',
         headers: {
             'Accept': 'application/json',
             'Content-Type': 'application/json',
-            'Authorization': `Token: ${access_t}` //убедиться что работает
+            // 'Authorization': `Token: ${access_t}` //убедиться что работает
         },
         body: JSON.stringify({
-            login:  document.getElementById('email').value,
+            login: document.getElementById('email').value,
             password: document.getElementById('pass').value
         }),
     })
@@ -73,18 +87,20 @@ function refreshToken(token) {
         });
 }
 
-export async function fetchWithAuth(url, options) { //не понимаю что именно возвращает (что такое options?)
-
+// export
+async function fetchWithAuth(url, options) { //не понимаю что именно возвращает (что такое options?)
     const loginUrl = '../login.html'; // url страницы для авторизации //правильный ли путь?
     var tokenData = null; // объявляем локальную переменную tokenData
     var access_t = null;
     var expires = null;
-    if (sessionStorage.authToken) { // если в sessionStorage присутствует tokenData, то берем её
+    if (localStorage.authToken) { // если в sessionStorage присутствует tokenData, то берем её
         console.log("token exist");
-        tokenData = JSON.parse(localStorage.getItem('token'));
-        access_t = JSON.parse(localStorage.getItem('token'))['access_token'];
-        expires = JSON.parse(localStorage.getItem('token'))['expires_in'];
-
+        tokenData = JSON.parse(localStorage.getItem('tokenData'));
+        console.log(tokenData);
+        access_t = JSON.parse(localStorage.getItem('tokenData'))['access_token'];
+        console.log(access_t);
+        expires = JSON.parse(localStorage.getItem('tokenData'))['expires_in'];
+        console.log(expires);
     } else {
         return window.location.replace(loginUrl); // если токен отсутствует, то перенаправляем пользователя на страницу авторизации
     }
@@ -102,7 +118,7 @@ export async function fetchWithAuth(url, options) { //не понимаю что
                 const newToken = await refreshToken(access_t); // если истек, то обновляем токен с помощью refresh_token
                 saveToken(newToken);
             } catch (err) { // если тут что-то пошло не так, то перенаправляем пользователя на страницу авторизации
-                return  window.location.replace(loginUrl);
+                return window.location.replace(loginUrl);
             }
         }
         options.headers.Authorization = `Bearer ${access_t}`; // добавляем токен в headers запроса
