@@ -29,13 +29,13 @@ async function fetchWithAuth(url, options) {
     var access_t = null;
     var expires = null;
     if (localStorage.tokenData) {
-        console.log("token exist");
+        // console.log("token exist");
         tokenData_t = localStorage.tokenData;
-        console.log(localStorage.tokenData);
+        // console.log(localStorage.tokenData);
         access_t = JSON.parse(localStorage.getItem('tokenData'));
-        console.log(access_t);
+        // console.log(access_t);
         expires = JSON.parse(localStorage.getItem('expiresIn'));
-        console.log(expires);
+        // console.log(expires);
 
     } else {
         console.log("localStorage.authToken = null");
@@ -48,7 +48,7 @@ async function fetchWithAuth(url, options) {
     }
 
     if (tokenData_t) {
-        console.log("tokenData exist");
+        // console.log("tokenData exist");
         if (Date.now() >= expires) {
             console.log("token isn't valid");
             try {
@@ -76,7 +76,7 @@ function getData(url, field_id) {
         return response.text();
     }).then(data => {
         document.getElementById(field_id).value = data;
-        console.log(data);
+        // console.log(data);
     }).catch(err => {
         alert("Fail");
         console.log(err);

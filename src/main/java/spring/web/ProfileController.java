@@ -138,11 +138,13 @@ public class ProfileController {
             Student student = studentService.findStudentByEmail(request.getEmail());
 
             studentService.updateFirstName(student.getId(), request.getFirst_name());
-            studentService.updateFirstName(student.getId(), request.getLast_name());
-            studentService.updateFirstName(student.getId(), request.getPhone_number());
-            studentService.updateFirstName(student.getId(), request.getBirth_date());
-            studentService.updateFirstName(student.getId(), request.getEmail()); //потом сделать отправку сообщения
+            studentService.updateLastName(student.getId(), request.getLast_name());
+            studentService.updatePhoneNumber(student.getId(), request.getPhone_number());
+            studentService.updateBirthDate(student.getId(), request.getBirth_date());
+            studentService.updateEmail(student.getId(), request.getEmail()); //потом сделать отправку сообщения
             // на почту с подтверждением
+            System.out.println("student.getFirst_name()" + student.getFirst_name());
+            System.out.println("request.getFirst_name()" + request.getFirst_name());
             return new ResponseEntity<>(HttpStatus.OK);
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
