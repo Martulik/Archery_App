@@ -20,7 +20,7 @@ import java.util.List;
 @RequestMapping("/archery/{id}/tickets")
 public class SeasonTicketsController
 {
-    @Autowired
+   /* @Autowired
     SeasonTicketService seasonTicketService;
     @Autowired
     PurchaseHistoryService purchaseHistoryService;
@@ -45,5 +45,5 @@ public class SeasonTicketsController
         {
             return new ResponseEntity<>("Нет активного абонемента", HttpStatus.OK);
         }
-    }
+    }*/
 }

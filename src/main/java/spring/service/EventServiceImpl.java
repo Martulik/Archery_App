@@ -10,7 +10,7 @@ import java.util.Date;
 @Service
 public class EventServiceImpl implements EventService
 {
-    private EventRepository eventRepository;
+    /*private EventRepository eventRepository;
 
     public Event addEvent(Date date, String htmlText)
     {
@@ -29,5 +29,5 @@ public class EventServiceImpl implements EventService
     public void setEventRepository(EventRepository eventRepository)
     {
         this.eventRepository = eventRepository;
-    }
+    }*/
 }

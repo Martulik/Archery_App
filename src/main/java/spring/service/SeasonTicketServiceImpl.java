@@ -15,8 +15,8 @@ import java.util.Optional;
 
 @Service
 public class SeasonTicketServiceImpl implements SeasonTicketService {
+    /*@Autowired
     private SeasonTicketRepository seasonTicketRepository;
-    private PurchaseHistoryRepository purchaseHistoryRepository;
 
     public List<SeasonTicket> findTickets()
     {
@@ -26,6 +26,11 @@ public class SeasonTicketServiceImpl implements SeasonTicketService {
     {
         return seasonTicketRepository.findByIsForSale(true);
     }
+
+
+
+
+
 
     public List<SeasonTicket> areNotForSale()
     {
@@ -64,17 +69,5 @@ public class SeasonTicketServiceImpl implements SeasonTicketService {
         {
             seasonTicket.setIsForSale(true);
         }
-    }
-
-    @Autowired
-    public void setSeasonTicketRepository(SeasonTicketRepository seasonTicketRepository)
-    {
-        this.seasonTicketRepository = seasonTicketRepository;
-    }
-
-    @Autowired
-    public void setPurchaseHistoryRepository(PurchaseHistoryRepository purchaseHistoryRepository)
-    {
-        this.purchaseHistoryRepository = purchaseHistoryRepository;
-    }
+    }*/
 }

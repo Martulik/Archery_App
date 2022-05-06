@@ -10,6 +10,7 @@ import java.util.List;
 @Service
 public class RankServiceImpl implements RankService
 {
+    @Autowired
     private RankRepository rankRepository;
 
     public List<Rank> findAll()
@@ -17,14 +18,8 @@ public class RankServiceImpl implements RankService
         return rankRepository.findAll();
     }
 
-    public void changeColor(String color, String name)
+   /* public void changeColor(String color, String name)
     {
         rankRepository.changeColor(color, name);
-    }
-
-    @Autowired
-    public void setRankRepository(RankRepository rankRepository)
-    {
-        this.rankRepository = rankRepository;
-    }
+    }*/
 }

@@ -30,23 +30,10 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     @Modifying
     @Query("update Request r set r.status = :status where r.student.id = :studentId and r.day.date = :date")
     void updateStatusByDate(long studentId, LocalDate date, RequestStatus status);
-
-
-
-
-
-    List<Request> findByStatusStatus(String status);
-
     @Transactional
     @Modifying
     @Query("update Request r set r.status = :status where r.requestId = :requestId")
-    void updateStatus(String status, long requestId);
-
+    void updateStatus(RequestStatus status, long requestId);
+    List<Request> findByStatusStatus(String status);
     void removeByRequestId(Long requestId);
-    void removeByDayDate(LocalDate date);
-
-    @Transactional
-    @Modifying
-    @Query("delete from Request r where r.student.id = :studentId and r.day.date >= :date and r.timeStart >= :time")
-    void removeActiveRequestsByStudentId(Long studentId, LocalDate date, LocalTime time);
 }

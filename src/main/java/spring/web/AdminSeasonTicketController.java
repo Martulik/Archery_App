@@ -15,12 +15,12 @@ import java.util.List;
 @RequestMapping("/archery/admin/tickets")
 public class AdminSeasonTicketController
 {
-    @Autowired
+  /*  @Autowired
     SeasonTicketService seasonTicketService;
 
     @GetMapping("")
     public ResponseEntity<List<SeasonTicket>> showTickets()
     {
         return new ResponseEntity<>(seasonTicketService.findTickets(), HttpStatus.OK);
-    }
+    }*/
 }

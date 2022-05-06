@@ -18,6 +18,13 @@ import static spring.Application.*;
 @Service
 public class RequestServiceImpl implements RequestService
 {
+    @Autowired
+    private RequestRepository requestRepository;
+    @Autowired
+    private StudentService studentService;
+    @Autowired
+    private DayService dayService;
+
     public Boolean existsByStudentIdAndTime(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
     {
         return requestRepository.existsByStudentIdAndDayDateAndTimeStartAndTimeEnd(studentId, date, timeStart, timeEnd);
@@ -99,7 +106,7 @@ public class RequestServiceImpl implements RequestService
         RequestStatus requestStatus = new RequestStatus();
         if (hasCome)
         {
-            requestStatus.setStatus("HAS_COME");//статусы есть: "принято" (по умолчанию); "просмотрено" (не выводить в списке заявок);
+            requestStatus.setStatus("HAS_COME");//статусы есть: "не просмотрено" (по умолчанию); "просмотрено" (не выводить в списке заявок);
             //"пришел"; "не пришел" (уже после занятия, когда заполняется посещаемость)
             studentService.changeAttendedClasses(studentId, true); //при посещении надо изменить число посещенных занятий
         }
@@ -119,51 +126,36 @@ public class RequestServiceImpl implements RequestService
         return requestRepository.findIfIntersectByTime(date, timeStart, timeEnd).stream().map(Request::getStudent).toList();
     }
 
+    public void removeRequest(Long requestId)
+    {
+        requestRepository.removeByRequestId(requestId);
+    }
 
-
-
-
-    private RequestRepository requestRepository;
-    private StudentService studentService;
-    @Autowired
-    private DayService dayService;
+    public void updateStatus(String status, long requestId)
+    {
+        RequestStatus requestStatus = new RequestStatus();
+        requestStatus.setStatus(status);
+        requestRepository.updateStatus(requestStatus, requestId);
+    }
 
     public List<Request> findByStatus(String status)
     {
         return requestRepository.findByStatusStatus(status);
     }
 
-    public void updateStatus(String status, long requestId)
-    {
-        requestRepository.updateStatus(status, requestId);
-    }
 
 
-    public void removeRequest(Long requestId)
-    {
-        requestRepository.removeByRequestId(requestId);
-    }
 
+
+
+    /*
     public void removeByDate(LocalDate date)
     {
         requestRepository.removeByDayDate(date);
     }
 
-
-
     public void removeActiveRequestsByStudent(Long studentId, LocalDate date, LocalTime time)
     {
         requestRepository.removeActiveRequestsByStudentId(studentId, date, time);
-    }
-
-
-    @Autowired
-    public void setRequestRepository(RequestRepository requestRepository) {
-        this.requestRepository = requestRepository;
-    }
-    @Autowired
-    public void setStudentService(StudentService studentService)
-    {
-        this.studentService = studentService;
-    }
+    }*/
 }

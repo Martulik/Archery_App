@@ -12,5 +12,5 @@ import java.util.Date;
 @Repository
 public interface EventRepository extends JpaRepository<Event, String>
 {
-    void removeByEventId(Long id);
+    //void removeByEventId(Long id);
 }

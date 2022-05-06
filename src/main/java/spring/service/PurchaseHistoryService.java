@@ -12,13 +12,13 @@ public interface PurchaseHistoryService
 {
     SeasonTicket findActiveSeasonTicket(Long studentId, LocalDate date);
     Boolean existByStudentId(Long studentId);
-
-
-
-
-    Boolean checkActiveSeasonTicket(Long studentId, LocalDate date);
-    List<SeasonTicket> findTicketsByStudentId(Long studentId);
-    PurchaseHistory addPurchase(Student student, LocalDate startDate, SeasonTicket seasonTicket);
     Boolean changeAvailableClassesFromActivePurchase(Long studentId, LocalDate date, Boolean toReduce);
     Boolean changeAvailableClassesFromLastPurchase(Long studentId, Boolean toReduce);
+
+
+
+   /* Boolean checkActiveSeasonTicket(Long studentId, LocalDate date);
+    List<SeasonTicket> findTicketsByStudentId(Long studentId);
+    PurchaseHistory addPurchase(Student student, LocalDate startDate, SeasonTicket seasonTicket);*/
+
 }

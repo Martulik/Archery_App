@@ -32,7 +32,7 @@ public class AdminTimetableController
     private StudentService studentService;
 
     @GetMapping("/day")
-    public ResponseEntity<String> showDay(@RequestBody LocalDate date)
+    public ResponseEntity<String> showDay(@RequestParam LocalDate date)
     {
         Day day = dayService.findByDate(date);
         if (!day.getAreLessons())
@@ -63,7 +63,7 @@ public class AdminTimetableController
     }
 
     @GetMapping("day/{id}")
-    public ResponseEntity<String> showPresenceOfStudent(@RequestBody LocalDate date, @RequestBody Long id)
+    public ResponseEntity<String> showPresenceOfStudent(@RequestParam LocalDate date, @RequestParam Long id)
     {
         String action = "";
         if (!requestService.showStatusByStudentIdAndDate(id, date).getStatus().equals("HAS_COME"))
@@ -78,13 +78,13 @@ public class AdminTimetableController
     }
 
     @PostMapping("/day/{id}")
-    public void changePresenceOfStudent(@RequestBody LocalDate date, @RequestBody Long id, @RequestBody boolean hasCome)
+    public void changePresenceOfStudent(@RequestParam LocalDate date, @RequestParam Long id, @RequestParam boolean hasCome)
     {
         requestService.changePresenceOfStudent(id, date, hasCome);
     }
 
     @GetMapping("/day/lesson")
-    public ResponseEntity<List<Student>> showLesson(@RequestBody LocalDate date, @RequestBody LocalTime timeStart, @RequestBody LocalTime timeEnd)
+    public ResponseEntity<List<Student>> showLesson(@RequestParam LocalDate date, @RequestParam LocalTime timeStart, @RequestParam LocalTime timeEnd)
     {
         return new ResponseEntity<>(requestService.findStudentsByTime(date, timeStart, timeEnd), HttpStatus.OK);
     }

@@ -18,8 +18,8 @@ import java.util.Optional;
 @Service
 public class DayServiceImpl implements DayService
 {
+    @Autowired
     private DayRepository dayRepository;
-    private RequestRepository requestRepository;
 
     public Day findByDate(LocalDate date)
     {
@@ -43,7 +43,7 @@ public class DayServiceImpl implements DayService
 
 
 
-    public Boolean areLessons(LocalDate date)
+    /*public Boolean areLessons(LocalDate date)
     {
         return dayRepository.findByDateAndAreLessons(date, true);
     }
@@ -85,13 +85,8 @@ public class DayServiceImpl implements DayService
     }
 
     @Autowired
-    public void setDayRepository(DayRepository dayRepository)
-    {
-        this.dayRepository = dayRepository;
-    }
-    @Autowired
     public void setRequestRepository(RequestRepository requestRepository)
     {
         this.requestRepository = requestRepository;
-    }
+    }*/
 }

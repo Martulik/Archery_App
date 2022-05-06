@@ -18,19 +18,12 @@ public interface RequestService {
     RequestStatus showStatusByStudentIdAndDate(Long studentId, LocalDate date);
     void changePresenceOfStudent(Long studentId, LocalDate date, Boolean hasCome);
     List<Student> findStudentsByTime(LocalDate date, LocalTime timeStart, LocalTime timeEnd);
-
-
-
-
-
-    List<Request> findByStatus(String status);
-    void updateStatus(String status, long requestId);
-
-
     void removeRequest(Long requestId);
-    void removeByDate(LocalDate date);
+    void updateStatus(String status, long requestId);
+    List<Request> findByStatus(String status);
 
-    void removeActiveRequestsByStudent(Long studentId, LocalDate date, LocalTime time);
 
+    /*void removeByDate(LocalDate date);
+    void removeActiveRequestsByStudent(Long studentId, LocalDate date, LocalTime time);*/
 
 }

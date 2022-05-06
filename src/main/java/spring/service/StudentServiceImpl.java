@@ -17,6 +17,7 @@ import spring.utils.ProfileStatusConstants;
 import org.springframework.transaction.annotation.Transactional;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -148,16 +149,6 @@ public class StudentServiceImpl implements StudentService {
         }
     }
 
-    @Override
-    public void updateHasPaid(long student_id, Boolean hasPaid)
-    {
-        if (hasPaid)
-        {
-            studentRepository.updateHasPaid(student_id, true);
-        }
-        studentRepository.updateHasPaid(student_id, false);
-    }
-
     public Rank getRank(long id)
     {
         Optional<Student> optionalStudent = studentRepository.findById(id);
@@ -168,7 +159,40 @@ public class StudentServiceImpl implements StudentService {
         throw new StudentNotFoundException("Student not found");
     }
 
-    public Boolean hasPaid(long id)
+    public void changeAttendedClasses(Long id, Boolean toIncrease)
+    {
+        if (toIncrease)
+        {
+            studentRepository.increaseAttendedClasses(id);
+            LocalDate date = LocalDate.now();
+            purchaseHistoryService.changeAvailableClassesFromActivePurchase(id, date, true); //в активном абонементе уменьшить
+        } //число доступных занятий
+        else
+        {
+            studentRepository.decreaseAttendedClasses(id); //если админ ошиблась и хочет обратно уменьшить число посещенных занятий
+            LocalDate date = LocalDate.now(); //тогда в активном абонементе надо обратно увеличить число доступных занятий
+            if (!purchaseHistoryService.changeAvailableClassesFromActivePurchase(id, date, false)) //если активного абонемента не оказалось
+            { //(например, сбросился, так как число доступных занятий стало равно нулю в результате ошибки, случайного нажатия),
+                purchaseHistoryService.changeAvailableClassesFromLastPurchase(id, false); //то вместо него увеличить число доступных занятий в последнем купленном абонементе
+                //studentRepository.updateHasPaid(id, true); //(очевидно, он и был активным)
+            } //тогда нужно обновить поле "оплатил", так как при сбросе активного абонемента оно становится false, а здесь сброс откатили, снова добавив
+        } //доступные занятия в последнем купленном абонементе
+    }
+
+
+
+
+        /*@Override
+    public void updateHasPaid(long student_id, Boolean hasPaid)
+    {
+        if (hasPaid)
+        {
+            studentRepository.updateHasPaid(student_id, true);
+        }
+        studentRepository.updateHasPaid(student_id, false);
+    }*/
+
+       /* public Boolean hasPaid(long id)
     {
         Optional<Student> optionalStudent = studentRepository.findById(id);
         if (optionalStudent.isPresent())
@@ -176,25 +200,5 @@ public class StudentServiceImpl implements StudentService {
             return optionalStudent.get().getHasPaid();
         }
         throw new StudentNotFoundException("Student not found");
-    }
-
-    public void changeAttendedClasses(Long id, Boolean toIncrease)
-    {
-        if (toIncrease)
-        {
-            studentRepository.increaseAttendedClasses(id);
-            Date date = new Date(); //пока так, потом разбираться с датами и взять актуальную
-            purchaseHistoryService.changeAvailableClassesFromActivePurchase(id, date, true); //в активном абонементе уменьшить
-        } //число доступных занятий
-        else
-        {
-            studentRepository.decreaseAttendedClasses(id); //если админ ошиблась и хочет обратно уменьшить число посещенных занятий
-            Date date = new Date(); //тогда в активном абонементе надо обратно увеличить число доступных занятий
-            if (!purchaseHistoryService.changeAvailableClassesFromActivePurchase(id, date, false)) //если активного абонемента не оказалось
-            { //(например, сбросился, так как число доступных занятий стало равно нулю в результате ошибки, случайного нажатия),
-                purchaseHistoryService.changeAvailableClassesFromLastPurchase(id, false); //то вместо него увеличить число доступных занятий в последнем купленном абонементе
-                studentRepository.updateHasPaid(id, true); //(очевидно, он и был активным)
-            } //тогда нужно обновить поле "оплатил", так как при сбросе активного абонемента оно становится false, а здесь сброс откатили, снова добавив
-        } //доступные занятия в последнем купленном абонементе
-    }
+    }*/
 }

@@ -16,8 +16,8 @@ public interface DayService {
 
 
 
-    Boolean areLessons(LocalDate date);
+  /*  Boolean areLessons(LocalDate date);
     void changeAreLessons(LocalDate date);
     void changeTimeStart(LocalDate date, LocalTime timeStart);
-    void changeTimeEnd(LocalDate date, LocalTime timeEnd);
+    void changeTimeEnd(LocalDate date, LocalTime timeEnd);*/
 }

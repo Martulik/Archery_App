@@ -15,16 +15,16 @@ public interface PurchaseHistoryRepository extends JpaRepository<PurchaseHistory
     @Query("select p from PurchaseHistory p where p.student.id = :studentId and p.availableClasses > 0")
     List<PurchaseHistory> findUnspentSeasonTicket(Long studentId);
     Boolean existsByStudentId(Long studentId);
-
-
-
-
-
-
-
-
-
-    List<PurchaseHistory> findByStudentId(Long studentId);
     Optional<PurchaseHistory> findTopByStudentIdOrderByStartDateDesc(Long studentId);
-    Boolean findBySeasonTicket(SeasonTicket seasonTicket);
+
+
+
+
+
+
+
+
+/*    List<PurchaseHistory> findByStudentId(Long studentId);
+
+    Boolean findBySeasonTicket(SeasonTicket seasonTicket); */
 }

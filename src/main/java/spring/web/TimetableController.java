@@ -46,7 +46,7 @@ public class TimetableController
     }
 
     @GetMapping("/day")
-    public ResponseEntity<String> showDay(@PathVariable Long id, @RequestBody LocalDate date)
+    public ResponseEntity<String> showDay(@PathVariable Long id, @RequestParam LocalDate date)
     {
         Day day = dayService.findByDate(date);
         if (day.getDate().isBefore(LocalDate.now()))
@@ -61,7 +61,7 @@ public class TimetableController
         try
         {
             lesson = purchaseHistoryService.findActiveSeasonTicket(id, date).getTimeDuration();
-            if (lesson == LocalTime.MAX)
+            if (lesson == LocalTime.of(23, 59))
             {
                 lesson = LocalTime.of(0, 30);
             }
@@ -87,7 +87,7 @@ public class TimetableController
     }
 
     @GetMapping("/day/lesson")
-    public ResponseEntity<String> showLesson(@PathVariable Long id, @RequestBody LocalDate date, @RequestBody LocalTime timeStart, @RequestBody LocalTime timeEnd)
+    public ResponseEntity<String> showLesson(@PathVariable Long id, @RequestParam LocalDate date, @RequestParam LocalTime timeStart, @RequestParam LocalTime timeEnd)
     {
         if (timeStart.isBefore(LocalTime.now()) && date.isBefore(LocalDate.now()))
         {
@@ -106,7 +106,7 @@ public class TimetableController
     }
 
     @PostMapping("/day/lesson/signup")
-    public ResponseEntity<String> signUpLesson(@PathVariable Long id, @RequestBody LocalDate date, @RequestBody LocalTime timeStart, @RequestBody LocalTime timeEnd)
+    public ResponseEntity<String> signUpLesson(@PathVariable Long id, @RequestParam LocalDate date, @RequestParam LocalTime timeStart, @RequestParam LocalTime timeEnd)
     {
         if (requestService.addRequest(id, date, timeStart, timeEnd))
         {
@@ -116,7 +116,7 @@ public class TimetableController
     }
 
     @PostMapping("/day/lesson/remove")
-    public ResponseEntity<String> removeRequest(@PathVariable Long id, @RequestBody LocalDate date, @RequestBody LocalTime timeStart, @RequestBody LocalTime timeEnd)
+    public ResponseEntity<String> removeRequest(@PathVariable Long id, @RequestParam LocalDate date, @RequestParam LocalTime timeStart, @RequestParam LocalTime timeEnd)
     {
         requestService.removeByStudentIdAndTime(id, date, timeStart, timeEnd);
         return new ResponseEntity<>("Удаление заявки успешно", HttpStatus.OK);

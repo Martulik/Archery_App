@@ -21,14 +21,5 @@ public interface DayRepository extends JpaRepository<Day, String>
     List<Day> findFromTo(LocalDate start, LocalDate end);
 
 
-
-
-
-
-
-
-
-
-
-    Boolean findByDateAndAreLessons(LocalDate date, Boolean areLessons);
+    //Boolean findByDateAndAreLessons(LocalDate date, Boolean areLessons);
 }
