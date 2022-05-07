@@ -14,6 +14,7 @@ public class UpdateProfileRequest implements Serializable {
     private String first_name;
     private String last_name;
     private String phone_number;
-    private String email;
-    private Date birth_date;
+    //private String email;
+    private String birth_date;
+    //private String password;
 }

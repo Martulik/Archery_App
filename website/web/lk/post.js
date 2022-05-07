@@ -68,24 +68,24 @@ async function fetchWithAuth(url, options) {
 function save_changes() {
     var firstname = document.getElementById('inputFirstname').value;
     var lastName = document.getElementById('inputLastName').value;
-    var emailAddress = document.getElementById('inputEmailAddress').value;
+    //var emailAddress = document.getElementById('inputEmailAddress').value;
     var phone = document.getElementById('inputPhone').value;
     var birth_date = document.getElementById('inputBirthday').value;
     var url = "http://localhost:8080/archery/profile/updateAll";
-    console.log(firstname);
-    console.log(lastName);
-    console.log(emailAddress);
-    console.log(phone);
-    console.log(birth_date);
-    window.alert(firstname);
-    window.alert(lastName);
-    window.alert(emailAddress);
+    // console.log(firstname);
+    // console.log(lastName);
+    // console.log(emailAddress);
+    // console.log(phone);
+    // console.log(birth_date);
+    // window.alert(firstname);
+    // window.alert(lastName);
+    // window.alert(emailAddress);
 
     var data = {
         first_name: firstname,
         last_name: lastName,
         phone_number: phone,
-        email: emailAddress,
+        //email: emailAddress,
         birth_date: birth_date
     };
     // var result =
@@ -96,7 +96,6 @@ function save_changes() {
             headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
-                // 'Content-Type': 'application/json;charset=utf-8'
             },
             body: JSON.stringify(data),
         }).then((res) => {

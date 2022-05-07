@@ -90,9 +90,6 @@ public class Student implements UserDetails {
     }
 
     @ElementCollection(fetch = FetchType.EAGER)
-//    @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-//    @CollectionTable(name = "student_roles", joinColumns = @JoinColumn(name = "student_student_id"))
-//    @Enumerated(EnumType.STRING)
     private List<String> roles = new ArrayList<>();
 
     @Override

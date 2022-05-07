@@ -156,10 +156,10 @@ public class StudentServiceImpl implements StudentService {
     @Transactional
     public void updatePhoneNumber(long student_id, String phoneNumber) {
         Optional<Student> optionalStudent = studentRepository.findById(student_id);
-        Optional<Student> optionalNumber = studentRepository.findUserByPhone_number(phoneNumber);
-        if (optionalNumber.isPresent()) {
-            throw new AlreadyExistException("Account with this email already registered");
-        }
+//        Optional<Student> optionalNumber = studentRepository.findUserByPhone_number(phoneNumber);
+//        if (optionalNumber.isPresent()) {
+//            throw new AlreadyExistException("Account with this email already registered");
+//        }
         if (optionalStudent.isPresent()) {
             studentRepository.updatePhoneNumber(student_id, phoneNumber);
             return;

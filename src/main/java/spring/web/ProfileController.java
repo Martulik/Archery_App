@@ -3,14 +3,19 @@ package spring.web;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import spring.entity.Student;
 import spring.exception.StudentNotFoundException;
+import spring.requests.AuthRequest;
 import spring.requests.UpdateProfileRequest;
+import spring.security.jwt.JwtTokenProvider;
+import spring.service.SecurityService;
 import spring.service.StudentService;
 
+import javax.management.remote.JMXAuthenticator;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -22,6 +27,12 @@ public class ProfileController {
 
     @Autowired
     StudentService studentService;
+    @Autowired
+    JwtTokenProvider jwtTokenProvider;
+
+    JMXAuthenticator authenticationManager;
+    @Autowired
+    SecurityService securityService;
 
     @GetMapping(value = "/getFirstName")
     public ResponseEntity<String> getFirstName(Authentication auth) {
@@ -59,7 +70,7 @@ public class ProfileController {
             Student student = studentService.findStudentByEmail(auth.getName());
             return ResponseEntity.ok(student.getPhone_number());
         } catch (StudentNotFoundException e) {
-            return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }
     }
 
@@ -132,24 +143,56 @@ public class ProfileController {
 
 
     @PostMapping(value = "/updateAll", consumes = "application/json")
-    public ResponseEntity<HttpStatus> updateAll(@RequestBody UpdateProfileRequest request) {
-
+    public ResponseEntity<String> updateAll(@RequestBody UpdateProfileRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         try {
-            Student student = studentService.findStudentByEmail(request.getEmail());
+            Student student = studentService.findStudentByEmail(auth.getName());
 
             studentService.updateFirstName(student.getId(), request.getFirst_name());
             studentService.updateLastName(student.getId(), request.getLast_name());
             studentService.updatePhoneNumber(student.getId(), request.getPhone_number());
-            studentService.updateBirthDate(student.getId(), request.getBirth_date());
-            studentService.updateEmail(student.getId(), request.getEmail()); //потом сделать отправку сообщения
-            // на почту с подтверждением
-            System.out.println("student.getFirst_name()" + student.getFirst_name());
-            System.out.println("request.getFirst_name()" + request.getFirst_name());
+            SimpleDateFormat df = new SimpleDateFormat("dd.MM.yyyy");
+            studentService.updateBirthDate(student.getId(), df.parse(request.getBirth_date()));
+
+//            studentService.updateEmail(student.getId(), request.getEmail()); //обновить токен
+//            String token = jwtTokenProvider.createToken(request.getEmail(), student.getRoles());
+//
+//            securityService.autologin(request.getEmail(), request.getPassword());
+//            studentService.updateToken(student.getId(), token);
+
             return new ResponseEntity<>(HttpStatus.OK);
+
         } catch (Exception e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
         }
     }
+
+    @PostMapping(value = "/updateEmail", consumes = "application/json")
+    public ResponseEntity<String> updateEmail(@RequestBody AuthRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        try {
+            studentService.findStudentByEmail(request.getLogin());
+        } catch (StudentNotFoundException ex) {
+            try {
+                String email = request.getLogin();
+                String password = request.getPassword();
+                Student student = studentService.findStudentByEmail(auth.getName());
+                studentService.updateEmail(student.getId(), email);
+                String token = jwtTokenProvider.createToken(email, student.getRoles());
+                securityService.autologin(email, password);
+                studentService.updateToken(student.getId(), token);
+
+                //потом сделать отправку сообщения
+                // на почту с подтверждением
+                return ResponseEntity.ok(token);
+
+            } catch (Exception e) {
+                return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+            }
+        }
+        return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED); //
+    }
+
 
     //Post
 //

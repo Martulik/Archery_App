@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-import spring.entity.ProfileStatus;
 import spring.entity.Student;
 import spring.exception.StudentNotFoundException;
 import spring.repositories.StudentRepository;
@@ -16,7 +15,6 @@ import spring.security.jwt.JwtTokenProvider;
 import spring.service.SecurityService;
 import spring.service.ProfileStatusService;
 import spring.service.StudentService;
-import spring.utils.ProfileStatusConstants;
 
 @RestController
 @RequestMapping("/archery/auth")
@@ -52,22 +50,22 @@ public class AuthController {
     @PostMapping(value = "/register", consumes = "application/json")
     public ResponseEntity<HttpStatus> register(@RequestBody RegisterRequest request) {
         String email = request.getEmail();
-        String phone_number = request.getPhone_number();
-        Student studentPhone;
+//        String phone_number = request.getPhone_number();
+//        Student studentPhone;
         try {
-            Student studentEmail = studentService.findStudentByEmail(email);
+            studentService.findStudentByEmail(email);
         } catch (StudentNotFoundException e) {
-            try {
-                studentPhone = studentService.findStudentByPhoneNumber(phone_number);
-            } catch (StudentNotFoundException ex) {
-                Student student = studentService.createStudent(request);
-                studentRepository.save(student);
-                return new ResponseEntity<>(HttpStatus.OK);
-            }
-            ProfileStatus status = profileStatusService.findByProfileStatus(studentPhone.getProfile_status());
-            if (!status.getStatus().equals(ProfileStatusConstants.NOT_REGISTERED)) {
-                return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
-            }
+//            try {
+//                studentPhone = studentService.findStudentByPhoneNumber(phone_number);
+//            } catch (StudentNotFoundException ex) {
+//                Student student = studentService.createStudent(request);
+//                studentRepository.save(student);
+//                return new ResponseEntity<>(HttpStatus.OK);
+//            }
+//            ProfileStatus status = profileStatusService.findByProfileStatus(studentPhone.getProfile_status());
+//            if (!status.getStatus().equals(ProfileStatusConstants.NOT_REGISTERED)) {
+//                return new ResponseEntity<>(HttpStatus.ALREADY_REPORTED);
+//            }
             Student student = studentService.createStudent(request);
             studentRepository.save(student);
             return new ResponseEntity<>(HttpStatus.OK);
