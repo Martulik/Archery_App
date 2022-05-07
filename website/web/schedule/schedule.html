@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Archery app!</title>
+
+    <link rel="stylesheet" type="text/css" href="/web/WEB-INF/Style.css">
+    <link rel="stylesheet" type="text/css" href="./schedule.css">
+    <link rel="stylesheet" type="text/css" href="/web/login/vendor/bootstrap/css/Bootstrap.min.css">
+    <link
+            rel="stylesheet"
+            href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/css/all.min.css"
+    />
+    <link
+            href="https://fonts.googleapis.com/css2?family=Quicksand:wght@300;400;500;600;700&display=swap"
+            rel="stylesheet"
+    />
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/simple-line-icons/2.5.5/css/simple-line-icons.min.css"
+          integrity="sha512-QKC1UZ/ZHNgFzVKSAhV5v5j73eeL9EEN289eKAEFaAjgAiobVAnVv/AGuPbXsKl1dNoel3kNr6PYnSiTzVVBCw=="
+          crossorigin="anonymous"/>
+
+    <style>
+        a {
+            text-decoration: none; /* Убираем подчёркивание */
+        }
+    </style>
+</head>
+
+<body>
+<div>
+    <section class="header">
+       <span class="sam">
+            <img src="/web/images/17-direct-massage.svg" alt="">
+        </span>
+        <span class="name">
+            Парадокс лучника
+        </span>
+
+        <button class="buttonprof" onclick="location.href = 'lk/lk.html'">
+            <span class="textreg">Профиль</span>
+        </button>
+        <button class="buttonmain" onclick="location.href = '/web/index2.html'">
+            <span class="textreg">Главная страница</span>
+        </button>
+
+    </section>
+
+    <section class="schedule">
+        <h class="scheduleZag">Расписание</h>
+        <div class="container">
+            <div class="calendar">
+                <div class="month">
+                    <i class="fas fa-angle-left prev"></i>
+                    <div class="date">
+                        <h1 id = "m"></h1>
+                        <p></p>
+                    </div>
+                    <i class="fas fa-angle-right next"></i>
+                </div>
+                <div class="weekdays">
+                    <div>Sun</div>
+                    <div>Mon</div>
+                    <div>Tue</div>
+                    <div>Wed</div>
+                    <div>Thu</div>
+                    <div>Fri</div>
+                    <div>Sat</div>
+                </div>
+                <div id = "day" class="days" onclick="setDay()"></div>
+            </div>
+        </div>
+    </section>
+
+</div>
+<script src="./schedule.js"></script>
+</body>
+</html>
