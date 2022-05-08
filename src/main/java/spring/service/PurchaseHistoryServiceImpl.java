@@ -1,5 +1,6 @@
 package spring.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.entity.PurchaseHistory;
@@ -16,15 +17,15 @@ import java.util.Optional;
 import static java.time.temporal.ChronoUnit.DAYS;
 
 @Service
+@RequiredArgsConstructor
 public class PurchaseHistoryServiceImpl implements PurchaseHistoryService
 {
-    @Autowired
-    private PurchaseHistoryRepository purchaseHistoryRepository;
+    private final PurchaseHistoryRepository purchaseHistoryRepository;
 
     public Optional<PurchaseHistory> findPurchaseWithActiveSeasonTicket(Long studentId, LocalDate date)
     {
         return purchaseHistoryRepository.findUnspentSeasonTicket(studentId).stream().filter(purchaseHistory ->
-                DAYS.between(date, purchaseHistory.getStartDate()) <= purchaseHistory.getSeasonTicket().getDaysDuration()).findFirst();
+                DAYS.between(purchaseHistory.getStartDate(), date) <= purchaseHistory.getSeasonTicket().getDaysDuration()).findFirst();
     }
 
     public SeasonTicket findActiveSeasonTicket(Long studentId, LocalDate date)

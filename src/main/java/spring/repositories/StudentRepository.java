@@ -8,6 +8,7 @@ import spring.entity.ProfileStatus;
 import spring.entity.Rank;
 import spring.entity.Student;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 
@@ -38,10 +39,12 @@ public interface StudentRepository extends JpaRepository<Student, Long> {
     @Query("update Student s set s.token = ?2 where s.id = ?1")
     void updateToken(Long id, String token);
 
+    @Transactional
     @Modifying
     @Query("update Student s set s.attended_classes = s.attended_classes + 1 where s.id = :id")
     void increaseAttendedClasses(long id);
 
+    @Transactional
     @Modifying
     @Query("update Student s set s.attended_classes = s.attended_classes - 1 where s.id = :id and s.attended_classes > 0")
     void decreaseAttendedClasses(long id);

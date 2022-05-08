@@ -1,9 +1,13 @@
 package spring.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.entity.*;
+import spring.exception.RequestNotFound;
+import spring.exception.RequestStatusNotFound;
 import spring.repositories.RequestRepository;
+import spring.repositories.RequestStatusRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -11,19 +15,20 @@ import java.util.Date;
 import java.sql.Time;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static spring.Application.*;
 
 @Service
+@RequiredArgsConstructor
 public class RequestServiceImpl implements RequestService
 {
-    @Autowired
-    private RequestRepository requestRepository;
-    @Autowired
-    private StudentService studentService;
-    @Autowired
-    private DayService dayService;
+
+    private final RequestRepository requestRepository;
+    private final StudentService studentService;
+    private final DayService dayService;
+    private final RequestStatusRepository requestStatusRepository;
 
     public Boolean existsByStudentIdAndTime(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
     {
@@ -51,13 +56,19 @@ public class RequestServiceImpl implements RequestService
             int numberOfJuniors = 0;
             int numberOfMiddles = 0;
             int numberOfSeniors = 0;
+            switch (student.getRank_name().getRank_name())
+            {
+                case "juniors" -> ++numberOfJuniors;
+                case "middles" -> ++numberOfMiddles;
+                default -> ++numberOfSeniors;
+            }
             List<Request> requests = requestRepository.findIfIntersectByTime(day.getDate(), localStart, localEnd);
             for (Request request: requests)
             {
                 switch (request.getStudent().getRank_name().getRank_name())
                 {
-                    case "JUNIOR" -> ++numberOfJuniors;
-                    case "MIDDLE" -> ++numberOfMiddles;
+                    case "juniors" -> ++numberOfJuniors;
+                    case "middles" -> ++numberOfMiddles;
                     default -> ++numberOfSeniors;
                 }
             }
@@ -97,28 +108,32 @@ public class RequestServiceImpl implements RequestService
 
     public RequestStatus showStatusByStudentIdAndDate(Long studentId, LocalDate date)
     {
-        return requestRepository.findRequestStatusByStudentIdAndDayDate(studentId, date).get();
+        List<Request> requests = requestRepository.findByStudentIdAndDayDate(studentId, date);
+        if (requests.isEmpty())
+        {
+            throw new RequestNotFound("Request is not found");
+        }
+        return requests.get(0).getStatus();
     }
 
     public void changePresenceOfStudent(Long studentId, LocalDate date, Boolean hasCome)
     {
-        RequestStatus oldStatus = requestRepository.findRequestStatusByStudentIdAndDayDate(studentId, date).get();
-        RequestStatus requestStatus = new RequestStatus();
+        RequestStatus oldStatus = showStatusByStudentIdAndDate(studentId, date);
         if (hasCome)
         {
-            requestStatus.setStatus("HAS_COME");//статусы есть: "не просмотрено" (по умолчанию); "просмотрено" (не выводить в списке заявок);
+           requestRepository.updateStatusByDate(studentId, date, requestStatusRepository.findByStatus("HAS_COME").get());
+            //статусы есть: "не просмотрено" (по умолчанию); "просмотрено" (не выводить в списке заявок);
             //"пришел"; "не пришел" (уже после занятия, когда заполняется посещаемость)
             studentService.changeAttendedClasses(studentId, true); //при посещении надо изменить число посещенных занятий
         }
         else
         {
-            requestStatus.setStatus("HAS_NOT_COME");
+            requestRepository.updateStatusByDate(studentId, date, requestStatusRepository.findByStatus("HAS_NOT_COME").get());
             if (oldStatus.getStatus().equals("HAS_COME")) //если старый статус был "пришел", то он изменяется в отсутствие и надо уменьшить число занятий
             {
                 studentService.changeAttendedClasses(studentId, false);
             }
         }
-        requestRepository.updateStatusByDate(studentId, date, requestStatus);
     }
 
     public List<Student> findStudentsByTime(LocalDate date, LocalTime timeStart, LocalTime timeEnd)
@@ -133,9 +148,12 @@ public class RequestServiceImpl implements RequestService
 
     public void updateStatus(String status, long requestId)
     {
-        RequestStatus requestStatus = new RequestStatus();
-        requestStatus.setStatus(status);
-        requestRepository.updateStatus(requestStatus, requestId);
+        Optional<RequestStatus> requestStatusOptional = requestStatusRepository.findByStatus(status);
+        if (requestStatusOptional.isEmpty())
+        {
+            throw new RequestStatusNotFound("Request status is not found");
+        }
+        requestRepository.updateStatus(requestStatusOptional.get(), requestId);
     }
 
     public List<Request> findByStatus(String status)

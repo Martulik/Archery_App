@@ -1,5 +1,6 @@
 package spring.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.entity.Day;
@@ -16,10 +17,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class DayServiceImpl implements DayService
 {
-    @Autowired
-    private DayRepository dayRepository;
+    private final DayRepository dayRepository;
 
     public Day findByDate(LocalDate date)
     {

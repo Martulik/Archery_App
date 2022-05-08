@@ -1,5 +1,6 @@
 package spring.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.entity.ProfileStatus;
@@ -10,10 +11,11 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class ProfileStatusServiceImpl implements ProfileStatusService{
 
-    @Autowired
-    private ProfileStatusRepository profileStatusRepository;
+
+    private final ProfileStatusRepository profileStatusRepository;
 
     @Override
     public List<ProfileStatus> getStatusList() {

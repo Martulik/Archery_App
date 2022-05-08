@@ -23,9 +23,11 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     Boolean existsByStudentIdAndDayDate(Long studentId, LocalDate date);
     @Query("select r from Request r where r.day.date = ?1 and ((r.timeStart >= ?2 and r.timeStart <= ?3) or (r.timeEnd >= ?2 and r.timeEnd <= ?3) or (r.timeStart < ?2 and r.timeEnd > ?3))")
     List<Request> findIfIntersectByTime(LocalDate date, LocalTime timeStart, LocalTime timeEnd);
+    @Transactional
+    @Modifying
     void removeByStudentIdAndDayDateAndTimeStartAndTimeEnd(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
     List<Request> findByDayDate(LocalDate date);
-    Optional<RequestStatus> findRequestStatusByStudentIdAndDayDate(Long studentId, LocalDate date);
+    List<Request> findByStudentIdAndDayDate(Long studentId, LocalDate date);
     @Transactional
     @Modifying
     @Query("update Request r set r.status = :status where r.student.id = :studentId and r.day.date = :date")
@@ -35,5 +37,7 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     @Query("update Request r set r.status = :status where r.requestId = :requestId")
     void updateStatus(RequestStatus status, long requestId);
     List<Request> findByStatusStatus(String status);
+    @Transactional
+    @Modifying
     void removeByRequestId(Long requestId);
 }

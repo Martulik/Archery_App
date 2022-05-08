@@ -1,5 +1,6 @@
 package spring.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.entity.Rank;
@@ -8,10 +9,10 @@ import spring.repositories.RankRepository;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class RankServiceImpl implements RankService
 {
-    @Autowired
-    private RankRepository rankRepository;
+    private final RankRepository rankRepository;
 
     public List<Rank> findAll()
     {

@@ -69,7 +69,7 @@ public class Student implements UserDetails {
     @JsonManagedReference
     private ProfileStatus profile_status;
 
-    @Override
+    /*@Override
     public String toString() {
         return "Student{" +
                 "id=" + id +
@@ -86,7 +86,7 @@ public class Student implements UserDetails {
                 ", rank=" + rank_name +
                 ", profileStatus=" + profile_status +
                 '}';
-    }
+    }*/
 
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles = new ArrayList<>();

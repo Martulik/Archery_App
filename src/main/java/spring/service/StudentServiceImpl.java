@@ -1,5 +1,6 @@
 package spring.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -24,19 +25,20 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private ProfileStatusRepository profileStatusRepository;
-    @Autowired
-    private RankRepository rankRepository;
-    @Autowired
-    private ProfileStatusService profileStatusService;
-    @Autowired
-    private PasswordEncoder pwdEncoder;
-    @Autowired
-    private PurchaseHistoryService purchaseHistoryService;
+
+    private final StudentRepository studentRepository;
+
+    private final ProfileStatusRepository profileStatusRepository;
+
+    private final RankRepository rankRepository;
+
+    private final ProfileStatusService profileStatusService;
+
+    private final PasswordEncoder pwdEncoder;
+
+    private final PurchaseHistoryService purchaseHistoryService;
 
     @Override
     public Student createStudent(RegisterRequest request) {
