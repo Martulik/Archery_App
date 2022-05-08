@@ -11,7 +11,6 @@ import java.util.List;
 
 public interface RequestService {
     Boolean existsByStudentIdAndTime(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
-    Boolean existsByStudentIdAndDate(Long studentId, LocalDate date);
     Boolean addRequest(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
     void removeByStudentIdAndTime(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
     List<Student> findStudentsByDate(LocalDate date);
@@ -21,6 +20,11 @@ public interface RequestService {
     void removeRequest(Long requestId);
     void updateStatus(String status, long requestId);
     List<Request> findByStatus(String status);
+
+
+
+
+    Boolean existsByStudentIdAndDate(Long studentId, LocalDate date);
 
 
     /*void removeByDate(LocalDate date);

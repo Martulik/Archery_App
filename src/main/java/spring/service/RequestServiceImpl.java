@@ -35,10 +35,7 @@ public class RequestServiceImpl implements RequestService
         return requestRepository.existsByStudentIdAndDayDateAndTimeStartAndTimeEnd(studentId, date, timeStart, timeEnd);
     }
 
-    public Boolean existsByStudentIdAndDate(Long studentId, LocalDate date)
-    {
-        return requestRepository.existsByStudentIdAndDayDate(studentId, date);
-    }
+
     public Boolean addRequest(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
     {
         Day day = dayService.findByDate(date);
@@ -165,6 +162,17 @@ public class RequestServiceImpl implements RequestService
 
 
 
+
+
+
+
+
+
+
+    public Boolean existsByStudentIdAndDate(Long studentId, LocalDate date)
+    {
+        return requestRepository.existsByStudentIdAndDayDate(studentId, date);
+    }
 
     /*
     public void removeByDate(LocalDate date)

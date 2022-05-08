@@ -35,7 +35,7 @@ public class TimetableController
     @Autowired
     private StudentService studentService;
 
-    @GetMapping("")
+    /*@GetMapping("")
     public ResponseEntity<List<Day>> showTimetable()
     {
         LocalDate currentDate = LocalDate.now();
@@ -43,12 +43,12 @@ public class TimetableController
         LocalDate startOfTimetable = currentDate.minusDays(currentDayOfWeek + 7);
         LocalDate endOfTimetable = currentDate.plusDays(7 - currentDayOfWeek + 21);
         return new ResponseEntity<>(dayService.findFromTo(startOfTimetable, endOfTimetable), HttpStatus.OK);
-    }
+    }*/
 
     @GetMapping("/day")
     public ResponseEntity<String> showDay(@PathVariable Long id, @RequestParam LocalDate date)
     {
-        Day day = dayService.findByDate(date);
+        Day day = dayService.findByDate(date); //ловить искл?
         if (day.getDate().isBefore(LocalDate.now()))
         {
             return new ResponseEntity<>("День уже прошел", HttpStatus.OK);
