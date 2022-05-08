@@ -795,3 +795,18 @@ body {
 .margin-30px-bottom {
     margin-bottom: 30px;
 }
+
+.info {
+    font-family: 'Playfair Display';
+    font-weight: 500;
+
+    /*font-size: 16.1772px;*/
+    font-size: 2em;
+    /*line-height: 22px;*/
+    /* identical to box height */
+    margin-top: 2.5vh;
+    color: #000000;
+    text-align: center;
+    display: inline-block;
+    text-decoration: none;
+}

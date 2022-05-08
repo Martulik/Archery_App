@@ -7,7 +7,6 @@
     <!--===============================================================================================-->
     <link rel="stylesheet" type="text/css" href="../login/vendor/bootstrap/css/Bootstrap.min.css">
     <!--===============================================================================================-->
-    <script src="get.js"></script>
 </head>
 <body>
 <div class="container-xl px-4 mt-4">
@@ -48,13 +47,12 @@
                 <div class="card-header">Account Details</div>
                 <div class="card-body">
                     <form>
-                        <input type="submit" name="submit" value="students" onClick="getStudents()">
                         <!-- Form Group (username)-->
                         <div class="mb-3">
                             <label class="small mb-1" for="inputFirstname">First name</label>
                             <input class="form-control" id="inputFirstname" type="text"
                                    placeholder="Enter your username"
-                                   value="username">
+                                   value="">
                         </div>
                         <!-- Form Row-->
                         <div class="row gx-3 mb-3">
@@ -62,7 +60,7 @@
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputLastName">Last name</label>
                                 <input class="form-control" id="inputLastName" type="text"
-                                       placeholder="Enter your last name" value="Valerie">
+                                       placeholder="Enter your last name" value="">
                             </div>
                         </div>
                         <!-- Form Row        -->
@@ -72,7 +70,7 @@
                         <div class="mb-3">
                             <label class="small mb-1" for="inputEmailAddress">Email address</label>
                             <input class="form-control" id="inputEmailAddress" type="email"
-                                   placeholder="Enter your email address" value="name@example.com">
+                                   placeholder="Enter your email address" value="">
                         </div>
                         <!-- Form Row-->
                         <div class="row gx-3 mb-3">
@@ -80,17 +78,17 @@
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputPhone">Phone number</label>
                                 <input class="form-control" id="inputPhone" type="tel"
-                                       placeholder="Enter your phone number" value="555-123-4567">
+                                       placeholder="Enter your phone number" value="">
                             </div>
                             <!-- Form Group (birthday)-->
                             <div class="col-md-6">
                                 <label class="small mb-1" for="inputBirthday">Birthday</label>
                                 <input class="form-control" id="inputBirthday" type="text" name="birthday"
-                                       placeholder="Enter your birthday" value="06/10/1988">
+                                       placeholder="Enter your birthday" value="">
                             </div>
                         </div>
                         <!-- Save changes button-->
-                        <button class="btn btn-primary" type="button">Save changes</button>
+                        <button class="btn btn-primary" type="submit" onclick="save_changes()">Save changes</button>
                     </form>
                 </div>
             </div>
@@ -98,4 +96,7 @@
     </div>
 </div>
 </body>
+<script defer src="get.js"></script>
+<script src="post.js"></script>
+
 </html>

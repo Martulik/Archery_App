@@ -32,7 +32,6 @@ public class Rank {
         return "Rank{" +
                 "rank_name='" + rank_name + '\'' +
                 ", color='" + color + '\'' +
-                ", students=" + students +
                 '}';
     }
 }
