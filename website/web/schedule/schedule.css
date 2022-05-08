@@ -60,7 +60,7 @@
     background: whitesmoke;
     text-align: center;
     align-content: center;
-    border-radius: 32.3543px 30.3543px 202.215px 32.3543px;
+    border-radius: 32.3543px 30.3543px 30.3543px 32.3543px;
     margin-left: 3vw;
     margin-right: 3vw;
 }
@@ -168,6 +168,26 @@
     cursor: pointer;
 }
 
+.timeSchedule {
+    min-width: 100%;
+    min-height: 10px;
+    height: 10vh;
 
+}
+#timeWork{
+   display: none;
+}
 
+.time--content {
+    background-color: #EBF5DF;
+    border-color: grey;
 
+    /*min-width: 200px;*/
+    min-width: calc(70vw/8);
+    /*width: 25%;*/
+    margin: 1%;
+    box-sizing: border-box;
+    border-radius: 2%;
+    box-shadow: 0 0.2rem 0.2rem rgba(0, 0, 0, 0.4);
+    cursor: pointer;
+}

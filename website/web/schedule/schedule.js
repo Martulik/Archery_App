@@ -1,31 +1,31 @@
-const date = new Date();
+var date = new Date();
 
-const renderCalendar = () => {
+function renderCalendar() {
     date.setDate(1);
 
-    const monthDays = document.querySelector(".days");
+    var monthDays = document.querySelector(".days");
 
-    const lastDay = new Date(
+    var lastDay = new Date(
         date.getFullYear(),
         date.getMonth() + 1,
         0
     ).getDate();
 
-    const prevLastDay = new Date(
+    var prevLastDay = new Date(
         date.getFullYear(),
         date.getMonth(),
         0
     ).getDate();
 
-    const firstDayIndex = date.getDay();
+    var firstDayIndex = date.getDay();
 
-    const lastDayIndex = new Date(
+    var lastDayIndex = new Date(
         date.getFullYear(),
         date.getMonth() + 1,
         0
     ).getDay();
 
-    const nextDays = 7 - lastDayIndex - 1;
+    var nextDays = 7 - lastDayIndex - 1;
 
     const months = [
         "January",
@@ -42,7 +42,7 @@ const renderCalendar = () => {
         "December",
     ];
 
-    document.querySelector(".date h1").innerHTML = months[date.getMonth()]/*+"   "+date.getFullYear().toString()*/;
+    document.querySelector(".date h1").innerHTML = months[date.getMonth()]+"   "+date.getFullYear().toString();
 
     document.querySelector(".date p").innerHTML = new Date().toDateString();
 
