@@ -7,5 +7,5 @@ import java.util.List;
 public interface RankService
 {
     List<Rank> findAll();
-    void changeColor(String color, String name);
+    //void changeColor(String color, String name);
 }

@@ -4,6 +4,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Date;
 import java.sql.Time;
@@ -13,10 +14,11 @@ import java.util.Objects;
 @Getter
 @Setter
 @Table(name = "days")
-public class Day {
+public class Day
+{
     @Id
     @Column(name = "date", nullable = false)
-    private Date date;
+    private LocalDate date;
     @Basic
     @Column(name = "time_start")
     private LocalTime timeStart;

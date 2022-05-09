@@ -1,5 +1,6 @@
 package spring.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.entity.Day;
@@ -9,18 +10,20 @@ import spring.repositories.DayRepository;
 import spring.repositories.RequestRepository;
 
 import java.sql.Time;
+import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class DayServiceImpl implements DayService
 {
-    private DayRepository dayRepository;
-    private RequestRepository requestRepository;
+    private final DayRepository dayRepository;
 
-    public Day findByDate(Date date)
+    public Day findByDate(LocalDate date)
     {
         Optional<Day> optionalDay = dayRepository.findByDate(date);
         if (optionalDay.isPresent())
@@ -30,17 +33,35 @@ public class DayServiceImpl implements DayService
         throw new DayNotFoundException("Day is not found");
     }
 
-    public List<Day> findFromTo(Date start, Date end)
+    public List<Day> findFromTo(LocalDate start, LocalDate end)
     {
         return dayRepository.findFromTo(start, end);
     }
 
-    public Boolean areLessons(Date date)
+    public List<LocalDate> showMonth()
+    {
+        LocalDate currentDate = LocalDate.now();
+        List<LocalDate> dates = new ArrayList<>();
+        for (int i = 1; i <= currentDate.getMonth().length(false); ++i)
+        {
+            dates.add(LocalDate.of(currentDate.getYear(), currentDate.getMonth(), i));
+        }
+        return dates;
+    }
+
+
+
+
+
+
+
+
+    /*public Boolean areLessons(LocalDate date)
     {
         return dayRepository.findByDateAndAreLessons(date, true);
     }
 
-    public void changeAreLessons(Date date)
+    public void changeAreLessons(LocalDate date)
     {
         Day day = findByDate(date);
         if (day.getAreLessons())
@@ -54,7 +75,7 @@ public class DayServiceImpl implements DayService
         }
     }
 
-    public void changeTimeStart(Date date, LocalTime timeStart)
+    public void changeTimeStart(LocalDate date, LocalTime timeStart)
     {
         Day day = findByDate(date);
         requestRepository.removeByDayDate(date); //добавить случай, когда начало ставят позже конца
@@ -65,7 +86,7 @@ public class DayServiceImpl implements DayService
         day.setTimeStart(timeStart);
     }
 
-    public void changeTimeEnd(Date date, LocalTime timeEnd)
+    public void changeTimeEnd(LocalDate date, LocalTime timeEnd)
     {
         Day day = findByDate(date);
         requestRepository.removeByDayDate(date);
@@ -77,13 +98,8 @@ public class DayServiceImpl implements DayService
     }
 
     @Autowired
-    public void setDayRepository(DayRepository dayRepository)
-    {
-        this.dayRepository = dayRepository;
-    }
-    @Autowired
     public void setRequestRepository(RequestRepository requestRepository)
     {
         this.requestRepository = requestRepository;
-    }
+    }*/
 }

@@ -1,5 +1,6 @@
 package spring.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -19,22 +20,29 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.util.Date;
+import java.util.List;
+import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.*;
 
 @Service
+@RequiredArgsConstructor
 public class StudentServiceImpl implements StudentService {
-    @Autowired
-    private StudentRepository studentRepository;
-    @Autowired
-    private ProfileStatusRepository profileStatusRepository;
-    @Autowired
-    private RankRepository rankRepository;
-    @Autowired
-    private PasswordEncoder pwdEncoder;
-    @Autowired
-    private PurchaseHistoryService purchaseHistoryService;
-    @Autowired
-    ProfileStatusService profileStatusService;
+
+    private final StudentRepository studentRepository;
+
+    private final ProfileStatusRepository profileStatusRepository;
+
+    private final RankRepository rankRepository;
+
+    private final ProfileStatusService profileStatusService;
+
+    private final PasswordEncoder pwdEncoder;
+
+    private final PurchaseHistoryService purchaseHistoryService;
+
 
     @Override
     public Student createStudent(RegisterRequest request) {
@@ -229,6 +237,9 @@ public class StudentServiceImpl implements StudentService {
         throw new StudentNotFoundException("Invalid student_id");
     }
 
+
+
+
     @Override
     @Transactional
     public void updateHasPaid(long student_id, Boolean hasPaid) {
@@ -263,20 +274,41 @@ public class StudentServiceImpl implements StudentService {
     public void changeAttendedClasses(Long id, Boolean toIncrease) {
         if (toIncrease) {
             studentRepository.increaseAttendedClasses(id);
-            Date date = new Date(); //пока так, потом разбираться с датами и взять актуальную
+            LocalDate date = LocalDate.now();
             purchaseHistoryService.changeAvailableClassesFromActivePurchase(id, date, true); //в активном абонементе уменьшить
         } //число доступных занятий
         else {
             studentRepository.decreaseAttendedClasses(id); //если админ ошиблась и хочет обратно уменьшить число посещенных занятий
-            Date date = new Date(); //тогда в активном абонементе надо обратно увеличить число доступных занятий
+            LocalDate date = LocalDate.now(); //тогда в активном абонементе надо обратно увеличить число доступных занятий
             if (!purchaseHistoryService.changeAvailableClassesFromActivePurchase(id, date, false)) //если активного абонемента не оказалось
             { //(например, сбросился, так как число доступных занятий стало равно нулю в результате ошибки, случайного нажатия),
                 purchaseHistoryService.changeAvailableClassesFromLastPurchase(id, false); //то вместо него увеличить число доступных занятий в последнем купленном абонементе
-                studentRepository.updateHasPaid(id, true); //(очевидно, он и был активным)
+                //studentRepository.updateHasPaid(id, true); //(очевидно, он и был активным)
             } //тогда нужно обновить поле "оплатил", так как при сбросе активного абонемента оно становится false, а здесь сброс откатили, снова добавив
         } //доступные занятия в последнем купленном абонементе
     }
 
+
+
+        /*@Override
+    public void updateHasPaid(long student_id, Boolean hasPaid)
+    {
+        if (hasPaid)
+        {
+            studentRepository.updateHasPaid(student_id, true);
+        }
+        studentRepository.updateHasPaid(student_id, false);
+    }*/
+
+       /* public Boolean hasPaid(long id)
+    {
+        Optional<Student> optionalStudent = studentRepository.findById(id);
+        if (optionalStudent.isPresent())
+        {
+            return optionalStudent.get().getHasPaid();
+        }
+        throw new StudentNotFoundException("Student not found");
+    }*/
 //    @Override
 //    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 //        Optional<Student> student = studentRepository.findUserByEmail(username);
