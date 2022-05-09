@@ -63,11 +63,21 @@ function renderCalendar() {
         }
     }
 
+    if (nextDays > 0) {
+        for (let j = 1; j <= nextDays; j++) {
+            days += `<div id="notToday" class="next-date">${j}</div>`;
+            monthDays.innerHTML = days;
+        }
+    } else {
+        monthDays.innerHTML = days;
+    }
+
+
     for (let j = 1; j <= nextDays; j++) {
         days += `<div id="notToday" class="next-date">${j}</div>`;
         monthDays.innerHTML = days;
     }
-};
+}
 
 document.querySelector(".prev").addEventListener("click", () => {
     date.setMonth(date.getMonth() - 1);
