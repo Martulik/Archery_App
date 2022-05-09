@@ -174,8 +174,9 @@
     height: 10vh;
     font-weight: 400;
     text-align: center;
-    display: none;
+    display: flex;
 }
+
 .time--content {
     background-color:#BAD4AA;
 

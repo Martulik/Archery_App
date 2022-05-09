@@ -15,9 +15,30 @@ document.querySelector('.days').addEventListener('click', function () {
 
 
 document.querySelector('.schedule .days').addEventListener('click', function () {
-    let elem = document.getElementsByClassName("timeSchedule");
-    /*if (elem.style.display === "none"){*/
-    /*
-    }*/
-    event.style.display ='flex';
+    cleaar();
+    if (!event.target.classList.contains("next-date") && !event.target.classList.contains("prev-date")) {
+        let time= "";
+        let startTime = 17;
+        let min;
+
+        for (let x = 1; x<=8; x++) { //поменять надо
+            if(x%2 === 1 ){
+                startTime +=1;
+                min = ":00";
+                time += `<div class="time--content">${startTime}${min}</div>`;
+            } else {
+                min = ":30";
+                time += `<div class="time--content">${startTime}${min}</div>`;
+            }
+        }
+
+        var monthDays = document.querySelector(".timeSchedule");
+        for(let x = 1; x<=8; x++){
+            monthDays.innerHTML = time;
+        }
+    }
 });
+
+function cleaar() {
+    document.getElementById("timeS").innerHTML = "";
+}

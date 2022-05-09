@@ -77,6 +77,8 @@ function renderCalendar() {
         days += `<div id="notToday" class="next-date">${j}</div>`;
         monthDays.innerHTML = days;
     }
+
+
 }
 
 document.querySelector(".prev").addEventListener("click", () => {
