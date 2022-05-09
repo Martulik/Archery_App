@@ -2,20 +2,20 @@ package spring.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import spring.entity.*;
 import spring.exception.RequestNotFound;
 import spring.exception.RequestStatusNotFound;
+import spring.exception.SeasonTicketNotFoundException;
 import spring.repositories.RequestRepository;
 import spring.repositories.RequestStatusRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
+import java.util.*;
 import java.sql.Time;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static spring.Application.*;
@@ -29,6 +29,13 @@ public class RequestServiceImpl implements RequestService
     private final StudentService studentService;
     private final DayService dayService;
     private final RequestStatusRepository requestStatusRepository;
+    private final PurchaseHistoryService purchaseHistoryService;
+
+
+    public List<Request> findByTime(LocalDate date, LocalTime timeStart, LocalTime timeEnd)
+    {
+        return requestRepository.findByDayDateAndTimeStartAndTimeEnd(date, timeStart, timeEnd);
+    }
 
     public Boolean existsByStudentIdAndTime(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
     {
@@ -36,60 +43,16 @@ public class RequestServiceImpl implements RequestService
     }
 
 
-    public Boolean addRequest(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
+    public void addRequest(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
     {
         Day day = dayService.findByDate(date);
-        Student student = studentService.findStudentById(studentId); //нужно ли обработать искл?
-        final long SESSION = 30L;
-        LocalTime localStart = timeStart;
-        LocalTime localEnd = timeStart;
-        while (localEnd.isBefore(timeEnd))
-        {
-            localEnd = localEnd.plusMinutes(SESSION);
-            if (localEnd.isAfter(timeEnd))
-            {
-                localEnd = timeEnd;
-            }
-            int numberOfJuniors = 0;
-            int numberOfMiddles = 0;
-            int numberOfSeniors = 0;
-            switch (student.getRank_name().getRank_name())
-            {
-                case "juniors" -> ++numberOfJuniors;
-                case "middles" -> ++numberOfMiddles;
-                default -> ++numberOfSeniors;
-            }
-            List<Request> requests = requestRepository.findIfIntersectByTime(day.getDate(), localStart, localEnd);
-            for (Request request: requests)
-            {
-                switch (request.getStudent().getRank_name().getRank_name())
-                {
-                    case "juniors" -> ++numberOfJuniors;
-                    case "middles" -> ++numberOfMiddles;
-                    default -> ++numberOfSeniors;
-                }
-            }
-            if (numberOfJuniors > wishedNumberOfJuniors)
-            {
-                return false;
-            }
-            if (numberOfJuniors + numberOfMiddles > wishedNumberOfDemandingTrainer)
-            {
-                return false;
-            }
-            if (numberOfJuniors + numberOfMiddles / 2 + numberOfMiddles % 2 + numberOfSeniors / 2 + numberOfSeniors % 2 > numberOfShields)
-            {
-                return false;
-            }
-            localStart = localStart.plusMinutes(SESSION);
-        }
+        Student student = studentService.findStudentById(studentId);
         Request request = new Request();
         request.setDay(day);
         request.setStudent(student);
         request.setTimeStart(timeStart);
         request.setTimeEnd(timeEnd);
         requestRepository.save(request);
-        return true;
     }
 
     public void removeByStudentIdAndTime(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
@@ -101,6 +64,11 @@ public class RequestServiceImpl implements RequestService
     {
         List<Request> requests = requestRepository.findByDayDate(date);
         return requests.stream().map(Request::getStudent).distinct().collect(Collectors.toList());
+    }
+
+    public List<Request> findByStudentIdAndDate(Long studentId, LocalDate date)
+    {
+        return requestRepository.findByStudentIdAndDayDate(studentId, date);
     }
 
     public RequestStatus showStatusByStudentIdAndDate(Long studentId, LocalDate date)
@@ -157,7 +125,87 @@ public class RequestServiceImpl implements RequestService
     {
         return requestRepository.findByStatusStatus(status);
     }
+    public  List<String> showInfoAboutSession(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
+    {
+        int numberOfJuniors = 0; //блок вывода информации о посещаемости
+        int numberOfMiddles = 0;
+        int numberOfSeniors = 0;
+        List<Request> requests = requestRepository.findByDayDateAndTimeStartAndTimeEnd(date, timeStart, timeEnd);
+        for (Request request: requests)
+        {
+            switch (request.getStudent().getRank_name().getRank_name())
+            {
+                case "juniors" -> ++numberOfJuniors;
+                case "middles" -> ++numberOfMiddles;
+                default -> ++numberOfSeniors;
+            }
+        }
+        int numberOfOccupiedShiels = numberOfJuniors + numberOfMiddles / 2 + numberOfMiddles % 2 + numberOfSeniors / 2 + numberOfSeniors % 2;
+        List<String> info = new ArrayList<>();
+        info.add(Integer.toString(numberOfJuniors));
+        info.add(Integer.toString(numberOfMiddles));
+        info.add(Integer.toString(numberOfSeniors));
+        info.add(Integer.toString(numberOfOccupiedShiels));
 
+
+        if (LocalDate.now().isAfter(date) || (LocalDate.now().isEqual(date) && (LocalTime.now().isAfter(timeStart))))
+        {
+            info.add("Редактирование заявки недоступно: занятие уже началось или прошло"); //проверка на актуальность времени
+            return info;
+        }
+
+        if (existsByStudentIdAndTime(studentId, date, timeStart, timeEnd)) //проверка, записан(а) ли уже
+        {
+            info.add("Отменить заявку");
+            return info;
+        }
+
+        LocalTime timeDuration; //проверка, можно ли еще записаться (связано с билетом и заявками на сегодня)
+        try
+        {
+            SeasonTicket ticket = purchaseHistoryService.findActiveSeasonTicket(studentId, date);
+            timeDuration = ticket.getTimeDuration();
+        }
+        catch (SeasonTicketNotFoundException e)
+        {
+            if (purchaseHistoryService.existByStudentId(studentId))
+            {
+                info.add("Нет активного абонемента на момент этой даты");
+                return info;
+            }
+            timeDuration = lenghtOfMasterClass;
+        }
+        if (!timeDuration.equals(LocalTime.of(23, 59)))
+        {
+            int numberOfSessions = timeDuration.getHour() * 2;
+            if (timeDuration.getMinute() >= 30)
+            {
+                ++numberOfSessions;
+            }
+            if (findByStudentIdAndDate(studentId, date).size() + 1 > numberOfSessions)
+            {
+                info.add("Число ваших заявок на сегодня достигло лимита");
+                return info;
+            }
+        }
+
+        Student student = studentService.findStudentById(studentId);
+        switch (student.getRank_name().getRank_name())
+        {
+            case "juniors" -> ++numberOfJuniors;
+            case "middles" -> ++numberOfMiddles;
+            default -> ++numberOfSeniors;
+        }
+        numberOfOccupiedShiels = numberOfJuniors + numberOfMiddles / 2 + numberOfMiddles % 2 + numberOfSeniors / 2 + numberOfSeniors % 2;
+        if (numberOfJuniors > wishedNumberOfJuniors || numberOfJuniors + numberOfMiddles > wishedNumberOfDemandingTrainer
+                || numberOfOccupiedShiels > numberOfShields)
+        {
+            info.add("Нельзя записаться из-за превышенного числа учеников по рангу или по щитам");
+            return info;
+        }
+        info.add("Записаться");
+        return info;
+    }
 
 
 

@@ -10,8 +10,9 @@ import java.util.Date;
 import java.util.List;
 
 public interface RequestService {
+    List<Request> findByTime(LocalDate date, LocalTime timeStart, LocalTime timeEnd);
     Boolean existsByStudentIdAndTime(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
-    Boolean addRequest(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
+    void addRequest(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
     void removeByStudentIdAndTime(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
     List<Student> findStudentsByDate(LocalDate date);
     RequestStatus showStatusByStudentIdAndDate(Long studentId, LocalDate date);
@@ -20,7 +21,8 @@ public interface RequestService {
     void removeRequest(Long requestId);
     void updateStatus(String status, long requestId);
     List<Request> findByStatus(String status);
-
+    List<Request> findByStudentIdAndDate(Long studentId, LocalDate date);
+    List<String> showInfoAboutSession(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
 
 
 

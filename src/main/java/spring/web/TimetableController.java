@@ -1,12 +1,17 @@
 package spring.web;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import spring.entity.Day;
+import spring.entity.Request;
 import spring.entity.SeasonTicket;
+import spring.entity.Student;
+import spring.exception.DayNotFoundException;
 import spring.exception.SeasonTicketNotFoundException;
+import spring.repositories.RequestRepository;
 import spring.service.DayService;
 import spring.service.PurchaseHistoryService;
 import spring.service.RequestService;
@@ -20,105 +25,58 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
 
-import static spring.Application.lenghtOfMasterClass;
+import static spring.Application.*;
 
 @RestController
-@RequestMapping("/archery/{id}/timetable")
+@RequestMapping("/archery/timetable/{id}")
+@RequiredArgsConstructor
 public class TimetableController
 {
-    @Autowired
-    private DayService dayService;
-    @Autowired
-    private PurchaseHistoryService purchaseHistoryService;
-    @Autowired
-    private RequestService requestService;
-    @Autowired
-    private StudentService studentService;
+    private final DayService dayService;
+    private final PurchaseHistoryService purchaseHistoryService;
+    private final RequestService requestService;
+    private final StudentService studentService;
+    private final RequestRepository requestRepository;
 
-    /*@GetMapping("")
-    public ResponseEntity<List<Day>> showTimetable()
+    @GetMapping("")
+    public ResponseEntity<List<LocalDate>> showTimetable()
     {
-        LocalDate currentDate = LocalDate.now();
-        int currentDayOfWeek = currentDate.getDayOfWeek().getValue();
-        LocalDate startOfTimetable = currentDate.minusDays(currentDayOfWeek + 7);
-        LocalDate endOfTimetable = currentDate.plusDays(7 - currentDayOfWeek + 21);
-        return new ResponseEntity<>(dayService.findFromTo(startOfTimetable, endOfTimetable), HttpStatus.OK);
-    }*/
+        return new ResponseEntity<>(dayService.showMonth(), HttpStatus.OK);
+    }
 
     @GetMapping("/day")
-    public ResponseEntity<String> showDay(@PathVariable Long id, @RequestParam LocalDate date)
+    public ResponseEntity<Boolean> showDay(@PathVariable Long id, @RequestParam LocalDate date)
     {
-        Day day = dayService.findByDate(date); //ловить искл?
-        if (day.getDate().isBefore(LocalDate.now()))
-        {
-            return new ResponseEntity<>("День уже прошел", HttpStatus.OK);
-        }
-        if (!day.getAreLessons())
-        {
-            return new ResponseEntity<>("Занятий нет", HttpStatus.OK);
-        }
-        LocalTime lesson;
-        try
-        {
-            lesson = purchaseHistoryService.findActiveSeasonTicket(id, date).getTimeDuration();
-            if (lesson == LocalTime.of(23, 59))
-            {
-                lesson = LocalTime.of(0, 30);
+        try {
+            Day day = dayService.findByDate(date);
+            if (!day.getAreLessons()) {
+                return new ResponseEntity<>(false, HttpStatus.OK);
             }
+            return new ResponseEntity<>(true, HttpStatus.OK);
         }
-        catch (SeasonTicketNotFoundException e)
+        catch (DayNotFoundException e)
         {
-            if (purchaseHistoryService.existByStudentId(id))
-            {
-                return new ResponseEntity<>("Нет активного абонемента. Продлите для записи", HttpStatus.OK);
-            }
-            lesson = lenghtOfMasterClass;
+            return new ResponseEntity<>(false, HttpStatus.OK);
         }
-        List<String> lessons = new ArrayList<>();
-        LocalTime localStart = day.getTimeStart();
-        LocalTime localEnd = day.getTimeStart().plusMinutes(lesson.getMinute());
-        while (localEnd.isBefore(day.getTimeEnd()))
-        {
-            lessons.add(localStart + "-" + localEnd);
-            localStart = localStart.plusMinutes(lesson.getMinute());
-            localEnd = localEnd.plusMinutes(lesson.getMinute());
-        }
-        return new ResponseEntity<>(lessons.toString(), HttpStatus.OK); //пока так, но должен быть список ссылок на каждый урок
     }
 
     @GetMapping("/day/lesson")
-    public ResponseEntity<String> showLesson(@PathVariable Long id, @RequestParam LocalDate date, @RequestParam LocalTime timeStart, @RequestParam LocalTime timeEnd)
+    public ResponseEntity<List<String>> showLesson(@PathVariable Long id, @RequestParam LocalDate date, @RequestParam LocalTime timeStart, @RequestParam LocalTime timeEnd)
     {
-        if (timeStart.isBefore(LocalTime.now()) && date.isBefore(LocalDate.now()))
-        {
-            return new ResponseEntity<>("Занятие уже началось или прошло", HttpStatus.OK);
-        }
-        if (requestService.existsByStudentIdAndTime(id, date, timeStart, timeEnd))
-        {
-            return new ResponseEntity<>("Отменить заявку", HttpStatus.OK);
-        }
-        SeasonTicket ticket = purchaseHistoryService.findActiveSeasonTicket(id, date);
-        if (ticket.getTimeDuration() == LocalTime.MAX || !requestService.existsByStudentIdAndDate(id, date))
-        {
-            return new ResponseEntity<>("Записаться", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Вы уже записались на другое время", HttpStatus.OK);
+        return new ResponseEntity<>(requestService.showInfoAboutSession(id, date, timeStart, timeEnd), HttpStatus.OK);
     }
 
     @PostMapping("/day/lesson/signup")
     public ResponseEntity<String> signUpLesson(@PathVariable Long id, @RequestParam LocalDate date, @RequestParam LocalTime timeStart, @RequestParam LocalTime timeEnd)
     {
-        if (requestService.addRequest(id, date, timeStart, timeEnd))
-        {
-            return new ResponseEntity<>("Запись успешна", HttpStatus.OK);
-        }
-        return new ResponseEntity<>("Нельзя записаться из-за числа учеников", HttpStatus.OK);
+        requestService.addRequest(id, date, timeStart, timeEnd);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/day/lesson/remove")
     public ResponseEntity<String> removeRequest(@PathVariable Long id, @RequestParam LocalDate date, @RequestParam LocalTime timeStart, @RequestParam LocalTime timeEnd)
     {
         requestService.removeByStudentIdAndTime(id, date, timeStart, timeEnd);
-        return new ResponseEntity<>("Удаление заявки успешно", HttpStatus.OK);
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

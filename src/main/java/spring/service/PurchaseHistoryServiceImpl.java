@@ -8,6 +8,7 @@ import spring.entity.SeasonTicket;
 import spring.entity.Student;
 import spring.exception.SeasonTicketNotFoundException;
 import spring.repositories.PurchaseHistoryRepository;
+import spring.repositories.SeasonTicketRepository;
 
 import java.time.LocalDate;
 import java.util.Date;
@@ -85,6 +86,17 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService
         return false;
     }
 
+    public PurchaseHistory addPurchase(Student student, LocalDate startDate, SeasonTicket seasonTicket)
+    {
+        PurchaseHistory purchaseHistory = new PurchaseHistory();
+        purchaseHistory.setStudent(student);
+        purchaseHistory.setStartDate(startDate);
+        purchaseHistory.setSeasonTicket(seasonTicket);
+        purchaseHistory.setAvailableClasses(seasonTicket.getNumberOfClasses());
+        purchaseHistoryRepository.save(purchaseHistory);
+        return purchaseHistory;
+    }
+
 
     /*public Boolean checkActiveSeasonTicket(Long studentId, LocalDate date)
     {
@@ -97,14 +109,5 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService
         return listPurchaseHistory.stream().map(PurchaseHistory::getSeasonTicket).toList();
     }
 
-    public PurchaseHistory addPurchase(Student student, LocalDate startDate, SeasonTicket seasonTicket)
-    {
-        PurchaseHistory purchaseHistory = new PurchaseHistory();
-        purchaseHistory.setStudent(student);
-        purchaseHistory.setStartDate(startDate);
-        purchaseHistory.setSeasonTicket(seasonTicket);
-        purchaseHistory.setAvailableClasses(seasonTicket.getNumberOfClasses());
-        purchaseHistoryRepository.save(purchaseHistory);
-        return purchaseHistory;
-    }*/
+*/
 }

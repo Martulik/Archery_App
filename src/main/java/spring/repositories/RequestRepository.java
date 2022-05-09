@@ -19,8 +19,9 @@ import java.util.Optional;
 
 @Repository
 public interface RequestRepository extends JpaRepository<Request, Long> {
+
+    List<Request> findByDayDateAndTimeStartAndTimeEnd(LocalDate date, LocalTime timeStart, LocalTime timeEnd);
     Boolean existsByStudentIdAndDayDateAndTimeStartAndTimeEnd(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
-    Boolean existsByStudentIdAndDayDate(Long studentId, LocalDate date);
     @Query("select r from Request r where r.day.date = ?1 and ((r.timeStart >= ?2 and r.timeStart <= ?3) or (r.timeEnd >= ?2 and r.timeEnd <= ?3) or (r.timeStart < ?2 and r.timeEnd > ?3))")
     List<Request> findIfIntersectByTime(LocalDate date, LocalTime timeStart, LocalTime timeEnd);
     @Transactional
@@ -40,4 +41,8 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     @Transactional
     @Modifying
     void removeByRequestId(Long requestId);
+
+
+
+    Boolean existsByStudentIdAndDayDate(Long studentId, LocalDate date);
 }

@@ -12,6 +12,7 @@ import spring.repositories.RequestRepository;
 import java.sql.Time;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -35,6 +36,17 @@ public class DayServiceImpl implements DayService
     public List<Day> findFromTo(LocalDate start, LocalDate end)
     {
         return dayRepository.findFromTo(start, end);
+    }
+
+    public List<LocalDate> showMonth()
+    {
+        LocalDate currentDate = LocalDate.now();
+        List<LocalDate> dates = new ArrayList<>();
+        for (int i = 1; i <= currentDate.getMonth().length(false); ++i)
+        {
+            dates.add(LocalDate.of(currentDate.getYear(), currentDate.getMonth(), i));
+        }
+        return dates;
     }
 
 
