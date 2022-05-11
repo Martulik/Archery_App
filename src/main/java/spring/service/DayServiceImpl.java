@@ -49,6 +49,14 @@ public class DayServiceImpl implements DayService
         return dates;
     }
 
+    public void addDay(Day day)
+    {
+        if (dayRepository.findByDate(day.getDate()).isEmpty())
+        {
+            dayRepository.save(day);
+        }
+    }
+
 
 
 

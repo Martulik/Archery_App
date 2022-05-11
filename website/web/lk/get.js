@@ -78,7 +78,7 @@ function getData(url, field_id) {
         document.getElementById(field_id).value = data;
         // console.log(data);
     }).catch(err => {
-        alert("Fail");
+        // alert("Fail");
         console.log(err);
     });
 }

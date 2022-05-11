@@ -14,6 +14,8 @@ public interface DayService {
     List<Day> findFromTo(LocalDate start, LocalDate end);
     List<LocalDate> showMonth();
 
+    void addDay(Day day);
+
 
 
 
