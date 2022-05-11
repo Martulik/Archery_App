@@ -1,7 +1,6 @@
 package spring.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import spring.entity.ProfileStatus;
@@ -14,7 +13,7 @@ import spring.repositories.ProfileStatusRepository;
 import spring.repositories.RankRepository;
 import spring.repositories.StudentRepository;
 import spring.requests.RegisterRequest;
-import spring.utils.ProfileStatusConstants;
+import spring.utils.Constants;
 
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +41,8 @@ public class StudentServiceImpl implements StudentService {
     private final PasswordEncoder pwdEncoder;
 
     private final PurchaseHistoryService purchaseHistoryService;
+
+    private final RankService rankService;
 
 
     @Override
@@ -71,7 +72,8 @@ public class StudentServiceImpl implements StudentService {
             student.setEmail(email); //проверить на корректность (и на существование такого?)
         }                           //разобраться как отправлять письмо на почту с подтверждением
 
-        student.setProfile_status(profileStatusService.findByProfileStatus(ProfileStatusConstants.ON_CHECKING));
+        student.setProfile_status(profileStatusService.findByProfileStatus(Constants.ProfileStatusConst.ON_CHECKING));
+        student.setRank_name(rankService.findByRankName(Constants.RankConst.NOT_SELECT));
         student.setRoles(Collections.singletonList("ROLE_USER"));
         student.setPassword_hash(pwdEncoder.encode(request.getPassword_hash()));
 
