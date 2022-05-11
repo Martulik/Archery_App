@@ -150,7 +150,7 @@ function addRow(id, user) {
 
 
     // rang
-    var rangs = ["middles", "juniors", "seniors", "no rang"];
+    var rangs = ["middles", "juniors", "seniors", "no rank"];
     var td5 = document.createElement("td")
     row.appendChild(td5);
     let div5 = document.createElement("div");
