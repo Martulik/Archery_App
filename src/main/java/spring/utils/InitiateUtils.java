@@ -16,6 +16,8 @@ import spring.requests.RegisterRequest;
 import spring.service.ProfileStatusServiceImpl;
 import spring.service.StudentServiceImpl;
 
+import java.util.Collections;
+
 @Service
 @RequiredArgsConstructor
 @Component
@@ -51,6 +53,15 @@ public class InitiateUtils implements CommandLineRunner {
         //studentRepository.deleteById(11L);
 //        studentRepository.save(studentService.createStudent(new RegisterRequest("Kate", "Borisova", "89171124120", "kate_boriso2002@mail.ru", "04.04.2002", "pwd")));
 //
+        
+//        System.out.println("создаем аккаунт админа");
+//        RegisterRequest request = new RegisterRequest("admin", "admin", "89500308212", "paradox@mail.ru", "1985-03-02", "pwd");
+//        Student student = studentService.createStudent(request);
+//        student.setRoles(Collections.singletonList("ROLE_ADMIN"));
+//        studentRepository.save(student);
+
+
+
         for (Student st :studentService.getAllStudents()) {
             System.out.println(st.toString());
         }

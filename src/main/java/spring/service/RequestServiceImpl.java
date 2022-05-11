@@ -174,12 +174,14 @@ public class RequestServiceImpl implements RequestService
         Optional<Request> optionalRequest = requestRepository.findIfAPartOfStudentRequest(studentId, date, timeStart, timeStart.plusMinutes(29));
         if (optionalRequest.isPresent()) //проверка, записан(а) ли уже
         {
-            if (date.isEqual(LocalDate.now()) && optionalRequest.get().getTimeStart().isBefore(LocalTime.now()))
+            LocalTime timeStartFoRemoving = optionalRequest.get().getTimeStart();
+            if (date.isEqual(LocalDate.now()) && timeStartFoRemoving.isBefore(LocalTime.now()))
             {
                 info.add("Редактирование заявки недоступно: занятие уже началось или прошло");
                 return info;
             }
             info.add("Отменить заявку");
+            info.add(timeStartFoRemoving.toString());
             return info;
         }
 
