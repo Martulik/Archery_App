@@ -1,82 +1,95 @@
 package spring.web;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import spring.entity.Day;
-import spring.entity.Request;
-import spring.entity.SeasonTicket;
 import spring.entity.Student;
 import spring.exception.DayNotFoundException;
-import spring.exception.SeasonTicketNotFoundException;
 import spring.repositories.RequestRepository;
+import spring.requests.LessonRequest;
 import spring.service.DayService;
 import spring.service.PurchaseHistoryService;
 import spring.service.RequestService;
 import spring.service.StudentService;
 
-import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 
-import static spring.Application.*;
-
 @RestController
-@RequestMapping("/archery/timetable/{id}")
+@RequestMapping("/archery/timetable")
 @RequiredArgsConstructor
-public class TimetableController
-{
+public class TimetableController {
     private final DayService dayService;
-    private final PurchaseHistoryService purchaseHistoryService;
     private final RequestService requestService;
     private final StudentService studentService;
-    private final RequestRepository requestRepository;
 
-    @GetMapping("")
-    public ResponseEntity<List<LocalDate>> showTimetable()
-    {
+    @GetMapping("/")
+    public ResponseEntity<List<LocalDate>> showTimetable() {
         return new ResponseEntity<>(dayService.showMonth(), HttpStatus.OK);
     }
 
     @GetMapping("/day")
-    public ResponseEntity<Boolean> showDay(@PathVariable Long id, @RequestParam LocalDate date)
-    {
+    public ResponseEntity<Boolean> showDay(@RequestParam String date) { //вроде можно из js пересылать USVString, либо сделать обертку
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        LocalDate localDate = LocalDate.parse(date, dtf);
         try {
-            Day day = dayService.findByDate(date);
+            Day day = dayService.findByDate(localDate);
             if (!day.getAreLessons()) {
-                return new ResponseEntity<>(false, HttpStatus.OK);
+                return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE); //406
             }
             return new ResponseEntity<>(true, HttpStatus.OK);
-        }
-        catch (DayNotFoundException e)
-        {
-            return new ResponseEntity<>(false, HttpStatus.OK);
+        } catch (DayNotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400
         }
     }
 
     @GetMapping("/day/lesson")
-    public ResponseEntity<List<String>> showLesson(@PathVariable Long id, @RequestParam LocalDate date, @RequestParam LocalTime timeStart, @RequestParam LocalTime timeEnd)
-    {
-        return new ResponseEntity<>(requestService.showInfoAboutSession(id, date, timeStart, timeEnd), HttpStatus.OK);
+    public ResponseEntity<List<String>> showLesson(@RequestBody LessonRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+
+        Student student = studentService.findStudentByEmail(auth.getName());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("HH:mm");
+
+        LocalDate date = LocalDate.parse(request.getDate(), dtf);
+        LocalTime timeStart = LocalTime.parse(request.getTimeStart(), dtf1);
+        LocalTime timeEnd = LocalTime.parse(request.getTimeEnd(), dtf1);
+
+        return new ResponseEntity<>(requestService.showInfoAboutSession(student.getId(), date, timeStart, timeEnd), HttpStatus.OK);
     }
 
-    @PostMapping("/day/lesson/signup")
-    public ResponseEntity<String> signUpLesson(@PathVariable Long id, @RequestParam LocalDate date, @RequestParam LocalTime timeStart, @RequestParam LocalTime timeEnd)
-    {
-        requestService.addRequest(id, date, timeStart, timeEnd);
+    @PostMapping("/day/lesson/signUp")
+    public ResponseEntity<String> signUpLesson(@RequestBody LessonRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Student student = studentService.findStudentByEmail(auth.getName());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("HH:mm");
+
+        LocalDate date = LocalDate.parse(request.getDate(), dtf);
+        LocalTime timeStart = LocalTime.parse(request.getTimeStart(), dtf1);
+        LocalTime timeEnd = LocalTime.parse(request.getTimeEnd(), dtf1);
+        requestService.addRequest(student.getId(), date, timeStart, timeEnd);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/day/lesson/remove")
-    public ResponseEntity<String> removeRequest(@PathVariable Long id, @RequestParam LocalDate date, @RequestParam LocalTime timeStart, @RequestParam LocalTime timeEnd)
-    {
-        requestService.removeByStudentIdAndTime(id, date, timeStart, timeEnd);
+    public ResponseEntity<String> removeRequest(@RequestBody LessonRequest request) {
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        Student student = studentService.findStudentByEmail(auth.getName());
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+        DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("HH:mm");
+
+        LocalDate date = LocalDate.parse(request.getDate(), dtf);
+        LocalTime timeStart = LocalTime.parse(request.getTimeStart(), dtf1);
+        LocalTime timeEnd = LocalTime.parse(request.getTimeEnd(), dtf1);
+
+        requestService.removeByStudentIdAndTime(student.getId(), date, timeStart, timeEnd);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }

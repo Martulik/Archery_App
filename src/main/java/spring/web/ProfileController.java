@@ -29,8 +29,6 @@ public class ProfileController {
     StudentService studentService;
     @Autowired
     JwtTokenProvider jwtTokenProvider;
-
-    JMXAuthenticator authenticationManager;
     @Autowired
     SecurityService securityService;
 

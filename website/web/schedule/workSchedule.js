@@ -15,7 +15,7 @@ document.querySelector('.days').addEventListener('click', function () {
 
 
 document.querySelector('.schedule .days').addEventListener('click', function () {
-    cleaar();
+    clear();
     if (!event.target.classList.contains("next-date") && !event.target.classList.contains("prev-date")) {
         let time= "";
         let startTime = 17;
@@ -39,6 +39,6 @@ document.querySelector('.schedule .days').addEventListener('click', function () 
     }
 });
 
-function cleaar() {
+function clear() {
     document.getElementById("timeS").innerHTML = "";
 }
