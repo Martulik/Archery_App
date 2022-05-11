@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Objects;
 
@@ -20,7 +21,7 @@ public class PurchaseHistory {
 
     @Basic
     @Column(name = "start_date")
-    private Date startDate;
+    private LocalDate startDate;
 
     @ManyToOne
     @JoinColumn(name="student_id", referencedColumnName="student_id")

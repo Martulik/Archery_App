@@ -23,6 +23,10 @@ public class Rank {
     @Column(name = "color", nullable = false)
     private String color;
 
+    @JsonBackReference
+    @OneToMany(mappedBy = "rank_name", fetch = FetchType.EAGER)
+    private List<Student> students;
+
     @Override
     public String toString() {
         return "Rank{" +

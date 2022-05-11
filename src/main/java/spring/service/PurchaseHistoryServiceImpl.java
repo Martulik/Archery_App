@@ -1,5 +1,6 @@
 package spring.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.entity.PurchaseHistory;
@@ -7,34 +8,28 @@ import spring.entity.SeasonTicket;
 import spring.entity.Student;
 import spring.exception.SeasonTicketNotFoundException;
 import spring.repositories.PurchaseHistoryRepository;
+import spring.repositories.SeasonTicketRepository;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
+import static java.time.temporal.ChronoUnit.DAYS;
+
 @Service
+@RequiredArgsConstructor
 public class PurchaseHistoryServiceImpl implements PurchaseHistoryService
 {
-    private PurchaseHistoryRepository purchaseHistoryRepository;
+    private final PurchaseHistoryRepository purchaseHistoryRepository;
 
-    public Boolean daysHavePassed(Date startDate, Date endDate, Integer daysDuration)
+    public Optional<PurchaseHistory> findPurchaseWithActiveSeasonTicket(Long studentId, LocalDate date)
     {
-        int days = (int)(endDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000);
-        return days > daysDuration;
+        return purchaseHistoryRepository.findUnspentSeasonTicket(studentId).stream().filter(purchaseHistory ->
+                DAYS.between(purchaseHistory.getStartDate(), date) <= purchaseHistory.getSeasonTicket().getDaysDuration()).findFirst();
     }
 
-    public Optional<PurchaseHistory> findPurchaseWithActiveSeasonTicket(Long studentId, Date date)
-    {
-        return purchaseHistoryRepository.findUnspentSeasonTicket(studentId).filter(purchaseHistory ->
-                !daysHavePassed(purchaseHistory.getStartDate(), date, purchaseHistory.getSeasonTicket().getDaysDuration()));
-    }
-
-    public Boolean checkActiveSeasonTicket(Long studentId, Date date)
-    {
-        return findPurchaseWithActiveSeasonTicket(studentId, date).isPresent();
-    }
-
-    public SeasonTicket findActiveSeasonTicket(Long studentId, Date date)
+    public SeasonTicket findActiveSeasonTicket(Long studentId, LocalDate date)
     {
         Optional<PurchaseHistory> optionalPurchaseHistory = findPurchaseWithActiveSeasonTicket(studentId, date);
         if (optionalPurchaseHistory.isPresent()) {
@@ -43,21 +38,9 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService
         throw new SeasonTicketNotFoundException("Season ticket is not found");
     }
 
-    public List<SeasonTicket> findByStudentId(Long studentId)
+    public Boolean existByStudentId(Long studentId)
     {
-        List<PurchaseHistory> listPurchaseHistory = purchaseHistoryRepository.findByStudentId(studentId);
-        return listPurchaseHistory.stream().map(PurchaseHistory::getSeasonTicket).toList();
-    }
-
-    public PurchaseHistory addPurchase(Student student, Date startDate, SeasonTicket seasonTicket)
-    {
-        PurchaseHistory purchaseHistory = new PurchaseHistory();
-        purchaseHistory.setStudent(student);
-        purchaseHistory.setStartDate(startDate);
-        purchaseHistory.setSeasonTicket(seasonTicket);
-        purchaseHistory.setAvailableClasses(seasonTicket.getNumberOfClasses());
-        purchaseHistoryRepository.save(purchaseHistory);
-        return purchaseHistory;
+        return purchaseHistoryRepository.existsByStudentId(studentId);
     }
 
     public void changeAvailableClasses(PurchaseHistory purchaseHistory, Boolean toReduce)
@@ -68,10 +51,10 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService
             if (availableClasses != 0)
             {
                 availableClasses--;
-                if (availableClasses == 0)
+                /*if (availableClasses == 0)
                 {
                     purchaseHistory.getStudent().setHasPaid(false);
-                }
+                }*/
             }
         }
         else
@@ -81,7 +64,7 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService
         purchaseHistory.setAvailableClasses(availableClasses);
     }
 
-    public Boolean changeAvailableClassesFromActivePurchase(Long studentId, Date date, Boolean toReduce)
+    public Boolean changeAvailableClassesFromActivePurchase(Long studentId, LocalDate date, Boolean toReduce)
     {
         Optional<PurchaseHistory> optionalPurchaseHistory = findPurchaseWithActiveSeasonTicket(studentId, date);
         if (optionalPurchaseHistory.isPresent())
@@ -103,10 +86,28 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService
         return false;
     }
 
-
-    @Autowired
-    public void setPurchaseHistoryRepository(PurchaseHistoryRepository purchaseHistoryRepository)
+    public PurchaseHistory addPurchase(Student student, LocalDate startDate, SeasonTicket seasonTicket)
     {
-        this.purchaseHistoryRepository = purchaseHistoryRepository;
+        PurchaseHistory purchaseHistory = new PurchaseHistory();
+        purchaseHistory.setStudent(student);
+        purchaseHistory.setStartDate(startDate);
+        purchaseHistory.setSeasonTicket(seasonTicket);
+        purchaseHistory.setAvailableClasses(seasonTicket.getNumberOfClasses());
+        purchaseHistoryRepository.save(purchaseHistory);
+        return purchaseHistory;
     }
+
+
+    /*public Boolean checkActiveSeasonTicket(Long studentId, LocalDate date)
+    {
+        return findPurchaseWithActiveSeasonTicket(studentId, date).isPresent();
+    }
+
+    public List<SeasonTicket> findTicketsByStudentId(Long studentId)
+    {
+        List<PurchaseHistory> listPurchaseHistory = purchaseHistoryRepository.findByStudentId(studentId);
+        return listPurchaseHistory.stream().map(PurchaseHistory::getSeasonTicket).toList();
+    }
+
+*/
 }

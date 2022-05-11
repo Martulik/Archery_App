@@ -26,10 +26,14 @@ public interface StudentService {
 
     void updateProfileStatus(long student_id, String status);
     void updateRank(long student_id, String rank);
+
     void updateHasPaid(long student_id, Boolean hasPaid);
 
+
     Rank getRank(long id);
-    Boolean hasPaid(long id);
     void updateToken(Long id, String token);
     void changeAttendedClasses(Long id, Boolean toIncrease);
+
+
+    Boolean hasPaid(long id);
 }
