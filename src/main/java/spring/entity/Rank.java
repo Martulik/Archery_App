@@ -23,16 +23,11 @@ public class Rank {
     @Column(name = "color", nullable = false)
     private String color;
 
-    @JsonBackReference
-    @OneToMany(mappedBy = "rank_name")
-    private List<Student> students;
-
     @Override
     public String toString() {
         return "Rank{" +
                 "rank_name='" + rank_name + '\'' +
                 ", color='" + color + '\'' +
-                ", students=" + students +
                 '}';
     }
 }
