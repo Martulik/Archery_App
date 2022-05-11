@@ -17,6 +17,7 @@ import java.util.Optional;
 public interface DayRepository extends JpaRepository<Day, String>
 {
     Optional<Day> findByDate(LocalDate date);
+
     @Query("select d from Day d where d.date >= :start and d.date <= :end")
     List<Day> findFromTo(LocalDate start, LocalDate end);
 

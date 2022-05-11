@@ -225,7 +225,7 @@ public class TestRequestServiceAndRep
     @Test
     void testTicketLimits()
     {
-        LocalDate date =  LocalDate.of(2022, 5, 15);
+        LocalDate date =  LocalDate.of(2022, 5, 16);
         List<String> info = requestService.showInfoAboutSession(28L, date,
                 LocalTime.of(20, 0), LocalTime.of(20, 30));
         assertEquals(info.get(4), "Число ваших заявок на сегодня достигло лимита");
