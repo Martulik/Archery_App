@@ -148,6 +148,7 @@ function addRow(id, user) {
     p3.textContent = user.birth_date.slice(0, 10);
     div4.appendChild(p3);
 
+
     // rang
     var rangs = ["middles", "juniors", "seniors", "no rang"];
     var td5 = document.createElement("td")
@@ -161,7 +162,32 @@ function addRow(id, user) {
     select.id = 'sel';
     select.className = "form-control category-select";
     select.onchange = function () {
+        let url = "http://localhost:8080/archery/admin/setRankAndApprove";
+        console.log("id", user.id);
         console.log("document", document.getElementById("sel").value);
+        var data = {
+            id: user.id,
+            rank: document.getElementById("sel").value
+        };
+        // var result =
+        fetchWithAuth(url,
+            {
+                method: 'POST',
+                credentials: 'include',
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            }).then((res) => {
+            if (res.status === 200) {
+                // window.alert("success");
+            } else {
+                window.alert("fail");
+            }
+        });
+        console.log("saving...");
+        // window.alert("saving...");
     };
     for (var i = 0; i < rangs.length; i++) {
         var option = document.createElement("option");
