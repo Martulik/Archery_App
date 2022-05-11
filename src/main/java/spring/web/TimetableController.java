@@ -61,9 +61,9 @@ public class TimetableController
     }
 
     @GetMapping("/day/lesson")
-    public ResponseEntity<List<String>> showLesson(@PathVariable Long id, @RequestParam LocalDate date, @RequestParam LocalTime timeStart, @RequestParam LocalTime timeEnd)
+    public ResponseEntity<List<String>> showLesson(@PathVariable Long id, @RequestParam LocalDate date, @RequestParam LocalTime timeStart)
     {
-        return new ResponseEntity<>(requestService.showInfoAboutSession(id, date, timeStart, timeEnd), HttpStatus.OK);
+        return new ResponseEntity<>(requestService.showInfoAboutSession(id, date, timeStart), HttpStatus.OK);
     }
 
     @PostMapping("/day/lesson/signup")
