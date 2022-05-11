@@ -156,6 +156,98 @@ public class TestRequestServiceAndRep
     }
 
     @Test
+    void testGoodSigningUp()
+    {
+        LocalDate date = LocalDate.of(2022, 5, 18);
+        List<String> info = requestService.showInfoAboutSession(30L, date, LocalTime.of(18, 30));
+        assertEquals(info.get(4), "Записаться");
+        assertEquals(info.get(5), LocalTime.of(20, 29).toString());
+        info = requestService.showInfoAboutSession(28L, date, LocalTime.of(18, 30));
+        assertEquals(info.get(4), "Записаться");
+        assertEquals(info.get(5), LocalTime.of(20, 29).toString());
+        info = requestService.showInfoAboutSession(29L, date, LocalTime.of(18, 30));
+        assertEquals(info.get(4), "Записаться");
+        assertEquals(info.get(5), LocalTime.of(18, 59).toString());
+
+        date = LocalDate.of(2022, 5, 17);
+        info = requestService.showInfoAboutSession(34L, date, LocalTime.of(19, 30));
+        assertEquals(info.get(4), "Отменить заявку");
+    }
+
+    @Test
+    void testLimitsOfPeople()
+    {
+        LocalDate date = LocalDate.of(2022, 5, 17);
+        wishedNumberOfJuniors = 1;
+        wishedNumberOfDemandingTrainer = 2;
+        List<String> info = requestService.showInfoAboutSession(32L, date, LocalTime.of(19, 0));
+        assertEquals(info.get(0), "1");
+        assertEquals(info.get(1), "1");
+        assertEquals(info.get(2), "2");
+        assertEquals(info.get(3), "3");
+        assertEquals(info.get(4), "Нельзя записаться из-за числа большого новичков в каком-то из получасов");
+
+        info = requestService.showInfoAboutSession(33L, date, LocalTime.of(18, 0));
+        assertEquals(info.get(4), "Нельзя записаться из-за большого числа требующих тренера в каком-то из получасов");
+
+        info = requestService.showInfoAboutSession(33L, date, LocalTime.of(18, 0));
+        assertEquals(info.get(4), "Нельзя записаться из-за большого числа требующих тренера в каком-то из получасов");
+
+        info = requestService.showInfoAboutSession(37L, date, LocalTime.of(19, 00));
+        assertEquals(info.get(4), "Записаться");
+
+
+        wishedNumberOfDemandingTrainer = 3;
+        info = requestService.showInfoAboutSession(33L, date, LocalTime.of(18, 0));
+        assertEquals(info.get(4), "Записаться");
+        wishedNumberOfJuniors = 5;
+        wishedNumberOfDemandingTrainer = 7;
+
+        numberOfShields = 3;
+        info = requestService.showInfoAboutSession(37L, date, LocalTime.of(19, 0));
+        assertEquals(info.get(4), "Нельзя записаться из-за большого числа занятых щитов в каком-то из получасов");
+        info = requestService.showInfoAboutSession(33L, date, LocalTime.of(18, 30));
+        assertEquals(info.get(4), "Записаться");
+
+        numberOfShields = 4;
+        info = requestService.showInfoAboutSession(32L, date, LocalTime.of(18, 30));
+        assertEquals(info.get(4), "Записаться");
+        info = requestService.showInfoAboutSession(37L, date, LocalTime.of(19, 0));
+        assertEquals(info.get(4), "Записаться");
+        numberOfShields = 12;
+    }
+
+    @Test
+    void testTimeLimits()
+    {
+      List<String> info = requestService.showInfoAboutSession(29L, LocalDate.of(2020, 1, 1), LocalTime.of(18, 0));
+      assertEquals(info.get(4), "Редактирование заявки недоступно: занятие уже началось или прошло");
+
+      // requestService.addRequest(29L, LocalDate.now(), LocalTime.of(19, 30), LocalTime.of(21, 29));
+       info = requestService.showInfoAboutSession(29L, LocalDate.now(),  LocalTime.of(20, 0));
+       assertEquals(info.get(4), "Редактирование заявки недоступно: занятие уже началось или прошло");
+    }
+
+    @Test
+    void testLimitsWithTicket()
+    {
+        List<String> info = requestService.showInfoAboutSession(29L, LocalDate.of(2030, 1, 1), LocalTime.of(18, 0));
+        assertEquals(info.get(4), "Нет активного абонемента на момент этой даты");
+        info = requestService.showInfoAboutSession(31L, LocalDate.of(2022, 5, 17), LocalTime.of(18, 30));
+        assertEquals(info.get(4), "Нет активного абонемента на момент этой даты");
+        info = requestService.showInfoAboutSession(41L, LocalDate.of(2022, 5, 17), LocalTime.of(18, 0));
+        assertEquals(info.get(4), "Число записей на будущие занятия достигло лимита");
+    }
+
+    @Test
+    void testLimitsWithRequests()
+    {
+        List<String> info = requestService.showInfoAboutSession(28L, LocalDate.of(2022, 5, 17), LocalTime.of(20, 0));
+        assertEquals(info.get(4), "Вы уже записались на сегодня");
+    }
+
+
+    /*@Test
     void testCountingOfRanks()
     {
         wishedNumberOfJuniors = 1;
@@ -245,5 +337,5 @@ public class TestRequestServiceAndRep
         info = requestService.showInfoAboutSession(31L, date,
                 LocalTime.of(20, 0), LocalTime.of(20, 30));
         assertEquals(info.get(4), "Нет активного абонемента на момент этой даты");
-    }
+    }*/
 }

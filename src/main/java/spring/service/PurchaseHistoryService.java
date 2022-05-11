@@ -5,11 +5,10 @@ import spring.entity.SeasonTicket;
 import spring.entity.Student;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 
 public interface PurchaseHistoryService
 {
+    PurchaseHistory findPurchaseWithActiveSeasonTicket(Long studentId, LocalDate date);
     SeasonTicket findActiveSeasonTicket(Long studentId, LocalDate date);
     Boolean existByStudentId(Long studentId);
     Boolean changeAvailableClassesFromActivePurchase(Long studentId, LocalDate date, Boolean toReduce);

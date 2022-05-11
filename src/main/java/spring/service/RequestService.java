@@ -1,5 +1,6 @@
 package spring.service;
 
+import spring.entity.Day;
 import spring.entity.Request;
 import spring.entity.RequestStatus;
 import spring.entity.Student;
@@ -12,7 +13,7 @@ import java.util.List;
 public interface RequestService {
     List<Request> findByTime(LocalDate date, LocalTime timeStart, LocalTime timeEnd);
     Boolean existsByStudentIdAndTime(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
-    void addRequest(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
+
     void removeByStudentIdAndTime(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
     List<Student> findStudentsByDate(LocalDate date);
     RequestStatus showStatusByStudentIdAndDate(Long studentId, LocalDate date);
@@ -22,11 +23,19 @@ public interface RequestService {
     void updateStatus(String status, long requestId);
     List<Request> findByStatus(String status);
     List<Request> findByStudentIdAndDate(Long studentId, LocalDate date);
-    List<String> showInfoAboutSession(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
-
-
 
     Boolean existsByStudentIdAndDate(Long studentId, LocalDate date);
+    List<Day> findActiveDaysWithRequests(Long studentId, LocalDate date);
+
+
+
+
+    List<String> showInfoAboutSession(Long studentId, LocalDate date, LocalTime timeStart);
+    void addRequest(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
+    void removeByStudentIdAndDateTimeStart(Long studentId, LocalDate date, LocalTime timeStart);
+
+
+
 
 
     /*void removeByDate(LocalDate date);

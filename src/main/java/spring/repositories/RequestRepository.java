@@ -4,16 +4,12 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
-import spring.entity.Day;
 import spring.entity.Request;
 import spring.entity.RequestStatus;
-import spring.entity.Student;
 
 import javax.transaction.Transactional;
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.Date;
-import java.sql.Time;
 import java.util.List;
 import java.util.Optional;
 
@@ -41,8 +37,14 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     @Transactional
     @Modifying
     void removeByRequestId(Long requestId);
+    @Query("select r from Request r where r.day.date >= :date")
+    List<Request> findFutureRequests(LocalDate date);
+    @Query("select r from Request r where r.student.id = :id and r.day.date = :date and r.timeStart <= :timeStart and r.timeEnd >= :timeEnd")
+    Optional<Request> findIfAPartOfStudentRequest(Long id, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
 
-
+    @Transactional
+    @Modifying
+    void removeByStudentIdAndDayDateAndTimeStart(Long id, LocalDate date, LocalTime timeStart);
 
     Boolean existsByStudentIdAndDayDate(Long studentId, LocalDate date);
 }

@@ -1,21 +1,18 @@
 package spring.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import spring.entity.*;
-import spring.exception.RequestNotFound;
+import spring.exception.PurchaseNotFoundException;
+import spring.exception.RequestNotFoundException;
 import spring.exception.RequestStatusNotFound;
-import spring.exception.SeasonTicketNotFoundException;
 import spring.repositories.RequestRepository;
 import spring.repositories.RequestStatusRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.time.temporal.Temporal;
 import java.util.*;
-import java.sql.Time;
 import java.util.stream.Collectors;
 
 import static spring.Application.*;
@@ -43,17 +40,7 @@ public class RequestServiceImpl implements RequestService
     }
 
 
-    public void addRequest(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
-    {
-        Day day = dayService.findByDate(date);
-        Student student = studentService.findStudentById(studentId);
-        Request request = new Request();
-        request.setDay(day);
-        request.setStudent(student);
-        request.setTimeStart(timeStart);
-        request.setTimeEnd(timeEnd);
-        requestRepository.save(request);
-    }
+
 
     public void removeByStudentIdAndTime(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
     {
@@ -76,7 +63,7 @@ public class RequestServiceImpl implements RequestService
         List<Request> requests = requestRepository.findByStudentIdAndDayDate(studentId, date);
         if (requests.isEmpty())
         {
-            throw new RequestNotFound("Request is not found");
+            throw new RequestNotFoundException("Request is not found");
         }
         return requests.get(0).getStatus();
     }
@@ -125,12 +112,42 @@ public class RequestServiceImpl implements RequestService
     {
         return requestRepository.findByStatusStatus(status);
     }
-    public  List<String> showInfoAboutSession(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
+
+    public List<Day> findActiveDaysWithRequests(Long studentId, LocalDate date)
+    {
+        return requestRepository.findFutureRequests(date).stream().map(Request::getDay).distinct().toList();
+    }
+
+    public Boolean existsByStudentIdAndDate(Long studentId, LocalDate date)
+    {
+        return requestRepository.existsByStudentIdAndDayDate(studentId, date);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public  List<String> showInfoAboutSession(Long studentId, LocalDate date, LocalTime timeStart)
     {
         int numberOfJuniors = 0; //блок вывода информации о посещаемости
         int numberOfMiddles = 0;
         int numberOfSeniors = 0;
-        List<Request> requests = requestRepository.findByDayDateAndTimeStartAndTimeEnd(date, timeStart, timeEnd);
+        List<Request> requests = requestRepository.findIfIntersectByTime(date, timeStart, timeStart.plusMinutes(29));
         for (Request request: requests)
         {
             switch (request.getStudent().getRank_name().getRank_name())
@@ -154,19 +171,33 @@ public class RequestServiceImpl implements RequestService
             return info;
         }
 
-        if (existsByStudentIdAndTime(studentId, date, timeStart, timeEnd)) //проверка, записан(а) ли уже
+        Optional<Request> optionalRequest = requestRepository.findIfAPartOfStudentRequest(studentId, date, timeStart, timeStart.plusMinutes(29));
+        if (optionalRequest.isPresent()) //проверка, записан(а) ли уже
         {
+            LocalTime timeStartFoRemoving = optionalRequest.get().getTimeStart();
+            if (date.isEqual(LocalDate.now()) && timeStartFoRemoving.isBefore(LocalTime.now()))
+            {
+                info.add("Редактирование заявки недоступно: занятие уже началось или прошло");
+                return info;
+            }
             info.add("Отменить заявку");
+            info.add(timeStartFoRemoving.toString());
             return info;
         }
 
         LocalTime timeDuration; //проверка, можно ли еще записаться (связано с билетом и заявками на сегодня)
+        int availableClasses = 0;
         try
         {
-            SeasonTicket ticket = purchaseHistoryService.findActiveSeasonTicket(studentId, date);
-            timeDuration = ticket.getTimeDuration();
+            PurchaseHistory purchase = purchaseHistoryService.findPurchaseWithActiveSeasonTicket(studentId, date);
+            timeDuration = purchase.getSeasonTicket().getTimeDuration();
+            if (findActiveDaysWithRequests(studentId, date).size() >= purchase.getAvailableClasses())
+            {
+                info.add("Число записей на будущие занятия достигло лимита");
+                return info;
+            }
         }
-        catch (SeasonTicketNotFoundException e)
+        catch (PurchaseNotFoundException e)
         {
             if (purchaseHistoryService.existByStudentId(studentId))
             {
@@ -177,50 +208,113 @@ public class RequestServiceImpl implements RequestService
         }
         if (!timeDuration.equals(LocalTime.of(23, 59)))
         {
-            int numberOfSessions = timeDuration.getHour() * 2;
-            if (timeDuration.getMinute() >= 30)
+            if (requestRepository.existsByStudentIdAndDayDate(studentId, date))
             {
-                ++numberOfSessions;
-            }
-            if (findByStudentIdAndDate(studentId, date).size() + 1 > numberOfSessions)
-            {
-                info.add("Число ваших заявок на сегодня достигло лимита");
+                info.add("Вы уже записались на сегодня");
                 return info;
             }
         }
 
-        Student student = studentService.findStudentById(studentId);
-        switch (student.getRank_name().getRank_name())
+        Student student = studentService.findStudentById(studentId); //проверка на число новичков и пр.
+        LocalTime localStart = timeStart;
+        LocalTime localEnd = timeStart;
+        LocalTime endOfRequest;
+        if (timeDuration.equals(LocalTime.of(23, 59)))
         {
-            case "juniors" -> ++numberOfJuniors;
-            case "middles" -> ++numberOfMiddles;
-            default -> ++numberOfSeniors;
+            endOfRequest = timeStart.plusMinutes(29L);
         }
-        numberOfOccupiedShiels = numberOfJuniors + numberOfMiddles / 2 + numberOfMiddles % 2 + numberOfSeniors / 2 + numberOfSeniors % 2;
-        if (numberOfJuniors > wishedNumberOfJuniors || numberOfJuniors + numberOfMiddles > wishedNumberOfDemandingTrainer
-                || numberOfOccupiedShiels > numberOfShields)
+        else
         {
-            info.add("Нельзя записаться из-за превышенного числа учеников по рангу или по щитам");
-            return info;
+            endOfRequest = timeStart.plusHours(timeDuration.getHour()).plusMinutes(timeDuration.getMinute() - 1);
+        }
+
+        while (localEnd.isBefore(endOfRequest))
+        {
+            localEnd = localEnd.plusMinutes(29L);
+            if (localEnd.isAfter(endOfRequest))
+            {
+                localEnd = endOfRequest;
+            }
+            int localNumberOfJuniors = 0;
+            int localNumberOfMiddles = 0;
+            int localNumberOfSeniors = 0;
+            switch (student.getRank_name().getRank_name())
+            {
+                case "juniors" -> ++localNumberOfJuniors;
+                case "middles" -> ++localNumberOfMiddles;
+                default -> ++localNumberOfSeniors;
+            }
+            List<Request> localRequests = requestRepository.findIfIntersectByTime(date, localStart, localEnd);
+            for (Request request: localRequests)
+            {
+                switch (request.getStudent().getRank_name().getRank_name())
+                {
+                    case "juniors" -> ++localNumberOfJuniors;
+                    case "middles" -> ++localNumberOfMiddles;
+                    default -> ++localNumberOfSeniors;
+                }
+            }
+            if (localNumberOfJuniors > wishedNumberOfJuniors)
+            {
+                info.add("Нельзя записаться из-за числа большого новичков в каком-то из получасов");
+                return info;
+            }
+            if (localNumberOfJuniors + localNumberOfMiddles > wishedNumberOfDemandingTrainer)
+            {
+                info.add("Нельзя записаться из-за большого числа требующих тренера в каком-то из получасов");
+                return info;
+            }
+            if (localNumberOfJuniors + localNumberOfMiddles / 2 + localNumberOfMiddles % 2 + localNumberOfSeniors / 2 + localNumberOfSeniors % 2 > numberOfShields)
+            {
+                info.add("Нельзя записаться из-за большого числа занятых щитов в каком-то из получасов");
+                return info;
+            }
+            localEnd = localEnd.plusMinutes(1L);
+            localStart = localStart.plusMinutes(30L);
         }
         info.add("Записаться");
+        info.add(endOfRequest.toString());
         return info;
     }
 
 
-
-
-
-
-
-
-
-
-
-    public Boolean existsByStudentIdAndDate(Long studentId, LocalDate date)
+    public void addRequest(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd)
     {
-        return requestRepository.existsByStudentIdAndDayDate(studentId, date);
+        Day day = dayService.findByDate(date);
+        Student student = studentService.findStudentById(studentId);
+        Request request = new Request();
+        request.setDay(day);
+        request.setStudent(student);
+        request.setTimeStart(timeStart);
+        request.setTimeEnd(timeEnd);
+        requestRepository.save(request);
     }
+
+    public void removeByStudentIdAndDateTimeStart(Long studentId, LocalDate date, LocalTime timeStart)
+    {
+        requestRepository.removeByStudentIdAndDayDateAndTimeStart(studentId, date, timeStart);
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
     /*
     public void removeByDate(LocalDate date)

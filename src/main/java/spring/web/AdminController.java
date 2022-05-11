@@ -9,7 +9,7 @@ import spring.exception.StudentNotFoundException;
 import spring.requests.UpdateRankRequest;
 import spring.service.ProfileStatusService;
 import spring.service.StudentService;
-import spring.utils.ProfileStatusConstants;
+import spring.utils.Constants;
 
 import java.util.List;
 
@@ -24,15 +24,17 @@ public class AdminController {
 
     @GetMapping(value = "/listToApprove")
     public List<Student> needToApproveList() { //??
-        return studentService.getStudentsByStatus(ProfileStatusConstants.ON_CHECKING);
+        return studentService.getStudentsByStatus(Constants.ProfileStatusConst.ON_CHECKING);
     }
+
+
 
     @PostMapping(value = "/setRankAndApprove")
     public ResponseEntity<HttpStatus> setRankAndApprove(@RequestBody UpdateRankRequest request) {
         long id = Long.parseLong(request.getStudent_id());
         try {
             studentService.updateRank(id, request.getRank());
-            studentService.updateProfileStatus(id, ProfileStatusConstants.APPROVED);
+            studentService.updateProfileStatus(id, Constants.ProfileStatusConst.APPROVED);
         } catch (StudentNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); //400
         }

@@ -1,18 +1,15 @@
 package spring.service;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import spring.entity.PurchaseHistory;
 import spring.entity.SeasonTicket;
 import spring.entity.Student;
+import spring.exception.PurchaseNotFoundException;
 import spring.exception.SeasonTicketNotFoundException;
 import spring.repositories.PurchaseHistoryRepository;
-import spring.repositories.SeasonTicketRepository;
 
 import java.time.LocalDate;
-import java.util.Date;
-import java.util.List;
 import java.util.Optional;
 
 import static java.time.temporal.ChronoUnit.DAYS;
@@ -23,15 +20,25 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService
 {
     private final PurchaseHistoryRepository purchaseHistoryRepository;
 
-    public Optional<PurchaseHistory> findPurchaseWithActiveSeasonTicket(Long studentId, LocalDate date)
+    public Optional<PurchaseHistory> findOptionalPurchaseWithActiveSeasonTicket(Long studentId, LocalDate date)
     {
         return purchaseHistoryRepository.findUnspentSeasonTicket(studentId).stream().filter(purchaseHistory ->
                 DAYS.between(purchaseHistory.getStartDate(), date) <= purchaseHistory.getSeasonTicket().getDaysDuration()).findFirst();
     }
 
+    public PurchaseHistory findPurchaseWithActiveSeasonTicket(Long studentId, LocalDate date)
+    {
+        Optional<PurchaseHistory> optionalPurchaseHistory = findOptionalPurchaseWithActiveSeasonTicket(studentId, date);
+        if (optionalPurchaseHistory.isPresent())
+        {
+            return optionalPurchaseHistory.get();
+        }
+        throw new PurchaseNotFoundException("Purchase is not found");
+    }
+
     public SeasonTicket findActiveSeasonTicket(Long studentId, LocalDate date)
     {
-        Optional<PurchaseHistory> optionalPurchaseHistory = findPurchaseWithActiveSeasonTicket(studentId, date);
+        Optional<PurchaseHistory> optionalPurchaseHistory = findOptionalPurchaseWithActiveSeasonTicket(studentId, date);
         if (optionalPurchaseHistory.isPresent()) {
             return optionalPurchaseHistory.get().getSeasonTicket();
         }
@@ -66,7 +73,7 @@ public class PurchaseHistoryServiceImpl implements PurchaseHistoryService
 
     public Boolean changeAvailableClassesFromActivePurchase(Long studentId, LocalDate date, Boolean toReduce)
     {
-        Optional<PurchaseHistory> optionalPurchaseHistory = findPurchaseWithActiveSeasonTicket(studentId, date);
+        Optional<PurchaseHistory> optionalPurchaseHistory = findOptionalPurchaseWithActiveSeasonTicket(studentId, date);
         if (optionalPurchaseHistory.isPresent())
         {
             changeAvailableClasses(optionalPurchaseHistory.get(), toReduce);
