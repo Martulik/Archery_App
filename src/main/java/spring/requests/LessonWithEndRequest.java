@@ -7,7 +7,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @AllArgsConstructor
-public class LessonRequest {
+public class LessonWithEndRequest {
     private String date;
     private String timeStart;
+    private String timeEnd;
 }

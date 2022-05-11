@@ -1,5 +1,6 @@
 package spring.web;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,15 +14,16 @@ import static spring.Application.*;
 
 @RestController
 @RequestMapping("/archery/admin/edit")
+@RequiredArgsConstructor
 public class EditConstantsController
 {
-   /* private RankService rankService;
+    //private final RankService rankService;
 
-    @GetMapping(value = "/ranks", consumes = "application/json")
+    /*@GetMapping(value = "/ranks", consumes = "application/json")
     public ResponseEntity<List<Rank>> showRanks()
     {
         return new ResponseEntity<>(rankService.findAll(), HttpStatus.OK);
-    }
+    }*/
 
     @GetMapping(value = "/constants", consumes = "application/json")
     public ResponseEntity<String> showConstants()
@@ -30,12 +32,12 @@ public class EditConstantsController
         return new ResponseEntity<>(constants, HttpStatus.OK);
     }
 
-    @PostMapping(value = "/changerankcolor", consumes = "application/json")
+    /*@PostMapping(value = "/changerankcolor", consumes = "application/json")
     public ResponseEntity<String> changeColor(@RequestParam String name, @RequestParam String color)
     {
         rankService.changeColor("blue", "juniors");
         return new ResponseEntity<>(HttpStatus.OK);
-    }
+    }*/
 
     @PostMapping(value = "/changeshields", consumes = "application/json")
     public ResponseEntity<String> changeShields(@RequestParam int number)
@@ -57,10 +59,4 @@ public class EditConstantsController
         wishedNumberOfDemandingTrainer = number;
         return new ResponseEntity<>(HttpStatus.OK);
     }
-
-    @Autowired
-    public void setRankService(RankService rankService)
-    {
-        this.rankService = rankService;
-    }*/
 }

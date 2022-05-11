@@ -22,7 +22,7 @@ import java.util.List;
 @RequestMapping("/archery/admin/timetable")
 public class AdminTimetableController
 {
-    @Autowired
+    /*@Autowired
     private DayService dayService;
     @Autowired
     private PurchaseHistoryService purchaseHistoryService;
@@ -87,5 +87,5 @@ public class AdminTimetableController
     public ResponseEntity<List<Student>> showLesson(@RequestParam LocalDate date, @RequestParam LocalTime timeStart, @RequestParam LocalTime timeEnd)
     {
         return new ResponseEntity<>(requestService.findStudentsByTime(date, timeStart, timeEnd), HttpStatus.OK);
-    }
+    }*/
 }

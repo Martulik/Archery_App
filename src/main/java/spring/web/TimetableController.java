@@ -9,10 +9,9 @@ import org.springframework.web.bind.annotation.*;
 import spring.entity.Day;
 import spring.entity.Student;
 import spring.exception.DayNotFoundException;
-import spring.repositories.RequestRepository;
+import spring.requests.LessonWithEndRequest;
 import spring.requests.LessonRequest;
 import spring.service.DayService;
-import spring.service.PurchaseHistoryService;
 import spring.service.RequestService;
 import spring.service.StudentService;
 
@@ -24,7 +23,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/archery/timetable")
 @RequiredArgsConstructor
-public class TimetableController {
+public class TimetableController
+{
     private final DayService dayService;
     private final RequestService requestService;
     private final StudentService studentService;
@@ -35,7 +35,8 @@ public class TimetableController {
     }
 
     @GetMapping("/day")
-    public ResponseEntity<Boolean> showDay(@RequestParam String date) { //вроде можно из js пересылать USVString, либо сделать обертку
+    public ResponseEntity<Boolean> showDay(@RequestParam String date) //вроде можно из js пересылать USVString, либо сделать обертку
+    {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         LocalDate localDate = LocalDate.parse(date, dtf);
         try {
@@ -50,22 +51,20 @@ public class TimetableController {
     }
 
     @GetMapping("/day/lesson")
-    public ResponseEntity<List<String>> showLesson(@RequestBody LessonRequest request) {
+    public ResponseEntity<List<String>> showLesson(@RequestBody LessonRequest request)
+    {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-
         Student student = studentService.findStudentByEmail(auth.getName());
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         DateTimeFormatter dtf1 = DateTimeFormatter.ofPattern("HH:mm");
 
         LocalDate date = LocalDate.parse(request.getDate(), dtf);
         LocalTime timeStart = LocalTime.parse(request.getTimeStart(), dtf1);
-        LocalTime timeEnd = LocalTime.parse(request.getTimeEnd(), dtf1);
-
-        return new ResponseEntity<>(requestService.showInfoAboutSession(student.getId(), date, timeStart, timeEnd), HttpStatus.OK);
+        return new ResponseEntity<>(requestService.showInfoAboutSession(student.getId(), date, timeStart), HttpStatus.OK);
     }
 
     @PostMapping("/day/lesson/signUp")
-    public ResponseEntity<String> signUpLesson(@RequestBody LessonRequest request) {
+    public ResponseEntity<String> signUpLesson(@RequestBody LessonWithEndRequest request) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student student = studentService.findStudentByEmail(auth.getName());
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -87,9 +86,7 @@ public class TimetableController {
 
         LocalDate date = LocalDate.parse(request.getDate(), dtf);
         LocalTime timeStart = LocalTime.parse(request.getTimeStart(), dtf1);
-        LocalTime timeEnd = LocalTime.parse(request.getTimeEnd(), dtf1);
-
-        requestService.removeByStudentIdAndTime(student.getId(), date, timeStart, timeEnd);
+        requestService.removeByStudentIdAndDateTimeStart(student.getId(), date, timeStart);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 }
