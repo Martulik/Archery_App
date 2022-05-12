@@ -156,18 +156,17 @@ function addRow(id, user) {
     let div5 = document.createElement("div");
     let span = document.createElement("span");
 
-    let div6 = document.createElement("div");
-    div6.className = "row no-gutters form-control col-lg-3 col-md-3 col-sm-12 p-0";
     let select = document.createElement("select");
-    select.id = 'sel';
+    select.id = `sel + ${user.id}`;
+    console.log("id", select.id);
     select.className = "form-control category-select";
     select.onchange = function () {
         let url = "http://localhost:8080/archery/admin/setRankAndApprove";
         console.log("id", user.id);
-        console.log("document", document.getElementById("sel").value);
+        console.log("document", document.getElementById(`sel + ${user.id}`).value);
         var data = {
             id: user.id,
-            rank: document.getElementById("sel").value
+            rank: document.getElementById(`sel + ${user.id}`).value
         };
         // var result =
         fetchWithAuth(url,
@@ -224,7 +223,6 @@ function addRow(id, user) {
     div5.appendChild(select);
     // td5.appendChild(select);
     td5.appendChild(div5);
-    td5.appendChild(div6);
     // div5.appendChild(span);
 
     tbody.appendChild(row);
