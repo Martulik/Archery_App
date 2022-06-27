@@ -11,7 +11,6 @@ import spring.repositories.RequestStatusRepository;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.temporal.Temporal;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -68,26 +67,6 @@ public class RequestServiceImpl implements RequestService
         return requests.get(0).getStatus();
     }
 
-    public void changePresenceOfStudent(Long studentId, LocalDate date, Boolean hasCome)
-    {
-        RequestStatus oldStatus = showStatusByStudentIdAndDate(studentId, date);
-        if (hasCome)
-        {
-           requestRepository.updateStatusByDate(studentId, date, requestStatusRepository.findByStatus("HAS_COME").get());
-            //статусы есть: "не просмотрено" (по умолчанию); "просмотрено" (не выводить в списке заявок);
-            //"пришел"; "не пришел" (уже после занятия, когда заполняется посещаемость)
-            studentService.changeAttendedClasses(studentId, true); //при посещении надо изменить число посещенных занятий
-        }
-        else
-        {
-            requestRepository.updateStatusByDate(studentId, date, requestStatusRepository.findByStatus("HAS_NOT_COME").get());
-            if (oldStatus.getStatus().equals("HAS_COME")) //если старый статус был "пришел", то он изменяется в отсутствие и надо уменьшить число занятий
-            {
-                studentService.changeAttendedClasses(studentId, false);
-            }
-        }
-    }
-
     public List<Student> findStudentsByTime(LocalDate date, LocalTime timeStart, LocalTime timeEnd)
     {
         return requestRepository.findIfIntersectByTime(date, timeStart, timeEnd).stream().map(Request::getStudent).toList();
@@ -112,12 +91,6 @@ public class RequestServiceImpl implements RequestService
     {
         return requestRepository.findByStatusStatus(status);
     }
-
-    public List<Day> findActiveDaysWithRequests(Long studentId, LocalDate date)
-    {
-        return requestRepository.findFutureRequests(date).stream().map(Request::getDay).distinct().toList();
-    }
-
     public Boolean existsByStudentIdAndDate(Long studentId, LocalDate date)
     {
         return requestRepository.existsByStudentIdAndDayDate(studentId, date);
@@ -130,6 +103,76 @@ public class RequestServiceImpl implements RequestService
 
 
 
+    public Boolean checkIfTodayRequestIsActive(Long studentId)
+    {
+        List<Request> todayRequests = requestRepository.findByStudentIdAndDayDate(studentId, LocalDate.now());
+        if (todayRequests.isEmpty())
+        {
+            return false;
+        }
+        for (Request request: todayRequests)
+        {
+            if (LocalTime.now().isAfter(request.getTimeStart()))
+            {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public List<LocalDate> findDaysWithActiveRequests(Long studentId)
+    {
+        List<LocalDate> daysWithActiveRequests = new ArrayList<>(requestRepository.findRequestsWithFutureDays(studentId, LocalDate.now()).
+                stream().map(Request::getDay).distinct().map(Day::getDate).toList());
+        if (checkIfTodayRequestIsActive(studentId))
+        {
+            daysWithActiveRequests.add(LocalDate.now());
+        }
+        return daysWithActiveRequests;
+    }
+
+    public void changePresenceOfStudent(Long studentId, LocalDate date, Boolean hasCome)
+    {
+        RequestStatus oldStatus = showStatusByStudentIdAndDate(studentId, date);
+        if (hasCome)
+        {
+            requestRepository.updateStatusByDate(studentId, date, requestStatusRepository.findByStatus("HAS_COME").get());
+            //статусы есть: "не просмотрено" (по умолчанию); "просмотрено" (не выводить в списке заявок);
+            //"пришел"; "не пришел" (уже после занятия, когда заполняется посещаемость)
+            studentService.changeAttendedClasses(studentId, true); //при посещении надо изменить число посещенных занятий
+            //если прибавить число посещенных, то уменьшится число доступных, и, значит, надо проверить, что заявок на следующие дни не больше, чем доступно,
+            //и удалить самые поздние, если больше
+            List<LocalDate> daysWithActiveRequests = findDaysWithActiveRequests(studentId);
+            int availableClasses = 0;
+            try
+            {
+                availableClasses = purchaseHistoryService.findPurchaseWithActiveSeasonTicket(studentId, date).getAvailableClasses();
+            }
+            catch (PurchaseNotFoundException ignored)
+            {}
+            while (daysWithActiveRequests.size() > availableClasses)
+            {
+                LocalDate maxDate = daysWithActiveRequests.get(0);
+                for (LocalDate localDate: daysWithActiveRequests)
+                {
+                    if (localDate.isAfter(maxDate))
+                    {
+                        maxDate = localDate;
+                    }
+                }
+                requestRepository.removeByStudentIdAndDayDate(studentId, maxDate);
+                daysWithActiveRequests = findDaysWithActiveRequests(studentId);
+            }
+        }
+        else
+        {
+            requestRepository.updateStatusByDate(studentId, date, requestStatusRepository.findByStatus("HAS_NOT_COME").get());
+            if (oldStatus.getStatus().equals("HAS_COME")) //если старый статус был "пришел", то он изменяется в отсутствие и надо уменьшить число занятий
+            {
+                studentService.changeAttendedClasses(studentId, false);
+            }
+        }
+    }
 
 
 
@@ -142,7 +185,14 @@ public class RequestServiceImpl implements RequestService
 
 
 
-    public  List<String> showInfoAboutSession(Long studentId, LocalDate date, LocalTime timeStart)
+
+
+
+
+
+
+
+    public List<String> showShortInfoAboutSession(LocalDate date, LocalTime timeStart)
     {
         int numberOfJuniors = 0; //блок вывода информации о посещаемости
         int numberOfMiddles = 0;
@@ -163,8 +213,12 @@ public class RequestServiceImpl implements RequestService
         info.add(Integer.toString(numberOfMiddles));
         info.add(Integer.toString(numberOfSeniors));
         info.add(Integer.toString(numberOfOccupiedShiels));
+        return info;
+    }
 
-
+    public  List<String> showInfoAboutSession(Long studentId, LocalDate date, LocalTime timeStart)
+    {
+        List<String> info = showShortInfoAboutSession(date, timeStart);
         if (LocalDate.now().isAfter(date) || (LocalDate.now().isEqual(date) && (LocalTime.now().isAfter(timeStart))))
         {
             info.add("Редактирование заявки недоступно: занятие уже началось или прошло"); //проверка на актуальность времени
@@ -191,7 +245,7 @@ public class RequestServiceImpl implements RequestService
         {
             PurchaseHistory purchase = purchaseHistoryService.findPurchaseWithActiveSeasonTicket(studentId, date);
             timeDuration = purchase.getSeasonTicket().getTimeDuration();
-            if (findActiveDaysWithRequests(studentId, date).size() >= purchase.getAvailableClasses())
+            if (findDaysWithActiveRequests(studentId).size() >= purchase.getAvailableClasses())
             {
                 info.add("Число записей на будущие занятия достигло лимита");
                 return info;

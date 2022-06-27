@@ -73,12 +73,6 @@ public class StudentsTableController
         purchaseHistoryService.addPurchase(student, LocalDate.now(), seasonTicket);
     }
 
-    /*@PostMapping("/{id}/changeclasses/{increase}")
-    public void editClasses(@PathVariable Long id, @PathVariable Boolean increase) {
-
-        studentService.changeAttendedClasses(id, increase);
-    }*/
-
     @GetMapping("/ranks")
     public ResponseEntity<List<String>> findRanks()
     {
