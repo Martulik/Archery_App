@@ -35,7 +35,7 @@ public class TimetableController
     }
 
     @GetMapping("/day")
-    public ResponseEntity<Boolean> showDay(@RequestParam String date) //вроде можно из js пересылать USVString, либо сделать обертку
+    public ResponseEntity<Boolean> showDay(@RequestBody String date) //вроде можно из js пересылать USVString, либо сделать обертку
     {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         LocalDate localDate = LocalDate.parse(date, dtf);
