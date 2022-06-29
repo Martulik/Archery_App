@@ -56,7 +56,7 @@ public class AdminTimetableController
         return new ResponseEntity<>(students, HttpStatus.OK);
     }
 
-    @GetMapping("day/id")
+    @GetMapping("/day/id")
     public ResponseEntity<List<String>> showPresenceOfStudent(@RequestBody StudentAndDateRequest studentAndDateRequest)
     {
         List<String> action = new ArrayList<>();

@@ -26,10 +26,9 @@ public class EditConstantsController
     }*/
 
     @GetMapping(value = "/constants", consumes = "application/json")
-    public ResponseEntity<String> showConstants()
+    public ResponseEntity<List<Integer>> showConstants()
     {
-        String constants = numberOfShields + " " + wishedNumberOfJuniors + " " + wishedNumberOfDemandingTrainer;
-        return new ResponseEntity<>(constants, HttpStatus.OK);
+        return new ResponseEntity<>(List.of(numberOfShields, wishedNumberOfJuniors, wishedNumberOfDemandingTrainer), HttpStatus.OK);
     }
 
     /*@PostMapping(value = "/changerankcolor", consumes = "application/json")

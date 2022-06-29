@@ -29,7 +29,7 @@ public class TimetableController
     private final RequestService requestService;
     private final StudentService studentService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<LocalDate>> showTimetable() {
         return new ResponseEntity<>(dayService.showMonth(), HttpStatus.OK);
     }

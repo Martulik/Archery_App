@@ -22,15 +22,15 @@ public class RequestsController
         return new ResponseEntity<>(requestService.findByStatus("UNVIEWED"), HttpStatus.OK);
     }
 
-    @PostMapping("/{requestId}/view")
-    public ResponseEntity<String> viewRequest(@PathVariable long requestId)
+    @PostMapping("/view")
+    public ResponseEntity<String> viewRequest(@RequestBody long requestId)
     {
         requestService.updateStatus("VIEWED", requestId);
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @PostMapping("/{requestId}/remove")
-    public ResponseEntity<String> removeRequest(@PathVariable long requestId)
+    @PostMapping("/remove")
+    public ResponseEntity<String> removeRequest(@RequestBody long requestId)
     {
         requestService.removeRequest(requestId);
         return new ResponseEntity<>(HttpStatus.OK);
