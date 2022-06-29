@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.*;
 import spring.entity.Request;
 import spring.service.RequestService;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 
 @RestController
@@ -19,7 +21,10 @@ public class RequestsController
     @GetMapping("")
     public ResponseEntity<List<Request>> showUnviewedRequests()
     {
-        return new ResponseEntity<>(requestService.findByStatus("UNVIEWED"), HttpStatus.OK);
+        List<Request> unviewedRequests = requestService.findByStatus("UNVIEWED");
+        unviewedRequests.removeIf(request -> LocalDate.now().isAfter(request.getDay().getDate()) || LocalDate.now().isEqual(request.getDay().getDate()) &&
+                LocalTime.now().isAfter(request.getTimeStart()));
+        return new ResponseEntity<>(unviewedRequests, HttpStatus.OK);
     }
 
     @PostMapping("/view")

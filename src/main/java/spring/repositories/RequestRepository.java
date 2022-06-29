@@ -53,4 +53,8 @@ public interface RequestRepository extends JpaRepository<Request, Long> {
     void removeByStudentIdAndDayDateAndTimeStart(Long id, LocalDate date, LocalTime timeStart);
 
     Boolean existsByStudentIdAndDayDate(Long studentId, LocalDate date);
+
+    @Transactional
+    @Modifying
+    void removeByDayDate(LocalDate date);
 }
