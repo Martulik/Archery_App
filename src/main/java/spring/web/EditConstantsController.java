@@ -5,6 +5,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 import static spring.utils.Constants.LimitsConst.*;
 
 @RestController
@@ -21,10 +23,9 @@ public class EditConstantsController
     }*/
 
     @GetMapping(value = "/constants", consumes = "application/json")
-    public ResponseEntity<String> showConstants()
+    public ResponseEntity<List<Integer>> showConstants()
     {
-        String constants = numberOfShields + " " + wishedNumberOfJuniors + " " + wishedNumberOfDemandingTrainer;
-        return new ResponseEntity<>(constants, HttpStatus.OK);
+        return new ResponseEntity<>(List.of(numberOfShields, wishedNumberOfJuniors, wishedNumberOfDemandingTrainer), HttpStatus.OK);
     }
 
     /*@PostMapping(value = "/changerankcolor", consumes = "application/json")

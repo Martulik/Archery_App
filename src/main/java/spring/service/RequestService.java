@@ -4,7 +4,6 @@ import spring.entity.Day;
 import spring.entity.Request;
 import spring.entity.RequestStatus;
 import spring.entity.Student;
-import spring.requests.NumberOfStudentsAndShields;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -26,19 +25,15 @@ public interface RequestService {
     List<Request> findByStudentIdAndDate(Long studentId, LocalDate date);
 
     Boolean existsByStudentIdAndDate(Long studentId, LocalDate date);
-    List<Day> findActiveDaysWithRequests(Long studentId, LocalDate date);
+    List<LocalDate> findDaysWithActiveRequests(Long studentId);
 
 
-    List<String> showInfoAboutSession(Long studentId, LocalDate date, LocalTime timeStart); //не трогала, разбила на методы ниже
+    Boolean checkIfTodayRequestIsActive(Long studentId);
 
 
-    NumberOfStudentsAndShields getNumberOfStudentsAndShields(LocalDate date, LocalTime timeStart);
-    boolean isAvailableLesson(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
-    boolean isAvailableSession(Long studentId, LocalDate date, LocalTime timeStart);
-    String setTimeEnd(LocalTime timeStart, String seasonTicket);
-    String setSeasonTicket(Long studentId, LocalDate date);
 
-
+    List<String> showShortInfoAboutSession(LocalDate date, LocalTime timeStart);
+    List<String> showInfoAboutSession(Long studentId, LocalDate date, LocalTime timeStart);
     void addRequest(Long studentId, LocalDate date, LocalTime timeStart, LocalTime timeEnd);
     void removeByStudentIdAndDateTimeStart(Long studentId, LocalDate date, LocalTime timeStart);
 

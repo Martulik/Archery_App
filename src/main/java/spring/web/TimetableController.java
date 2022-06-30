@@ -23,33 +23,36 @@ import java.util.List;
 @RestController
 @RequestMapping("/archery/timetable")
 @RequiredArgsConstructor
-public class TimetableController {
+public class TimetableController
+{
     private final DayService dayService;
     private final RequestService requestService;
     private final StudentService studentService;
 
-    @GetMapping("/")
+    @GetMapping("")
     public ResponseEntity<List<LocalDate>> showTimetable() {
         return new ResponseEntity<>(dayService.showMonth(), HttpStatus.OK);
     }
 
     @GetMapping("/day")
-    public ResponseEntity<HttpStatus> showDay(@RequestParam String date) { //вроде можно из js пересылать USVString, либо сделать обертку
+    public ResponseEntity<Boolean> showDay(@RequestBody String date) //вроде можно из js пересылать USVString, либо сделать обертку
+    {
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
         LocalDate localDate = LocalDate.parse(date, dtf);
         try {
             Day day = dayService.findByDate(localDate);
             if (!day.getAreLessons()) {
-                return new ResponseEntity<>(HttpStatus.NOT_ACCEPTABLE); //406
+                return new ResponseEntity<>(false, HttpStatus.NOT_ACCEPTABLE); //406
             }
-            return new ResponseEntity<>(HttpStatus.OK);
+            return new ResponseEntity<>(true, HttpStatus.OK);
         } catch (DayNotFoundException e) {
             return new ResponseEntity<>(HttpStatus.BAD_REQUEST); // 400
         }
     }
 
     @GetMapping("/day/lesson")
-    public ResponseEntity<List<String>> showLesson(@RequestBody LessonRequest request) { //не использую
+    public ResponseEntity<List<String>> showLesson(@RequestBody LessonRequest request)
+    {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         Student student = studentService.findStudentByEmail(auth.getName());
         DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -59,9 +62,6 @@ public class TimetableController {
         LocalTime timeStart = LocalTime.parse(request.getTimeStart(), dtf1);
         return new ResponseEntity<>(requestService.showInfoAboutSession(student.getId(), date, timeStart), HttpStatus.OK);
     }
-
-    //добавить контроллеры на разбитые методы
-
 
     @PostMapping("/day/lesson/signUp")
     public ResponseEntity<String> signUpLesson(@RequestBody LessonWithEndRequest request) {

@@ -4,17 +4,20 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import spring.entity.PurchaseHistory;
 import spring.entity.Rank;
 import spring.entity.SeasonTicket;
 import spring.entity.Student;
-import spring.exception.SeasonTicketNotFoundException;
+import spring.exception.PurchaseNotFoundException;
 import spring.repositories.SeasonTicketRepository;
 import spring.repositories.StudentRepository;
+import spring.requests.StudentAndRankRequest;
+import spring.requests.StudentAndTicketRequest;
+import spring.requests.TicketInfoRequest;
 import spring.service.PurchaseHistoryService;
 import spring.service.RankService;
 import spring.service.StudentService;
 
-import javax.print.DocFlavor;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -35,53 +38,50 @@ public class StudentsTableController
         return new ResponseEntity<>(studentRepository.findAll(), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<Student> showStudent(@PathVariable Long id)
+    @GetMapping("/id")
+    public ResponseEntity<Student> showStudent(@RequestBody Long id)
     {
         return new ResponseEntity<>(studentService.findStudentById(id), HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/ticket")
-    public ResponseEntity<String> showTicket(@PathVariable Long id)
+    @GetMapping("/ticket")
+    public ResponseEntity<TicketInfoRequest> showTicket(@RequestBody Long id)
     {
         String ticket = "";
+        TicketInfoRequest ticketInfoRequest = new TicketInfoRequest("", 0);
         try
         {
-            ticket = purchaseHistoryService.findActiveSeasonTicket(id, LocalDate.now()).getTicketType();
+            PurchaseHistory purchaseHistory = purchaseHistoryService.findPurchaseWithActiveSeasonTicket(id, LocalDate.now());
+            ticketInfoRequest.setTicketType(purchaseHistory.getSeasonTicket().getTicketType());
+            ticketInfoRequest.setAvailableClasses(purchaseHistory.getAvailableClasses());
         }
-        catch (SeasonTicketNotFoundException ignored) {}
-        return new ResponseEntity<>(ticket, HttpStatus.OK);
+        catch (PurchaseNotFoundException ignored) {}
+        return new ResponseEntity<>(ticketInfoRequest, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}/tickets")
+    @GetMapping("/tickets")
     public ResponseEntity<List<String>> findTickets()
     {
         return new ResponseEntity<>(ticketRepository.findAll().stream().map(SeasonTicket::getTicketType).toList(), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/changeticket/{ticket}")
-    public void editTicket(@PathVariable Long id, @PathVariable String ticket)
+    @PostMapping("/changeticket")
+    public void editTicket(@RequestBody StudentAndTicketRequest studentAndTicketRequest)
     {
-        Student student = studentService.findStudentById(id);
-        SeasonTicket seasonTicket = ticketRepository.findByTicketType(ticket).get();
+        Student student = studentService.findStudentById(studentAndTicketRequest.getId());
+        SeasonTicket seasonTicket = ticketRepository.findByTicketType(studentAndTicketRequest.getSeasonTicketType()).get();
         purchaseHistoryService.addPurchase(student, LocalDate.now(), seasonTicket);
     }
 
-    @PostMapping("/{id}/changeclasses/{increase}")
-    public void editClasses(@PathVariable Long id, @PathVariable Boolean increase) {
-
-        studentService.changeAttendedClasses(id, increase);
-    }
-
-    @GetMapping("/{id}/ranks")
+    @GetMapping("/ranks")
     public ResponseEntity<List<String>> findRanks()
     {
         return new ResponseEntity<>(rankService.findAll().stream().map(Rank::getRank_name).toList(), HttpStatus.OK);
     }
 
-    @PostMapping("/{id}/changerank/{rank}")
-    public void edit(@PathVariable Long id, @PathVariable String rank) {
+    @PostMapping("/changerank")
+    public void edit(@RequestBody StudentAndRankRequest studentAndRankRequest) {
 
-        studentService.updateRank(id, rank);
+        studentService.updateRank(studentAndRankRequest.getId(), studentAndRankRequest.getRank());
     }
 }
