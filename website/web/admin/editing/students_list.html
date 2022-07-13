@@ -32,14 +32,14 @@
                         <div class="row">
                             <div class="col-12">
                                 <div class="row no-gutters">
-                                    <div class="form-control col-lg-2 col-md-3 col-sm-12 p-0">
-                                        <select id="exampleFormControlSelect1">
-                                            <option>All ranks</option>
-                                            <option>juniors</option>
-                                            <option>middles</option>
-                                            <option>seniors</option>
-                                        </select>
-                                    </div>
+<!--                                    <div class="form-control col-lg-2 col-md-3 col-sm-12 p-0">-->
+<!--                                        <select id="ranks_selector" onchange="search_ranks()">-->
+<!--                                            <option value="">All ranks</option>-->
+<!--                                            <option value="juniors">juniors</option>-->
+<!--                                            <option value="middles">middles</option>-->
+<!--                                            <option value="seniors">seniors</option>-->
+<!--                                        </select>-->
+<!--                                    </div>-->
                                     <div class="form-control col-lg-2 col-md-3 col-sm-12 p-0">
                                         <!--<label>Requests Per Page: </label>-->
                                         <table id="req_per_page">
@@ -50,10 +50,10 @@
                                     </div>
                                     <div class="col-lg-7 col-md-6 col-sm-12 p-0">
                                         <input type="text" placeholder="Search..." class="form-control" id="search"
-                                               name="search">
+                                               name="search" onkeyup="search_by_names()">
                                     </div>
                                     <div class="col-lg-1 col-md-3 col-sm-12 p-0">
-                                        <button type="submit" class="btn btn-base">
+                                        <button type="button" class="btn btn-base">
                                             <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24"
                                                  viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
                                                  stroke-linecap="round" stroke-linejoin="round"
@@ -145,10 +145,9 @@
     });
 </script>
 
-
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="./list.js"></script>
-<script src="./popup.js"></script>
+<script src="./searching.js"></script>
 </body>
 
 </html>

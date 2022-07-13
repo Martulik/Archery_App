@@ -47,7 +47,6 @@ async function fetchWithAuth(url, options) {
     }
 
     if (tokenData_t) {
-        // console.log("tokenData exist");
         if (Date.now() >= expires) {
             console.log("token isn't valid");
             try {
@@ -68,9 +67,6 @@ function save_changes(selectedOption) {
 }
 
 function new_users() {
-    console.log("last_id " + localStorage.getItem("last_id"));
-    console.log("users_data.length " + myarr_global.length);
-    console.log("new_users " + new_users);
     var tbody = document.getElementById("new_users_table").getElementsByTagName('tbody')[0];
     var row = document.createElement("tr")
     var td_name = document.createElement("td")
@@ -224,8 +220,6 @@ function add_ticket(row, id) {
     select_pass.className = "form-control category-select";
     select_pass.onchange = function () {
         let url = "http://localhost:8080/archery/admin/students/changeticket";
-        console.log("id", id);
-        console.log("document", document.getElementById(`sel_pass + ${id}`).value);
         var data = {
             id: id,
             seasonTicketType: document.getElementById(`sel_pass + ${id}`).value
@@ -415,7 +409,6 @@ function render_table_rows(rows, req_per_page, page_no, option_all) {
     $("#users > tbody").html("");
     $('#users').append('<tr><th>Name</th><th>Phone</th><th>Rank</th><th>Ticket</th></tr>');
     resp.forEach(function (element) {
-        console.log(element);
         addRow('users', element);
     });
 }
