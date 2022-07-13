@@ -97,9 +97,15 @@ function getData(url, field_id) {
         }).then(response => {
         return response.json();
     }).then(data => {
-        console.log(data.ticketType);
-        document.getElementById(field_id).value = data.ticketType;
-        // console.log(data);
+        if (data.ticketType == "long limit") {
+            document.getElementById('ticket').value = "На 8 занятий";
+        } else if (data.ticketType == "short limit") {
+            document.getElementById('ticket').value = "На 4 занятий";
+        } else if (data.ticketType == "unlimited") {
+            document.getElementById('ticket').value = "Безлимитный";
+        } else if (data.ticketType == "") {
+            document.getElementById('ticket').value = "Нет";
+        }
     }).catch(err => {
         // alert("Fail");
         console.log(err);

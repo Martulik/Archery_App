@@ -102,7 +102,15 @@ function getTicket() {
         }).then(response => {
         return response.json();
     }).then(data => {
-        document.getElementById('ticket').value = data.ticketType;
+        if (data.ticketType == "long limit") {
+            document.getElementById('ticket').value = "На 8 занятий";
+        } else if (data.ticketType == "short limit") {
+            document.getElementById('ticket').value = "На 4 занятий";
+        } else if (data.ticketType == "unlimited") {
+            document.getElementById('ticket').value = "Безлимитный";
+        } else if (data.ticketType == "") {
+            document.getElementById('ticket').value = "Нет";
+        }
         // console.log(data);
     }).catch(err => {
         // alert("Fail");
