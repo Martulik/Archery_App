@@ -88,4 +88,26 @@ getData("http://localhost:8080/archery/profile/getLastName", 'inputLastName');
 getData("http://localhost:8080/archery/profile/getEmail", 'inputEmailAddress');
 getData("http://localhost:8080/archery/profile/getPhoneNumber", 'inputPhone');
 getData("http://localhost:8080/archery/profile/getBirthDate", 'inputBirthday');
+getData("http://localhost:8080/archery/profile/getAttendedClasses", 'attendedClasses');
 
+function getTicket() {
+    fetchWithAuth("http://localhost:8080/archery/profile/getTicket",
+        {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            }
+        }).then(response => {
+        return response.json();
+    }).then(data => {
+        document.getElementById('ticket').value = data.ticketType;
+        // console.log(data);
+    }).catch(err => {
+        // alert("Fail");
+        console.log(err);
+    });
+}
+
+getTicket();
