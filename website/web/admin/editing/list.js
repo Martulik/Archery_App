@@ -210,6 +210,7 @@ function add_ranks(row, id, rank) {
 
 function add_ticket(row, id) {
     var passes = ["unlimited", "long limit", "short limit", "no ticket"];
+    var passes_rus = ["Безлимитный", "8 занятий", "4 занятия", "Нет"];
     var td_pass = document.createElement("td")
     row.appendChild(td_pass);
     let div_pass = document.createElement("div");
@@ -244,7 +245,7 @@ function add_ticket(row, id) {
     for (i = 0; i < passes.length; i++) {
         var option_pass = document.createElement("option");
         option_pass.value = passes[i];
-        option_pass.text = passes[i];
+        option_pass.text = passes_rus[i];
         select_pass.appendChild(option_pass);
     }
     let pass;
@@ -266,21 +267,24 @@ function add_ticket(row, id) {
             if (pass == passes[0]) {
                 select_pass.className = "widget-26-job-category bg-soft-success";
                 select_pass[0].selected = true;
+                span_pass.textContent = "Безлимитный";
             } else if (pass == passes[1]) {
                 select_pass.className = "widget-26-job-category bg-soft-warning";
                 select_pass[1].selected = true;
+                span_pass.textContent = "8 занятий";
             } else if (pass == passes[2]) {
                 select_pass.className = "widget-26-job-category bg-soft-danger";
                 select_pass[2].selected = true;
+                span_pass.textContent = "4 занятия";
             } else if (pass == passes[3]) {
                 select_pass.className = "widget-26-job-category bg-soft-secondary";
                 select_pass[3].selected = true;
+                span_pass.textContent = "Нет";
             }
-            span_pass.textContent = pass;
         } else {
             select_pass.className = "widget-26-job-category bg-soft-secondary";
-            span_pass.textContent = passes[3];
             select_pass[3].selected = true;
+            span_pass.textContent = "Нет";
         }
     }).catch(err => {
         console.log(err);
